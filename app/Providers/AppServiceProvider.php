@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+
+ 
+use App\Contracts\DataInsertionInterface;
+use App\Repository\AccountRepository;
+
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register()
+    {
+        $this->app->bind(DataInsertionInterface::class, AccountRepository::class);
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        // Gate::before(function ($user, $ability) {
+        //     return $user->hasRole('Super Admin') ? true : null;
+        // });
+    }
+}
