@@ -83,32 +83,9 @@ class UserRepository implements UserRepositoryInterface
             ->where('u.id', Auth::user()->id)
             ->select('r.id as id', 'r.name as name')->orderBy('r.id', 'ASC')->get()->toArray();
     }
+ 
 
-
-    public function getAllCategoriesWithChildren($categories, $parentId = null)
-    {
-        $result = []; 
-
-        foreach ($categories as $category) {
-          //  return $category->parent_id;die;
-            if ($category->parent_id == $parentId) {
-                $category->children = $this->getAllCategoriesWithChildren($categories, $category->id);
-                $result[] = $category;
-            }
-        }
-
-        return $result;
-    }
-
-
-    public function userWithoutSA()
-    {
-        $users = DB::table('users as u')
-            ->where('u.id', '!=', $this->superAdmin)
-            ->select('u.id', 'u.parent_id', 'u.name', 'u.email', 'u.role_id', 'u.mobile', 'u.password');
-        return $users->get();
-    }
-
+ 
 
     public function update($request){
 
@@ -130,21 +107,7 @@ class UserRepository implements UserRepositoryInterface
         return $user->syncRoles([$request->role_id]); 
 
     }
-
-
-    public function sub_congregation($id)
-    { 
-    return DB::table('users as u')
-            ->join('model_has_roles as mhr', 'mhr.model_id', '=', 'u.id')
-            ->join('roles as r', 'r.id', '=', 'mhr.role_id')
-            ->where('r.id', $id)
-            ->select('r.id as id', 'r.name as name')->orderBy('r.id', 'ASC')->get()->toArray();
-    }
-
-    public function getLocations(){
-        return DB::table('cities')->select('id', 'name')->get();
-    }
-
+ 
 
 
 }

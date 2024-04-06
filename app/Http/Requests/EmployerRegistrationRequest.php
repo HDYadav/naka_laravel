@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class RegistraionRequest extends FormRequest
+class EmployerRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +25,10 @@ class RegistraionRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'company_name' => 'required',
+            'company_size' => 'required',
             'email' => 'required|unique:users,email',
-            'date_of_birth' => 'required',
-            'user_type' => 'required',
+            'mobile' => 'required|unique:users,mobile',
             'password' => 'required',
         ];
     }
@@ -35,9 +36,12 @@ class RegistraionRequest extends FormRequest
     public function messages()
     {
         return [
-                'name.required' => 'Name can not be empty !',  
-                'email.required' => 'Name can not be empty !',  
-                'mobile.required' => 'Mobile number can not be empty !'                                
+            'name.required' => 'Name can not be empty !',
+            'company_name.required' => 'Company name can not be empty !',
+            'company_size.required' => 'Company size can not be empty !',
+            'email.required' => 'Name can not be empty !',
+            'mobile.required' => 'Mobile number can not be empty !',
+            'password.required' => 'Password number can not be empty !'
         ];
     }
 
@@ -48,7 +52,5 @@ class RegistraionRequest extends FormRequest
             'message'   => 'Validation errors',
             'data'      =>  $validator->getMessageBag()->toArray()
         ], 201));
-
     }
-
 }

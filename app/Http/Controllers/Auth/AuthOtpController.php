@@ -24,8 +24,7 @@ class AuthOtpController extends ApiController
 
         /* Generate An OTP */
         $userOtp = $this->generateOtp($request->mobile);
-        $userOtp->sendSMS($request->mobile);         // send otp on twillo
-   
+        $userOtp->sendSMS($request->mobile);         // send otp on twillo 
 
         return $this->sucessResponse('OTP has been sent on Your Mobile Number', $userOtp, true, 201);
     }
