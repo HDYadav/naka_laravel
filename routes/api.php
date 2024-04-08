@@ -36,6 +36,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/register',[ApiAuthController::class, 'register'])->name('register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');  
+ 
 
 });
  
@@ -47,9 +48,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/add', [VendorController::class, 'storeVendor'] )->name('add');
    }); 
 
-   Route::prefix('customers')->group(function () {
-    Route::post('/add', [CustomerController::class, 'storeCustomer'] )->name('add');
-   });  
+  //  Route::prefix('customers')->group(function () {
+  //   Route::post('/add', [CustomerController::class, 'storeCustomer'] )->name('add');
+  //  });  
    
    Route::prefix('users')->group(function () {
     Route::post('/get_user', [UserController::class, 'getUserData'] )->name('get_user');

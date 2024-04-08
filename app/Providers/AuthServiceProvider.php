@@ -32,9 +32,13 @@ class AuthServiceProvider extends ServiceProvider
             'delete' => 'Delete data',
         ]);
         
-        $this->registerPolicies();   
-       // Passport::routes();     
-        Passport::tokensExpireIn(now()->addDays(15));
+        $this->registerPolicies();
+        // Passport::routes();     
+        // Passport::tokensExpireIn(now()->addDays(15));
+
+        Passport::tokensExpireIn(now()->addMinutes(2));
+        Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
        // Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
         Gate::before(function ($user, $ability) {

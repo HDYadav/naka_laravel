@@ -141,18 +141,14 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
 
         try { 
         
-            $user = User::where('email', $request->email)->firstOrFail();
-
-          //  dd($user);
-            
+            $user = User::where('email', $request->email)->firstOrFail(); 
         
             if (Hash::check($request->password, $user->password)) {
                  $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-
-             // dd($token);
-               // $token = $user->createToken('Laravel Password Grant Client',['read'],true);
+                 $newAccessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
                // $newAccessToken = $user->refreshToken;
-                $response = ['uid'=>$user->id, 'name' => $user->name,'email' => $user->email, 'token' => $token]; 
+            
+                $response = ['uid'=>$user->id, 'name' => $user->name,'email' => $user->email, 'token' => $token, 'refreshToken'=> $newAccessToken ]; 
                 LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $response, true, 200)]); 
                 return $this->sucessResponse('your are looged in', $response, true, 200); 
                
