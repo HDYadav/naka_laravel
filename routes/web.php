@@ -15,7 +15,7 @@
 
 // Passport 
 
-use Illuminate\Routing\Route;
+ 
 
 Route::get('/', function () {
      
