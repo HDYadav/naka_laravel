@@ -24,17 +24,15 @@ use App\Http\Controllers\User\UserController;
 //     Route::get('otp/verification/{user_id}', 'verification')->name('otp.verification');
 //     Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');   
 // });
+ 
 
-
-//Route::post('register', [RegisterController::class, 'register']);
+  //Route::post('register', [RegisterController::class, 'register']);
 // Route::post('login', [RegisterController::class, 'login']); 
 
 
-Route::POST('/login', [ApiAuthController::class, 'login'])->name('login.api');
-
 Route::group(['middleware' => ['cors', 'json.response']], function () { 
    
-    Route::post('/login', [ApiAuthController::class, 'login'] )->name('login.api');
+    //Route::post('/login', [ApiAuthController::class, 'login'] )->name('login.api');
     Route::post('/register',[ApiAuthController::class, 'register'])->name('register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');  
@@ -43,8 +41,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 });
  
 
-Route::group(['middleware' => 'auth:api'], function () { 
- 
+Route::group(['middleware' => 'auth:api'], function () {
+  Route::post('/login', [ApiAuthController::class, 'login'])->name('login');
  
    Route::prefix('vendors')->group(function () {
     Route::post('/add', [VendorController::class, 'storeVendor'] )->name('add');
