@@ -29,7 +29,7 @@ use App\Http\Controllers\User\UserController;
 //Route::post('register', [RegisterController::class, 'register']);
 // Route::post('login', [RegisterController::class, 'login']); 
 
- Route::get('/test',function(){
+ Route::post('/test',function(){
 return "Hello";
  });
 
