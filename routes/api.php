@@ -30,7 +30,7 @@ use App\Http\Controllers\User\UserController;
 // Route::post('login', [RegisterController::class, 'login']); 
 
 
-Route::post('/login', [ApiAuthController::class, 'login'])->name('login.api');
+Route::POST('/login', [ApiAuthController::class, 'login'])->name('login.api');
 
 Route::group(['middleware' => ['cors', 'json.response']], function () { 
    
