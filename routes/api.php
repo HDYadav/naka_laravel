@@ -29,9 +29,6 @@ use App\Http\Controllers\User\UserController;
 //Route::post('register', [RegisterController::class, 'register']);
 // Route::post('login', [RegisterController::class, 'login']); 
 
- Route::post('/test',function(){
-return "Hello";
- });
 
 Route::group(['middleware' => ['cors', 'json.response']], function () { 
    
