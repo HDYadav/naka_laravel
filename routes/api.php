@@ -24,11 +24,13 @@ use App\Http\Controllers\User\UserController;
 //     Route::get('otp/verification/{user_id}', 'verification')->name('otp.verification');
 //     Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');   
 // });
- 
 
-  //Route::post('register', [RegisterController::class, 'register']);
+
+//Route::post('register', [RegisterController::class, 'register']);
 // Route::post('login', [RegisterController::class, 'login']); 
 
+
+Route::post('/login', [ApiAuthController::class, 'login'])->name('login.api');
 
 Route::group(['middleware' => ['cors', 'json.response']], function () { 
    
