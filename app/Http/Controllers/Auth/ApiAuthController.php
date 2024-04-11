@@ -3,18 +3,14 @@
 namespace App\Http\Controllers\Auth; 
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Controllers\ApiController;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth; 
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\RegistraionRequest;
 use App\Repository\SignupRepository;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\LogBuilder;
 use App\Http\Requests\EmployerRegistrationRequest;
 use App\Http\Requests\OtpLoginRequest;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;  

@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Vendor\VendorController;  
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\User\UserController;
@@ -38,14 +39,32 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
 
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset');  // password reset 
+
+
+    Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
+
+
+
+
+    //  Route::post('password/reset', 'Auth\ResetPasswordController@reset');  // password reset 
+
+    //Route::prefix('password')->group(function () {
+     //   Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset.api');
+    //}); 
+
  
 
 });
  
 
-Route::group(['middleware' => 'auth:api'], function () { 
- 
+Route::group(['middleware' => 'auth:api'], function () {
+
+
+     Route::prefix('password')->group(function () {
+        Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
+    }); 
+
+
  
    Route::prefix('vendors')->group(function () {
     Route::post('/add', [VendorController::class, 'storeVendor'] )->name('add');
