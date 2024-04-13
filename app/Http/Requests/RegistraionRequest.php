@@ -23,19 +23,16 @@ class RegistraionRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required',
-            'email' => 'required|unique:users,email',
-            'date_of_birth' => 'required',
-            'user_type' => 'required',
-            'password' => 'required',
-        ];
+    return [
+        'email' => 'required|email|unique:users,email',
+        'mobile' => 'required|unique:users,mobile'
+    ];
     }
+
 
     public function messages()
     {
-        return [
-                'name.required' => 'Name can not be empty !',  
+        return [               
                 'email.required' => 'Name can not be empty !',  
                 'mobile.required' => 'Mobile number can not be empty !'                                
         ];
@@ -45,9 +42,9 @@ class RegistraionRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      =>  $validator->getMessageBag()->toArray()
-        ], 201));
+            'message'   => $validator->errors()->all(),
+            'data' => null
+        ], 200));
 
     }
 

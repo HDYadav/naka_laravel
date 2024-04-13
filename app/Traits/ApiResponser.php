@@ -15,7 +15,7 @@ trait ApiResponser{
     public function sucessResponse($message, $data=null, $status, $code=null){
 
         return response()->json([
-            'status'   => $status,
+            'sucess'   => $status,
             'message'   => $message,
             'data'      => $data
         ], $code);

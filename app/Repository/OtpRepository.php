@@ -53,11 +53,18 @@ class OtpRepository
         }
 
         /* Create a New OTP */
+        // return UserOtp::create([
+        //     'user_id' =>$user->id,
+        //     'otp' => rand(1231, 7879),
+        //     'expire_at' => $now->addMinutes(10)
+        // ]);
+
         return UserOtp::create([
-            'user_id' =>$user->id,
-            'otp' => rand(1231, 7879),
+            'user_id' => $user->id,
+            'otp' => 123456,
             'expire_at' => $now->addMinutes(10)
         ]);
+
     }
 
     /**

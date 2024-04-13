@@ -24,24 +24,17 @@ class EmployerRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'company_name' => 'required',
-            'company_size' => 'required',
-            'email' => 'required|unique:users,email',
-            'mobile' => 'required|unique:users,mobile',
-            'password' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'mobile' => 'required|unique:users,mobile'
         ];
     }
+
 
     public function messages()
     {
         return [
-            'name.required' => 'Name can not be empty !',
-            'company_name.required' => 'Company name can not be empty !',
-            'company_size.required' => 'Company size can not be empty !',
             'email.required' => 'Name can not be empty !',
-            'mobile.required' => 'Mobile number can not be empty !',
-            'password.required' => 'Password number can not be empty !'
+            'mobile.required' => 'Mobile number can not be empty !'
         ];
     }
 
@@ -49,8 +42,8 @@ class EmployerRegistrationRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      =>  $validator->getMessageBag()->toArray()
-        ], 201));
+            'message'   => $validator->errors()->all(),
+            'data' => null
+        ], 200));
     }
 }

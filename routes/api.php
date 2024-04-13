@@ -34,7 +34,7 @@ use App\Http\Controllers\User\UserController;
 Route::group(['middleware' => ['cors', 'json.response']], function () { 
    
     Route::post('/login', [ApiAuthController::class, 'login'] )->name('login.api');
-    Route::post('/register',[ApiAuthController::class, 'register'])->name('register.api'); 
+    Route::post('/user_register',[ApiAuthController::class, 'register'])->name('user_register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
 
@@ -48,9 +48,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
     //  Route::post('password/reset', 'Auth\ResetPasswordController@reset');  // password reset 
 
-    //Route::prefix('password')->group(function () {
-     //   Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset.api');
-    //}); 
+    Route::prefix('password')->group(function () {
+        Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
+    }); 
 
  
 
@@ -60,9 +60,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 Route::group(['middleware' => 'auth:api'], function () {
 
 
-     Route::prefix('password')->group(function () {
-        Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
-    }); 
+    //  Route::prefix('password')->group(function () {
+    //     Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
+    // }); 
 
 
  

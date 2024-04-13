@@ -25,24 +25,24 @@ class ApiAuthController extends ApiController
 { 
 
 public function register(RegistraionRequest $request, SignupRepository $signupRepository)
-{
+{ 
+ 
     try {
         DB::beginTransaction();
             $user =  $signupRepository->create($request); 
             $otpRepos = new OtpRepository; 
-
-            // Generate OTP
+ 
             $otp = $otpRepos->generate($user->email);
 
             $token = $user->createToken('Laravel Password Grant Client')->accessToken;  
-            $response =  $otp;
+            $response =  $otp; 
+           
+            $user['otp'] = $response['otp'];
 
-           // $response = ['uid' => $user->id, 'otp' => $otp, 'name' => $user->name, 'email' => $user->email, 'token' => $token]; 
-
-            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $response, true, 200)]);  
+            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]);  
             
         DB::commit();     
-        return $this->sucessResponse('Records successfully inserted', $response, true, 201);
+        return $this->sucessResponse('Records successfully inserted', $user, true, 201);
     } catch (QueryException $e) {
         DB::rollBack();
         LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse('Database error: ' . $e->getMessage(), 500)]);
@@ -74,12 +74,12 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             $token = $user->createToken('Laravel Password Grant Client')->accessToken;
             $response =  $otp;
 
-            // $response = ['uid' => $user->id, 'otp' => $otp, 'name' => $user->name, 'email' => $user->email, 'token' => $token]; 
+            $user['otp'] = $response['otp'];
 
-            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $response, true, 200)]);
+            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]);
 
             DB::commit();
-            return $this->sucessResponse('Records successfully inserted', $response, true, 201);
+            return $this->sucessResponse('Records successfully inserted', $user, true, 200);
         } catch (QueryException $e) {
             DB::rollBack();
             LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse('Database error: ' . $e->getMessage(), 500)]);
@@ -107,7 +107,7 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
         if (!$userOtp) {
             return $this->errorResponse('Your Otp is not correct', 422);
         } else if ($userOtp && $now->isAfter($userOtp->expire_at)) {
-            return $this->errorResponse('Your OTP has been expired', 402);
+            return $this->errorResponse('Your OTP has been expired', 401);
         }
 
         $user = User::whereId($request->user_id)->first();
@@ -117,17 +117,18 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             $userOtp->update([
                 'expire_at' => now()
             ]);
-
-            // Auth::login($user);
-
-            // $token = $this->tokenHeader($user->createToken('MyApp')->accessToken);
+             User::where('id', $user->id)->update(['otp_verified' => 1]);          
 
             $token = $user->createToken('MyApp')->accessToken;
 
-            return $this->sucessResponse('OTP has been sucessfully verified', $token, true, 201);
+            $user->makeHidden(['email_verified_at', 'updated_at', 'created_at']);  
+            $user['token'] = $token;  
+            $user['otp_verified'] = 1;
+
+            return $this->sucessResponse('OTP has been sucessfully verified', $user, true, 201);
         }
 
-        return $this->errorResponse('Your Otp is not correct', 402);
+        return $this->errorResponse('Your Otp is not correct', 401);
     }
 
 
@@ -141,12 +142,13 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
         
             if (Hash::check($request->password, $user->password)) {
                  $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                 $newAccessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
-               // $newAccessToken = $user->refreshToken;
-            
-                $response = ['uid'=>$user->id, 'name' => $user->name,'email' => $user->email, 'token' => $token, 'refreshToken'=> $newAccessToken ]; 
-                LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $response, true, 200)]); 
-                return $this->sucessResponse('your are looged in', $response, true, 200); 
+                // $newAccessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
+                $user->makeHidden(['email_verified_at','updated_at', 'created_at']); 
+
+                $user['token'] =   $token; 
+               
+                LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]); 
+                return $this->sucessResponse('your are looged in', $user, true, 200); 
                
             } else {
                 throw new Exception("Password mismatch", 422);

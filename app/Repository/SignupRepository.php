@@ -16,26 +16,22 @@ class SignupRepository implements UserRepositoryInterface
 
 
     private static $role_id = 7;  // role id 7 is for memeber 
-    
+
     public function create($request)
-    {  
-        $user =  User::create([           
+    {
+        $user =  User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'mobile' => $request->mobile,
             'dob' => $request->date_of_birth,
-            'user_type' => $request->user_type,
-            'password' => Hash::make($request->password),
-            'password_confirmation' => Hash::make($request->password),
-            
+            'user_type' => 1,
+            'password' => Hash::make($request->password) 
         ]);
-
-         
-
-       // $user->assignRole([self::$role_id]); // assign the role of registerd user
+        $user->makeHidden(['updated_at', 'created_at']);
 
         return $user;
     }
-
+ 
 
 
     public function employerCreate($request)
@@ -47,16 +43,14 @@ class SignupRepository implements UserRepositoryInterface
             'mobile' => $request->mobile,
             'email' => $request->email,          
             'user_type' => '2',
-            'password' => Hash::make($request->password),
-            'password_confirmation' => Hash::make($request->password),
+            'password' => Hash::make($request->password) 
 
         ]);
 
-
-
-        // $user->assignRole([self::$role_id]); // assign the role of registerd user
+        $user->makeHidden(['updated_at', 'created_at']);
 
         return $user;
+ 
     }
 
 
