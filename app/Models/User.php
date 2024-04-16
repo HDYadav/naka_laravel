@@ -28,7 +28,9 @@ class User extends Authenticatable
         'mobile',
         'user_type',
         'otp_verified',
-        'dob',   
+        'dob',
+        'company_name',
+        'company_size',
         'password',
     ];
 

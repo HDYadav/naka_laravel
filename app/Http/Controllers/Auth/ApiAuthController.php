@@ -68,6 +68,8 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             $user =  $signupRepository->employerCreate($request);
             $otpRepos = new OtpRepository;
 
+           // dd($user);
+
             // Generate OTP
             $otp = $otpRepos->generate($user->email);
 
@@ -138,23 +140,28 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
 
         try { 
         
-            $user = User::where('email', $request->email)->firstOrFail(); 
+            $user = User::where('email', $request->email)->where('otp_verified','1')->firstOrFail(); 
         
             if (Hash::check($request->password, $user->password)) {
                  $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                 // $newAccessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
-                $user->makeHidden(['email_verified_at','updated_at', 'created_at']); 
+                if($user->otp_verified == '1'){
+                     $user->makeHidden(['email_verified_at','updated_at', 'created_at', 'company_name', 'company_size', 'otp_verified']); 
+                }else{
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']); 
+                }                
 
                 $user['token'] =   $token; 
                
                 LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]); 
-                return $this->sucessResponse('your are looged in', $user, true, 200); 
+                return $this->sucessResponse('Login Sucessfully', $user, true, 200); 
                
             } else {
                 throw new Exception("Password mismatch", 422);
             }
-        } catch (ModelNotFoundException $e) { 
-            return $this->errorResponse('User does not exist', 422);
+        } catch (ModelNotFoundException $e) {
+            //  return $this->errorResponse('User does not exist or not verified', 422);
+           return $this->sucessResponse('User does not exist or not verified', $e, false, 422);
 
         } catch (Exception $e) { 
          // dd($e->getCode());
@@ -180,6 +187,31 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
         } catch (Exception $e) {
             return $this->errorResponse('An error occurred while logging out. Please try again later.', 500);
         }
+    }
+
+
+    public function resendOtp(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        if (!$user) {
+            return $this->errorResponse('User not found', 404);
+        }
+
+        // Generate a new OTP
+       // $otp = mt_rand(100000, 999999);
+
+       $otp = 123456;
+        // Save the new OTP to the user's record
+        UserOtp::updateOrCreate(
+            ['user_id' => $user->id],
+            ['otp' => $otp, 'expire_at' => now()->addMinutes(5)]
+        );
+
+        // Send the OTP to the user via email
+     //   Mail::to($user->email)->send(new OTPMail($otp));
+
+        return $this->sucessResponse('OTP resent successfully', $otp, true, 200);
     }
 
 

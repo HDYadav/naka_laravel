@@ -38,12 +38,41 @@ class EmployerRegistrationRequest extends FormRequest
         ];
     }
 
+    // public function failedValidation(Validator $validator)
+    // {
+    //     throw new HttpResponseException(response()->json([
+    //         'success'   => false,
+    //         'message'   => $validator->errors()->all(),
+    //         'data' => null
+    //     ], 200));
+    // }
+
     public function failedValidation(Validator $validator)
     {
+        $errors = $validator->errors();
+
+        if ($errors->has('email')) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => $errors->first('email'),
+                'data' => null
+            ], 200));
+        }
+
+        if ($errors->has('mobile')) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => $errors->first('mobile'),
+                'data' => null
+            ], 200));
+        }
+
+        // If no specific field error found, throw generic error
         throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => $validator->errors()->all(),
+            'success' => false,
+            'message' => 'Validation failed',
             'data' => null
         ], 200));
     }
+    
 }

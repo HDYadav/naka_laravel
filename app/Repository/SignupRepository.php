@@ -36,6 +36,8 @@ class SignupRepository implements UserRepositoryInterface
 
     public function employerCreate($request)
     {
+
+        //dd($request);
         $user =  User::create([
             'name' => $request->name,
             'company_name' => $request->company_name,

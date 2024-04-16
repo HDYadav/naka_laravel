@@ -36,6 +36,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/login', [ApiAuthController::class, 'login'] )->name('login.api');
     Route::post('/user_register',[ApiAuthController::class, 'register'])->name('user_register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
+
+    Route::post('/resent_otp', [ApiAuthController::class, 'resendOtp'])->name('resent_otp.api');
+
+
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
 
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
