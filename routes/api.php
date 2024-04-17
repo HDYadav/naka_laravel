@@ -44,10 +44,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
 
-
     Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
-
-
 
 
     //  Route::post('password/reset', 'Auth\ResetPasswordController@reset');  // password reset 
