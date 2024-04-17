@@ -135,20 +135,70 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
 
 
 
+    // public function login(UserLoginRequest $request)
+    // {
+    //     try {
+    //         $user = User::where('email', $request->email)->firstOrFail();
+
+    //         if (Hash::check($request->password, $user->password)) {
+
+    //             if($user->otp_verified == '1'){
+    //                 return $this->sucessResponse('OTP not verified', $user, true, 200);
+    //             }
+
+
+    //             $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+    //           //  dd($user->user_type);
+
+    //             // Hide unnecessary fields based on OTP verification status
+    //             $fieldsToHide = ($user->user_type === '2') ?
+    //             ['email_verified_at', 'updated_at', 'created_at', 'company_name', 'company_size', 'otp_verified'] :
+    //             ['email_verified_at', 'updated_at', 'created_at', 'dob', 'otp_verified'];
+
+    //             $user->makeHidden($fieldsToHide); 
+
+
+    //             $user['token'] = $token;
+
+    //             LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('You are logged in', $user, true, 200)]);
+    //             return $this->sucessResponse('Login Successfully', $user, true, 200);
+    //         } else {
+    //             throw new Exception("Password mismatch", 401);
+    //         }
+    //     } catch (ModelNotFoundException $e) {
+    //         return $this->errorResponse('User does not exist or not verified', 404);
+    //     } catch (Exception $e) {
+    //         return $this->errorResponse($e->getMessage(), 500);
+    //     }
+    // }
+
+
+
+
 
     public function login (UserLoginRequest $request) {
 
         try { 
         
-            $user = User::where('email', $request->email)->where('otp_verified','1')->firstOrFail(); 
+            $user = User::where('email', $request->email)->firstOrFail(); 
         
             if (Hash::check($request->password, $user->password)) {
+
+                if ($user->otp_verified != '1') {
+                   return $this->sucessResponse('OTP not verified', null, false, 200);
+
+                  //  throw new Exception("Otp not verified", 200);
+
+                }
+
                  $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                // $newAccessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
-                if($user->otp_verified == '1'){
-                     $user->makeHidden(['email_verified_at','updated_at', 'created_at', 'company_name', 'company_size', 'otp_verified']); 
+
+               
+      
+                if($user->user_type == '1'){
+                     $user->makeHidden(['email_verified_at','updated_at', 'created_at', 'company_name', 'company_size']); 
                 }else{
-                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']); 
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at','dob']); 
                 }                
 
                 $user['token'] =   $token; 
