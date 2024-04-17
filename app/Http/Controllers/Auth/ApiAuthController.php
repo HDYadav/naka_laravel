@@ -184,19 +184,19 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
         
             if (Hash::check($request->password, $user->password)) {
 
+                if ($user->user_type == '1') {
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'company_name', 'company_size']);
+                } else {
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']);
+                }      
+
+
                 if ($user->otp_verified != '1') {
-                   return $this->sucessResponse('OTP not verified', ['otp_verified'=>'0'], false, 200); 
+                   return $this->sucessResponse('OTP not verified',$user, false, 200); 
                 }
 
-                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-
-               
-      
-                if($user->user_type == '1'){
-                     $user->makeHidden(['email_verified_at','updated_at', 'created_at', 'company_name', 'company_size']); 
-                }else{
-                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at','dob']); 
-                }                
+                 $token = $user->createToken('Laravel Password Grant Client')->accessToken; 
+                         
 
                 $user['token'] =   $token; 
                
