@@ -185,10 +185,7 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             if (Hash::check($request->password, $user->password)) {
 
                 if ($user->otp_verified != '1') {
-                   return $this->sucessResponse('OTP not verified', null, false, 200);
-
-                  //  throw new Exception("Otp not verified", 200);
-
+                   return $this->sucessResponse('OTP not verified', ['otp_verified'=>'0'], false, 200); 
                 }
 
                  $token = $user->createToken('Laravel Password Grant Client')->accessToken;
