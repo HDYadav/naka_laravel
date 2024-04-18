@@ -44,7 +44,7 @@ class OtpRepository
         //  dd($user->id);
 
         /* User Does not Have Any Existing OTP */
-        $userOtp = UserOtp::where('user_id', $user->id)->select('user_id', 'otp')->latest()->first();
+        $userOtp = UserOtp::where('user_id', $user->id)->select('user_id', 'otp')->latest()->orderBy('id','desc')->first();
 
         $now = now();
 

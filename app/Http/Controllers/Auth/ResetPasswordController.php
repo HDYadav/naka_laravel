@@ -37,11 +37,15 @@ class ResetPasswordController extends ApiController
                 // $response = ['uid' => $user->id, 'email' => $user->email, 'token' => $token];
                 $user['otp'] = $otp->otp;
 
-                $user->makeHidden(['email_verified_at', 'updated_at', 'created_at']);
+                if ($user->user_type == '1') {
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'company_name', 'company_size']);
+                } else {
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']);
+                }
                // $user['token'] = $token;  
 
-                LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('password reset', $user, true, 200)]);
-                return $this->sucessResponse('password reset', $user, true, 200);
+                LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('OTP send on your EmailId', $user, true, 200)]);
+                return $this->sucessResponse('OTP send on your EmailId', $user, true, 200);
             } else {
                 throw new Exception("user mismatch", 422);
             }
@@ -56,8 +60,7 @@ class ResetPasswordController extends ApiController
     public function reset(Request $request)
     {
         $request->validate([             
-            'email' => 'required|email',
-            'otp' => 'required',
+            'email' => 'required|email',            
             'password' => 'required|min:8',
         ]);
 
@@ -71,34 +74,45 @@ class ResetPasswordController extends ApiController
 
         $user = User::where('email', $request->email)->first();
 
+       // dd($user);
+
         if (!$user) {
             return response()->json(['message' => 'Unable to find a user with that email'], 404);
         }
 
 
-        $userOtp   = UserOtp::where('user_id', $user->id)->where('otp', $request->otp)->first();
+        // $userOtp   = UserOtp::where('user_id', $user->id)->where('otp', $request->otp)->first(); 
+        // $now = now();
+        // if (!$userOtp) {
+        //     return $this->errorResponse('Your Otp is not correct', 422);
+        // } else if ($userOtp && $now->isAfter($userOtp->expire_at)) {
+        //     return $this->errorResponse('Your OTP has been expired', 401);
+        // }
 
-      // dd($userOtp);
+        $otpRepos = new OtpRepository;
 
-        $now = now();
-        if (!$userOtp) {
-            return $this->errorResponse('Your Otp is not correct', 422);
-        } else if ($userOtp && $now->isAfter($userOtp->expire_at)) {
-            return $this->errorResponse('Your OTP has been expired', 401);
-        }
-
-
+        $generated = $otpRepos->generate($user->email); 
         
 
         // Perform password reset
         $user->password = bcrypt($request->password);
         $response = $user->save();
 
-      
+        $user['otp'] = $generated->otp;
+
+
+        if ($user->user_type == '1') {
+            $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'company_name', 'company_size']);
+        } else {
+            $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']);
+        }
+        
+
         // Check response for potential errors
         switch ($response) {
             case Password::PASSWORD_RESET:
-                return response()->json(['message' => 'Password reset successfully'], 200);
+               return  $this->sucessResponse('Password updated successfully', $user, true, 200);
+               // return response()->json(['message' => 'Password updated successfully'], 200);
             case Password::INVALID_USER:
                 return response()->json(['message' => 'Unable to find a user with that email'], 404);
             case Password::INVALID_TOKEN:

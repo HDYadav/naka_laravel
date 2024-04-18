@@ -37,15 +37,45 @@ class OtpLoginRequest extends FormRequest
         ];
     }
 
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ], 201));
+        $errors = $validator->errors();
 
+        if ($errors->has('user_id')) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => $errors->first('user_id'),
+                'data' => null
+            ], 200));
+        }
+
+        if ($errors->has('otp')) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => $errors->first('otp'),
+                'data' => null
+            ], 200));
+        }
+
+        // If no specific field error found, throw generic error
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation failed',
+            'data' => null
+        ], 200));
     }
+
+
+    // public function failedValidation(Validator $validator)
+    // {
+    //     throw new HttpResponseException(response()->json([
+    //         'success'   => false,
+    //         'message'   => 'Validation errors',
+    //         'data'      => $validator->errors()
+    //     ], 201));
+
+    // }
 
 
 }

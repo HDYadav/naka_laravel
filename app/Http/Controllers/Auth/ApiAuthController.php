@@ -105,14 +105,27 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
         /* Validation Logic */
         $userOtp   = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->first();
 
-        $now = now();
+        $now = now(); 
+      
         if (!$userOtp) {
             return $this->errorResponse('Your Otp is not correct', 422);
         } else if ($userOtp && $now->isAfter($userOtp->expire_at)) {
             return $this->errorResponse('Your OTP has been expired', 401);
         }
 
+       
+ 
+
         $user = User::whereId($request->user_id)->first();
+
+
+        if ($user->user_type == '1') {
+            $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'company_name', 'company_size']);
+        } else {
+            $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']);
+        }    
+
+
 
         if ($user) {
 
@@ -121,13 +134,14 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             ]);
              User::where('id', $user->id)->update(['otp_verified' => 1]);          
 
-            $token = $user->createToken('MyApp')->accessToken;
+          //  $token = $user->createToken('Login with Otp')->accessToken;
 
             $user->makeHidden(['email_verified_at', 'updated_at', 'created_at']);  
-            $user['token'] = $token;  
+           // $user['token'] = $token;  
             $user['otp_verified'] = 1;
+            $user['otp'] = $userOtp ->otp;
 
-            return $this->sucessResponse('OTP has been sucessfully verified', $user, true, 201);
+            return $this->sucessResponse('OTP verified successfully', $user, true, 201);
         }
 
         return $this->errorResponse('Your Otp is not correct', 401);
