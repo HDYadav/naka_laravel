@@ -103,9 +103,11 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
     {
 
         /* Validation Logic */
-        $userOtp   = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->first();
+        $userOtp   = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->orderBy('id','desc')->first();
 
         $now = now(); 
+
+      // dd($userOtp->expire_at);
       
         if (!$userOtp) {
             return $this->errorResponse('Your Otp is not correct', 422);
@@ -132,6 +134,8 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             $userOtp->update([
                 'expire_at' => now()
             ]);
+
+            
              User::where('id', $user->id)->update(['otp_verified' => 1]);          
 
           //  $token = $user->createToken('Login with Otp')->accessToken;
