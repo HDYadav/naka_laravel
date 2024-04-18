@@ -79,7 +79,7 @@ class AuthOtpController extends ApiController
     {
 
         /* Validation Logic */
-        $userOtp   = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->first();
+        $userOtp   = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->orderBy('id', 'desc')->first();
 
         $now = now();
         if (!$userOtp) {
