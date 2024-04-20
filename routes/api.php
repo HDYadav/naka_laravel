@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Vendor\VendorController;  
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Jobs\JobsCotroller;
 use App\Http\Controllers\User\UserController;
 
 /*
@@ -36,19 +37,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/login', [ApiAuthController::class, 'login'] )->name('login.api');
     Route::post('/user_register',[ApiAuthController::class, 'register'])->name('user_register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
-
     Route::post('/resent_otp', [ApiAuthController::class, 'resendOtp'])->name('resent_otp.api');
-
-
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
-
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
-
     Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
-
-
-    //  Route::post('password/reset', 'Auth\ResetPasswordController@reset');  // password reset 
-
     Route::prefix('password')->group(function () {
         Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
     }); 
@@ -61,10 +53,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 Route::group(['middleware' => 'auth:api'], function () {
 
 
-    //  Route::prefix('password')->group(function () {
-    //     Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
-    // }); 
+ 
 
+    Route::prefix('jobs')->group(function () {
+        Route::get('/get_all', [JobsCotroller::class, 'getAll'])->name('get_all');
+    }); 
 
  
    Route::prefix('vendors')->group(function () {
