@@ -41,22 +41,25 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
     Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
+
     Route::prefix('password')->group(function () {
         Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
-    }); 
-
+    });  
  
 
 });
  
 
-Route::group(['middleware' => 'auth:api'], function () {
-
-
+Route::group(['middleware' => 'auth:api'], function () { 
  
 
     Route::prefix('jobs')->group(function () {
         Route::get('/get_all', [JobsCotroller::class, 'getAll'])->name('get_all');
+        Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
+
+        Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
+
+
     }); 
 
  

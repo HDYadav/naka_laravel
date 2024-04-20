@@ -12,6 +12,7 @@ use App\Models\Model\CompanyList;
 use App\Models\Model\Education;
 use App\Models\Model\EmployeementType;
 use App\Models\Model\Experience;
+use App\Models\Model\Job;
 use App\Models\Model\Jobposition;
 use App\Models\Model\SalaryType;
 use App\Models\Model\Skill;
@@ -59,4 +60,50 @@ class JobsCotroller extends ApiController
        
 
     }
+
+
+    public function getCity(Request $request)
+    { 
+
+        $array = []; 
+        $city = City::where('state_id', $request->state_id)->select('id', 'name')->get(); 
+
+        $array = [ 
+            'city' => $city
+            ];
+
+        return $this->sucessResponse(null, $array, true, 201);
+    }
+
+    public function jobCreateOrUpdate(Request $request)
+    {
+        $jobData = [
+            'jobPosiiton' => $request->jobPosiiton,
+            'workPlace' => $request->workPlace,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'company' => $request->company,
+            'employeementType' => $request->employeementType,
+            'skills' => $request->skills,
+            'totalVacancy' => $request->totalVacancy,
+            'deadline' => $request->deadline,
+            'minSalary' => $request->minSalary,
+            'maxSalary' => $request->maxSalary,
+            'salaryType' => $request->salaryType,
+            'experience' => $request->experience,
+            'promote' => $request->promote,
+            'description' => $request->description
+        ];
+
+        // Find the job if it exists, or create a new one
+        $job = Job::updateOrCreate(['id' => $request->id], $jobData); 
+
+        return $this->sucessResponse('Records sucessfully created', ['id' => $job->id], true, 201);
+
+        
+    }
+
+
+
 }
