@@ -119,11 +119,12 @@ class JobsCotroller extends ApiController
     {
 
         $array = [];
-        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'cl.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace') 
+        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'cl.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType') 
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
             ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->get(); 
         
        // $array = ['jobPosition'=> $jobs  ];
