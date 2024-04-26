@@ -83,6 +83,9 @@ class JobsCotroller extends ApiController
 
     public function jobCreateOrUpdate(Request $request)
     {
+      //  dd($request->skills);
+        $skills = str_replace(['[', ']'], '', $request->skills);
+       
         $jobData = [
             'jobPosiiton' => $request->jobPosiiton,
             'workPlace' => $request->workPlace,
@@ -92,7 +95,7 @@ class JobsCotroller extends ApiController
             'company' => $request->company,
             'education' => $request->education,
             'employeementType' => $request->employeementType,
-            'skills' => $request->skills,
+            'skills' => $skills,
             'totalVacancy' => $request->totalVacancy,
             'deadline' => $request->deadline,
             'minSalary' => $request->minSalary,
