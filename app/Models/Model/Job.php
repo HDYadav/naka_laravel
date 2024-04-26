@@ -17,6 +17,7 @@ class Job extends Model
         'state',
         'city',
         'company',
+        'education',
         'employeementType',
         'skills',
         'totalVacancy',

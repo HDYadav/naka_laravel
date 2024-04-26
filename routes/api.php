@@ -56,9 +56,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('jobs')->group(function () {
         Route::get('/get_all', [JobsCotroller::class, 'getAll'])->name('get_all');
         Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
-
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
+        Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
 
+        Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');
 
     }); 
 
