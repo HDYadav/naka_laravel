@@ -23,6 +23,7 @@ use EmptyIterator;
 use Illuminate\Database\QueryException as DatabaseQueryException;
 use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\UserData; 
 
 
 class JobsCotroller extends ApiController
@@ -85,6 +86,8 @@ class JobsCotroller extends ApiController
     {
       //  dd($request->skills);
         $skills = str_replace(['[', ']'], '', $request->skills);
+
+        $user = UserData::getUserFrToken($request);  
        
         $jobData = [
             'jobPosiiton' => $request->jobPosiiton,
@@ -92,7 +95,7 @@ class JobsCotroller extends ApiController
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'company' => $request->company,
+            'company' => $user->id,
             'education' => $request->education,
             'employeementType' => $request->employeementType,
             'skills' => $skills,
@@ -116,20 +119,18 @@ class JobsCotroller extends ApiController
 
 
     public function getAllJobs()
-    {
-
-        $array = [];
-        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'cl.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType') 
+    { 
+        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'cl.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city') 
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
             ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
+            ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->get(); 
-        
-       // $array = ['jobPosition'=> $jobs  ];
 
-        return $this->sucessResponse(null, $jobs, true, 201);
+         return $this->sucessResponse(null, $jobs, true, 201); 
+
     }
 
 
@@ -181,6 +182,10 @@ class JobsCotroller extends ApiController
         foreach ($jobs as $job) {
             $job->skills = $this->getSkills($job->skills);
         }
+
+      //  $jobs = json_encode($jobs);
+
+        
 
         return $this->sucessResponse(null, $jobs, true, 201);
     }
