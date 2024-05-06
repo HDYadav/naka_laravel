@@ -134,7 +134,8 @@ class JobsCotroller extends ApiController
             'salaryType' => $request->salaryType,
             'experience' => $request->experience,
             'promote' => $request->promote, 
-            'description' => $request->description
+            'description' => $request->description,
+            'created_by' =>  $user->id
         ];
 
         // Find the job if it exists, or create a new one
