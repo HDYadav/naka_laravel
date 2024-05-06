@@ -211,6 +211,8 @@ class JobsCotroller extends ApiController
                 'j.skills'
             )
             ->get(); 
+
+            dd($jobs);
          
          
         foreach ($jobs as $job) {
