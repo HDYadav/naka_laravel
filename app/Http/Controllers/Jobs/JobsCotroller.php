@@ -175,7 +175,7 @@ class JobsCotroller extends ApiController
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('educations as ed', 'ed.id', '=', 'j.education')
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
-          //  ->join('users as u', 'u.id', '=', 'j.company')
+            ->join('users as u', 'u.id', '=', 'j.created_by')
             ->where('j.id', '=', $id)
             ->select(
                 'j.id',
