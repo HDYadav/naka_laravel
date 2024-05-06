@@ -213,15 +213,15 @@ class JobsCotroller extends ApiController
             ->get();
 
         // Retrieve skills for each job
-        foreach ($jobs as $job) {
-            $job->skills = $this->getSkills($job->skills);
-        }
+        // foreach ($jobs as $job) {
+        //     $job->skills = $this->getSkills($job->skills);
+        // }
 
       //  $jobs = json_encode($jobs);
 
         
 
-        return $this->sucessResponse(null, $job, true, 201);
+        return $this->sucessResponse(null, $jobs, true, 201);
     }
 
     protected function getSkills($skills)
