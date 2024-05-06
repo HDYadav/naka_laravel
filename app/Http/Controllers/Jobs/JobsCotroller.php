@@ -238,14 +238,15 @@ class JobsCotroller extends ApiController
 
     public function jobOpenings(Request $request)
     {
-
-        //  dd($request);
-
+ 
         $jobsQuery = DB::table('jobs as j')
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
-            ->join('experiences as ex', 'ex.id', '=', 'j.experience');
+            ->join('job_states as js', 'js.id', '=', 'j.state')
+            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace');
  
         if (!empty($request->search) ) {
             $searchTerm = '%' . $request->search . '%';
@@ -266,7 +267,7 @@ class JobsCotroller extends ApiController
             }
         }
 
-        
+
 
         // Check if sortBy parameter exists and is a string
         if (!empty($request->sortBy) && is_string($request->sortBy)) {
@@ -296,14 +297,67 @@ class JobsCotroller extends ApiController
         } 
 
 
-        $jobs = $jobsQuery->select('jp.name as jobPosition')->get();
- 
+        $jobs = $jobsQuery->select('jp.name as jobPosition', 'cl.name as company', 'jc.name as city', 'js.name as state', 
+        'et.name as employeementType', 'wp.name as workPlace',
+            'j.created_at as date',
+            'j.isFavourite')->get(); 
  
 
         return $this->sucessResponse(null, $jobs, true, 201);
     }
 
 
+
+
+    public function addFavourite(Request $request)
+    {
+        $fav = $request->isFavourite ? 1 : 0; 
+
+        $jobData = [
+            'isFavourite' => $request->isFavourite,
+        ];
+
+        $job = Job::updateOrCreate(['id' => $request->id], $jobData);
+
+        return $this->sucessResponse(null, ['id' => $job->id], true, 201);
+    }
+
+
+
+
+    public function getFavourite(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        if ($user) {
+            $jobsQuery = DB::table('jobs as j')
+            ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
+            ->join('job_cities as jc', 'jc.id', '=', 'j.city')
+            ->join('job_states as js', 'js.id', '=', 'j.state')
+            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->where('j.isFavourite','true')
+            ->where('j.company', $user->id)
+                ->select(
+                    'jp.name as jobPosiition',
+                    'cl.name as company',
+                    'jc.name as city',
+                    'js.name as state',
+                    'et.name as employmentType',
+                    'wp.name as workPlace',
+                    'j.created_at as date',
+                    'j.isFavourite'
+                )->get();
+
+            return $this->sucessResponse(null, $jobsQuery, true, 201);
+        } else {
+            // Handle case when user is not found
+            return $this->errorResponse("User not found", [], false, 404);
+        }
+
+    }
 
 
 

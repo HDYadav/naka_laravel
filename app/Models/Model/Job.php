@@ -27,7 +27,8 @@ class Job extends Model
         'salaryType',
         'experience',
         'promote',
-        'description'
+        'description',
+        'isFavourite'
     ];
     
 }
