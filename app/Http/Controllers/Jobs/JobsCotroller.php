@@ -164,14 +164,25 @@ class JobsCotroller extends ApiController
 
     public function getAllJobsDetails($id)
     {
-        $jobs = DB::table('jobs as j')
+        $jobs = DB::table('jobs as j')           
+            ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->join('job_states as js', 'js.id', '=', 'j.state')
+            ->join('job_cities as jc', 'jc.id', '=', 'j.city')
+            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
+            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+            ->join('educations as ed', 'ed.id', '=', 'j.education')
+            ->join('promotes as pt', 'pt.id', '=', 'j.promote')
+            ->join('users as u', 'u.id', '=', 'j.company')
             ->where('j.id', '=', $id)
             ->select(
                 'j.id',
-                 'j.description',
-                 'j.created_at as crated_date',
+                'j.description',
+                'j.created_at as crated_date',
                 'jp.id as jobPosiitonId',
-                'jp.name as jobPosiiton', 
+                'jp.name as jobPosiiton',
                 'u.company_size as employe_count',
                 'u.about as about_company',
                 'u.email',
@@ -199,27 +210,12 @@ class JobsCotroller extends ApiController
                 'pt.id as promoteId',
                 'j.skills'
             )
-            ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
-            ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
-            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
-            ->join('job_states as js', 'js.id', '=', 'j.state')
-            ->join('job_cities as jc', 'jc.id', '=', 'j.city')
-            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
-            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
-            ->join('educations as ed', 'ed.id', '=', 'j.education')
-            ->join('promotes as pt', 'pt.id', '=', 'j.promote')
-            ->join('users as u', 'u.id', '=', 'j.company')
-            ->get();
-
-        // Retrieve skills for each job
+            ->get(); 
+         
+         
         foreach ($jobs as $job) {
             $job->skills = $this->getSkills($job->skills);
-        }
-
-      //  $jobs = json_encode($jobs);
-
-        
+        } 
 
         return $this->sucessResponse(null, $jobs, true, 201);
     }
