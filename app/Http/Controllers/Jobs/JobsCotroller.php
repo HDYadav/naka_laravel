@@ -210,9 +210,7 @@ class JobsCotroller extends ApiController
                 'pt.id as promoteId',
                 'j.skills'
             )
-            ->get(); 
-
-            dd($jobs);
+            ->get();  
          
          
         foreach ($jobs as $job) {
