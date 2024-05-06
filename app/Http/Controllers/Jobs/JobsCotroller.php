@@ -28,10 +28,7 @@ use App\Helpers\UserData;
 
 class JobsCotroller extends ApiController
 {
-    public function getAll(Request $request){
-
- //  dd($request->state_id);
-
+    public function getAll(Request $request){ 
         $array = [];
         $jobpostiong =  Jobposition::select('id','name')->get();
         $state =  State::select('id', 'name')->get();
@@ -61,12 +58,43 @@ class JobsCotroller extends ApiController
                  'workplace' => $workplace
                 ];
 
-        return $this->sucessResponse(null, $array, true, 201);
-
-
-       
+        return $this->sucessResponse(null, $array, true, 201); 
 
     }
+
+
+
+
+    public function empFilter(Request $request)
+    {
+        $array = [];
+
+        $state =  State::select('id', 'name')->get();
+        $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
+        $emp_type =  EmployeementType::select('id', 'name')->get();
+        $experience = Experience::select('id', 'name')->get();
+        $workplace = WorkPlace::select('id', 'name')->get();
+
+         // $companyList =  CompanyList::select('id', 'name')->get();
+        //   $jobpostiong =  Jobposition::select('id', 'name')->get();
+        //  $skills =  Skill::select('id', 'name')->get();       
+        // $salaryType = SalaryType::select('id', 'name')->get();
+        // $education = Education::select('id', 'name')->get();
+        // $promote = Promote::select('id', 'name')->get();
+        
+
+
+        $array = [
+            'employeementType' => $emp_type,
+            'state' => $state,
+            'city' => $city,
+            'experience' => $experience,
+            'workplace' => $workplace, 
+        ];
+
+        return $this->sucessResponse(null, $array, true, 201);
+    }
+
 
 
     public function getCity(Request $request)
@@ -140,8 +168,13 @@ class JobsCotroller extends ApiController
             ->where('j.id', '=', $id)
             ->select(
                 'j.id',
+                 'j.description',
+                 'j.created_at as crated_date',
                 'jp.id as jobPosiitonId',
-                'jp.name as jobPosiiton',
+                'jp.name as jobPosiiton', 
+                'u.company_size as employe_count',
+                'u.about as about_company',
+                'u.email',
                 'wp.id as workPlaceId',
                 'wp.name as workPlace',
                 'j.country',
@@ -176,6 +209,7 @@ class JobsCotroller extends ApiController
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('educations as ed', 'ed.id', '=', 'j.education')
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
+            ->join('users as u', 'u.id', '=', 'j.company')
             ->get();
 
         // Retrieve skills for each job
@@ -199,6 +233,76 @@ class JobsCotroller extends ApiController
 
         return $skill;
     }
+
+
+
+    public function jobOpenings(Request $request)
+    {
+
+        //  dd($request);
+
+        $jobsQuery = DB::table('jobs as j')
+            ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
+            ->join('job_cities as jc', 'jc.id', '=', 'j.city')
+            ->join('experiences as ex', 'ex.id', '=', 'j.experience');
+ 
+        if (!empty($request->search) ) {
+            $searchTerm = '%' . $request->search . '%';
+            $jobsQuery->where('jp.name', 'like',
+                $searchTerm
+            );
+        }
+
+
+        if (!empty($request->datePosted) && is_string($request->datePosted)) {
+            $currentDate = now();
+            if ($request->datePosted === 'Past 24 Hour') {
+                $jobsQuery->where('j.created_at', '>=', $currentDate->subDay());
+            } elseif ($request->datePosted === 'Past Week') {
+                $jobsQuery->where('j.created_at', '>=', $currentDate->subWeek());
+            } elseif ($request->datePosted === 'Past Month') {
+                $jobsQuery->where('j.created_at', '>=', $currentDate->subMonth());
+            }
+        }
+
+        
+
+        // Check if sortBy parameter exists and is a string
+        if (!empty($request->sortBy) && is_string($request->sortBy)) {
+            if ($request->sortBy === 'Most Recent') {
+                // Add logic to sort by most recent
+                $jobsQuery->orderBy('j.created_at', 'desc');
+            } elseif ($request->sortBy === 'Most Relevant') {
+                // Add logic to sort by most relevant
+                // You may adjust this according to your relevance criteria
+                // For example, you might order by a relevance score
+                // $jobsQuery->orderBy('relevance_score', 'desc');
+                // Or by a rank based on relevance algorithms
+                // $jobsQuery->orderBy('relevance_rank', 'desc');
+            }
+        }
+
+        if (!empty($request->employmentType) && is_array($request->employmentType)) {
+            $jobsQuery->whereIn('j.employeementType', $request->employmentType);
+        }
+
+        if (!empty($request->jobLocation) && is_array($request->jobLocation)) {
+            $jobsQuery->whereIn('j.city', $request->jobLocation);
+        }
+
+        if (!empty($request->experience) && is_array($request->experience)) {
+            $jobsQuery->whereIn('j.experience', $request->experience);
+        } 
+
+
+        $jobs = $jobsQuery->select('jp.name as jobPosition')->get();
+ 
+ 
+
+        return $this->sucessResponse(null, $jobs, true, 201);
+    }
+
 
 
 
