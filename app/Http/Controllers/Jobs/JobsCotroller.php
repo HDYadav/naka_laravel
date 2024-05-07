@@ -70,19 +70,19 @@ class JobsCotroller extends ApiController
         $array = [];
 
         $state =  State::select('id', 'name')->get();
-        $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
+      //  $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
         $emp_type =  EmployeementType::select('id', 'name')->get();
         $experience = Experience::select('id', 'name')->get();
         $workplace = WorkPlace::select('id', 'name')->get();
 
-         // $companyList =  CompanyList::select('id', 'name')->get();
+        // $companyList =  CompanyList::select('id', 'name')->get();
         //   $jobpostiong =  Jobposition::select('id', 'name')->get();
         //  $skills =  Skill::select('id', 'name')->get();       
         // $salaryType = SalaryType::select('id', 'name')->get();
         // $education = Education::select('id', 'name')->get();
         // $promote = Promote::select('id', 'name')->get();
-        
 
+        $city= $this->getAllCities();
 
         $array = [
             'employeementType' => $emp_type,
@@ -94,6 +94,18 @@ class JobsCotroller extends ApiController
 
         return $this->sucessResponse(null, $array, true, 201);
     }
+
+
+    protected function getAllCities()
+    {
+         
+        $cities =  City::select('id','name as cityName')->get();
+
+       // $skill = $skills->makeHidden(['created_at', 'updated_at']);
+
+        return $cities;
+    }
+
 
 
 
