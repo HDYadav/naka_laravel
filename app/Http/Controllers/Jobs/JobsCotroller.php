@@ -347,7 +347,7 @@ class JobsCotroller extends ApiController
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->where('j.isFavourite','true')
-            ->where('j.company', $user->id)
+            ->where('j.created_by', $user->id)
                 ->select(
                     'jp.name as jobPosiition',
                     'cl.name as company',
