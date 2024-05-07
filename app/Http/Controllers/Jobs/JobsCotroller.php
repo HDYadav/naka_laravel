@@ -86,8 +86,7 @@ class JobsCotroller extends ApiController
 
         $array = [
             'employeementType' => $emp_type,
-            'state' => $state,
-            'city' => $city,
+            'jobLocation' => $city,
             'experience' => $experience,
             'workplace' => $workplace, 
         ];
