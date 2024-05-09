@@ -367,9 +367,15 @@ class JobsCotroller extends ApiController
                 'et.name as employmentType',
                 'wp.name as workPlace',
                 'j.created_at as date',
-                DB::raw('j.isFavourite = "true" as isFavourite')
+                'j.isFavourite'                
             )
             ->get();
+
+            foreach ($jobsQuery as $job) {
+                // Convert isFavourite to boolean
+                $job->isFavourite = $job->isFavourite == 1 ? true : false;
+            }
+
 
 
 
