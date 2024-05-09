@@ -138,10 +138,10 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             
              User::where('id', $user->id)->update(['otp_verified' => 1]);          
 
-          //  $token = $user->createToken('Login with Otp')->accessToken;
+            $token = $user->createToken('Login with Otp')->accessToken;
 
             $user->makeHidden(['email_verified_at', 'updated_at', 'created_at']);  
-           // $user['token'] = $token;  
+            $user['token'] = $token;  
             $user['otp_verified'] = 1;
             $user['otp'] = $userOtp ->otp;
 
