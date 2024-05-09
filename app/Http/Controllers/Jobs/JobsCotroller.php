@@ -346,18 +346,20 @@ class JobsCotroller extends ApiController
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
-            ->where('j.isFavourite','true')
+            ->where('j.isFavourite', 'true')
             ->where('j.created_by', $user->id)
-                ->select(
-                    'jp.name as jobPosiition',
-                    'cl.name as company',
-                    'jc.name as city',
-                    'js.name as state',
-                    'et.name as employmentType',
-                    'wp.name as workPlace',
-                    'j.created_at as date',
-                    'j.isFavourite'
-                )->get();
+            ->select(
+                'jp.name as jobPosiition',
+                'cl.name as company',
+                'jc.name as city',
+                'js.name as state',
+                'et.name as employmentType',
+                'wp.name as workPlace',
+                'j.created_at as date',
+                DB::raw('CAST(j.isFavourite AS UNSIGNED) as isFavourite')
+            )
+            ->get();
+
 
             return $this->sucessResponse(null, $jobsQuery, true, 201);
         } else {
