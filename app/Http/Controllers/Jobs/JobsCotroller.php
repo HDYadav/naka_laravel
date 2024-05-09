@@ -346,8 +346,7 @@ class JobsCotroller extends ApiController
             ->join('job_states as js', 'js.id', '=', 'j.state')
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
-            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
-            ->where('j.isFavourite', '1')
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace') 
             ->where('j.created_by', $user->id)
             ->select(
                 'jp.name as jobPosiition',
@@ -357,7 +356,7 @@ class JobsCotroller extends ApiController
                 'et.name as employmentType',
                 'wp.name as workPlace',
                 'j.created_at as date',
-                DB::raw('CASE WHEN j.isFavourite = "1" THEN true ELSE false END as isFavourite')
+                DB::raw('j.isFavourite = "true" as isFavourite')
             )
             ->get();
 
