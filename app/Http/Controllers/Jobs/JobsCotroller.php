@@ -302,25 +302,26 @@ class JobsCotroller extends ApiController
 
         if (!empty($request->experience) && is_array($request->experience)) {
             $jobsQuery->whereIn('j.experience', $request->experience);
-        } 
+        }
 
 
-        $jobs = $jobsQuery->select('j.id','jp.name as jobPosition', 'cl.name as company', 'jc.name as city', 'js.name as state', 
-        'et.name as employeementType', 'wp.name as workPlace',
-            'j.created_at as date'
-            )->get();
+        $jobs = $jobsQuery->select(
+            'j.id',
+            'jp.name as jobPosition',
+            'cl.name as company',
+            'jc.name as city',
+            'js.name as state',
+            'et.name as employeementType',
+            'wp.name as workPlace',
+            'j.created_at as date',
+            'j.isFavourite' // Include the isFavourite field
+        )->get();
 
         foreach ($jobs as $job) {
-
-            if($job->isFavourite == 1){
-                $job->isFavourite = true;
-            }else{
-                $job->isFavourite = false;
-            }
-            //$job->skills = $this->getSkills($job->skills);
-        } 
-
- 
+            // Convert isFavourite to boolean
+            $job->isFavourite = $job->isFavourite == 1 ? true : false;
+        }
+             
 
         return $this->sucessResponse(null, $jobs, true, 201);
     }
