@@ -255,7 +255,7 @@ class JobsCotroller extends ApiController
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
-            ->where('j.isFavourite', '1') ;
+            ->where('j.isFavourite', '0') ;
  
         if (!empty($request->search) ) {
             $searchTerm = '%' . $request->search . '%';
