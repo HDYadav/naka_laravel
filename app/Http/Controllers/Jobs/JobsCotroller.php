@@ -254,8 +254,7 @@ class JobsCotroller extends ApiController
             ->join('job_states as js', 'js.id', '=', 'j.state')
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
-            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
-            ->where('j.isFavourite', '0') ;
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace') ;
  
         if (!empty($request->search) ) {
             $searchTerm = '%' . $request->search . '%';
@@ -309,7 +308,7 @@ class JobsCotroller extends ApiController
         $jobs = $jobsQuery->select('j.id','jp.name as jobPosition', 'cl.name as company', 'jc.name as city', 'js.name as state', 
         'et.name as employeementType', 'wp.name as workPlace',
             'j.created_at as date',
-            DB::raw('CAST(j.isFavourite AS UNSIGNED) as isFavourite'))->get(); 
+            DB::raw('j.isFavourite = "true" as isFavourite'))->get(); 
  
 
         return $this->sucessResponse(null, $jobs, true, 201);
