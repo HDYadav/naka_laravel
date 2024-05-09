@@ -356,9 +356,10 @@ class JobsCotroller extends ApiController
                 'et.name as employmentType',
                 'wp.name as workPlace',
                 'j.created_at as date',
-                DB::raw('CAST(j.isFavourite AS UNSIGNED) as isFavourite')
+                DB::raw('CASE WHEN j.isFavourite = "true" THEN true ELSE false END as isFavourite')
             )
             ->get();
+
 
 
             return $this->sucessResponse(null, $jobsQuery, true, 201);
