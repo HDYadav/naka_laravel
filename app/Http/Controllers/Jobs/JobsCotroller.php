@@ -361,11 +361,12 @@ class JobsCotroller extends ApiController
             ->where('j.created_by', $user->id)
             ->where('j.isFavourite', 1)
             ->select(
-                'jp.name as jobPosiition',
+                'j.id',
+                'jp.name as jobPosition',
                 'cl.name as company',
                 'jc.name as city',
                 'js.name as state',
-                'et.name as employmentType',
+                'et.name as employeementType',
                 'wp.name as workPlace',
                 'j.created_at as date',
                 'j.isFavourite'                
@@ -375,9 +376,7 @@ class JobsCotroller extends ApiController
             foreach ($jobsQuery as $job) {
                 // Convert isFavourite to boolean
                 $job->isFavourite = $job->isFavourite == 1 ? true : false;
-            }
-
-
+            } 
 
 
             return $this->sucessResponse(null, $jobsQuery, true, 201);
