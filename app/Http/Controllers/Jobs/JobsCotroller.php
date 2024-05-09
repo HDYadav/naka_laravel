@@ -305,7 +305,7 @@ class JobsCotroller extends ApiController
         } 
 
 
-        $jobs = $jobsQuery->select('jp.name as jobPosition', 'cl.name as company', 'jc.name as city', 'js.name as state', 
+        $jobs = $jobsQuery->select('j.id','jp.name as jobPosition', 'cl.name as company', 'jc.name as city', 'js.name as state', 
         'et.name as employeementType', 'wp.name as workPlace',
             'j.created_at as date',
             'j.isFavourite')->get(); 
