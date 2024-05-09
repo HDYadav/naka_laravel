@@ -307,8 +307,19 @@ class JobsCotroller extends ApiController
 
         $jobs = $jobsQuery->select('j.id','jp.name as jobPosition', 'cl.name as company', 'jc.name as city', 'js.name as state', 
         'et.name as employeementType', 'wp.name as workPlace',
-            'j.created_at as date',
-            DB::raw('CASE WHEN j.isFavourite = "1" THEN true ELSE false END as isFavourite'))->get(); 
+            'j.created_at as date'
+            )->get();
+
+        foreach ($jobs as $job) {
+
+            if($job->isFavourite == 1){
+                $job->isFavourite = true;
+            }else{
+                $job->isFavourite = false;
+            }
+            //$job->skills = $this->getSkills($job->skills);
+        } 
+
  
 
         return $this->sucessResponse(null, $jobs, true, 201);
