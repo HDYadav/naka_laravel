@@ -331,15 +331,22 @@ class JobsCotroller extends ApiController
 
     public function addFavourite(Request $request)
     {
+        $user = UserData::getUserFrToken($request);
         $fav = $request->isFavourite ? 1 : 0; 
 
         $jobData = [
+            'user_id' => $user->id,
+            'job_id' => $request->id,
             'isFavourite' => $request->isFavourite,
         ];
 
-        $job = Job::updateOrCreate(['id' => $request->id], $jobData);
+        // $job = Job::updateOrCreate(['id' => $request->id], $jobData);
 
-        return $this->sucessResponse(null, ['id' => $job->id], true, 201);
+        $favorate = DB::table('favorate_job')->insert($jobData);
+        $lastId=  DB::getPdo()->lastInsertId();
+
+
+        return $this->sucessResponse('Successfully created favorite',['id'=>$lastId,'favorite'=> $favorate] , true, 201);
     }
 
 
@@ -347,7 +354,9 @@ class JobsCotroller extends ApiController
 
     public function getFavourite(Request $request)
     {
-        $user = UserData::getUserFrToken($request);
+        $user = UserData::getUserFrToken($request); 
+        
+//dd($user->id);
 
         if ($user) {
             $jobsQuery = DB::table('jobs as j')
@@ -357,9 +366,10 @@ class JobsCotroller extends ApiController
             ->join('job_states as js', 'js.id', '=', 'j.state')
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
-            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace') 
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id') 
             ->where('j.created_by', $user->id)
-            ->where('j.isFavourite', 1)
+            ->where('fav.isFavourite', 1)
             ->select(
                 'j.id',
                 'jp.name as jobPosition',
@@ -369,7 +379,7 @@ class JobsCotroller extends ApiController
                 'et.name as employeementType',
                 'wp.name as workPlace',
                 'j.created_at as date',
-                'j.isFavourite'                
+                'fav.isFavourite'                
             )
             ->get();
 
