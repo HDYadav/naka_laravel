@@ -331,22 +331,42 @@ class JobsCotroller extends ApiController
 
     public function addFavourite(Request $request)
     {
-        $user = UserData::getUserFrToken($request);
-        $fav = $request->isFavourite ? 1 : 0; 
+        try {
+            $user = UserData::getUserFrToken($request);
+            $fav = ($request->isFavourite) ? 1 : 0;
 
-        $jobData = [
-            'user_id' => $user->id,
-            'job_id' => $request->id,
-            'isFavourite' => $request->isFavourite,
-        ];
+            $jobData = [
+                'user_id' => $user->id,
+                'job_id' => $request->id,
+                'isFavourite' => $fav,
+            ];
 
-        // $job = Job::updateOrCreate(['id' => $request->id], $jobData);
+            $existingRecord = DB::table('favorate_job')
+            ->where('user_id', $user->id)
+                ->where('job_id', $request->id)
+                ->first();
 
-        $favorate = DB::table('favorate_job')->insert($jobData);
-        $lastId=  DB::getPdo()->lastInsertId();
+            if ($existingRecord) { 
+                throw new \Exception("Failed to insert favorite job."); // Throw exception if insertion fails 
+            }
+
+              DB::table('favorate_job')->insert($jobData);
+
+            $lastId = DB::getPdo()->lastInsertId();
+            $lastInsertedData = DB::table('favorate_job')->where('id', $lastId)->first();
+
+            $isFavourite = $lastInsertedData->isFavourite == 1 ? true : false;
+
+            return $this->sucessResponse('Successfully created favorite', ['id' => $lastId, 'isFavourite' => $isFavourite], true, 201);
+        } catch (\Exception $e) {
+           // dd($e->getMessage());
+
+            return $this->errorResponse($e->getMessage(), 500);
+
+           // return $this->errorResponse($e->getMessage(), [], 500); // Handle the error gracefully
+        }
 
 
-        return $this->sucessResponse('Successfully created favorite',['id'=>$lastId,'favorite'=> $favorate] , true, 201);
     }
 
 
