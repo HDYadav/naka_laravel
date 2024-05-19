@@ -348,9 +348,15 @@ class JobsCotroller extends ApiController
                 'user_id' => $user->id,
                 'job_id' => $request->job_id,
                 'isFavourite' => $fav,
-            ]; 
+            ];
 
-           $data=  FavorateJob::updateOrCreate(['id' => $request->id], $jobData);  
+            $data = FavorateJob::updateOrCreate(
+                ['user_id' => $user->id, 'job_id' => $request->job_id],
+                $jobData
+            );
+            
+
+         //  $data=  FavorateJob::updateOrCreate(['id' => $request->id], $jobData);  
           
             $lastId = $data->id;
             $lastInsertedData = DB::table('favorate_job')->where('id', $lastId)->first();
