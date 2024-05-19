@@ -210,7 +210,7 @@ class JobsCotroller extends ApiController
                 'js.name as state',
                 'jc.id as cityId',
                 'jc.name as city',
-                'cl.id as companyId',
+                'u.id as companyId',
                 'u.name as company',
                 'et.id as employeementTypeId',
                 'et.name as employeementType',
