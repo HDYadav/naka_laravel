@@ -163,7 +163,7 @@ class JobsCotroller extends ApiController
     {
         $user = UserData::getUserFrToken($request);  
       //  dd($user->id);
-        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'u.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city') 
+        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'u.company_name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city') 
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('users as u', 'u.id', '=', 'j.company')
            // ->join('company_lists as cl', 'cl.id', '=', 'j.company')
@@ -210,7 +210,7 @@ class JobsCotroller extends ApiController
                 'jc.id as cityId',
                 'jc.name as city',
                 'u.id as companyId',
-                'u.name as company',
+                 'u.company_name as company',
                 'et.id as employeementTypeId',
                 'et.name as employeementType',
                 'j.totalVacancy',
@@ -314,7 +314,7 @@ class JobsCotroller extends ApiController
         $jobs = $jobsQuery->select(
             'j.id',
             'jp.name as jobPosition',
-            'u.name as company',
+            'u.company_name as company',
             'jc.name as city',
             'js.name as state',
             'et.name as employeementType',
@@ -425,7 +425,7 @@ class JobsCotroller extends ApiController
             ->select(
                 'j.id',
                 'jp.name as jobPosition',
-                'u.name as company',
+                'u.company_name as company',
                 'jc.name as city',
                 'js.name as state',
                 'et.name as employeementType',
@@ -452,7 +452,7 @@ class JobsCotroller extends ApiController
     public function getCompany(Request $request)
     {
          
-        $data = User::where('user_type', '2')->where('otp_verified', '1')->select('id', 'name')->get();  
+        $data = User::where('user_type', '2')->where('otp_verified', '1')->select('id', 'company_name as name')->get();  
         return $this->sucessResponse(null, $data, true, 201);
     }
 
