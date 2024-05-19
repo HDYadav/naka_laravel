@@ -350,10 +350,29 @@ class JobsCotroller extends ApiController
                 'isFavourite' => $fav,
             ];
 
-            $data = FavorateJob::updateOrCreate(
-                ['user_id' => $user->id, 'job_id' => $request->job_id],
-                $jobData
-            );
+            $existingRecord = FavorateJob::where('user_id', $user->id)
+                                ->where('job_id', $request->job_id)
+                                ->first();
+
+
+            if ($existingRecord) {
+                // Delete the existing record
+                $existingRecord->delete();
+                return response()->json(['success' => true, 'message' => 'Record deleted.']);
+            } else {
+                // Insert the new record
+               $data =  FavorateJob::create($jobData);
+             //   return $this->sucessResponse('Successfully created favorite', $data , true, 201);
+
+               // return response()->json(['success' => true, 'message' => 'Record inserted.']);
+            }
+
+
+
+            // $data = FavorateJob::updateOrCreate(
+            //     ['user_id' => $user->id, 'job_id' => $request->job_id],
+            //     $jobData
+            // );
 
 
          //  $data=  FavorateJob::updateOrCreate(['id' => $request->id], $jobData);  
@@ -379,9 +398,7 @@ class JobsCotroller extends ApiController
 
     public function getFavourite(Request $request)
     {
-        $user = UserData::getUserFrToken($request); 
-        
-//dd($user->id);
+        $user = UserData::getUserFrToken($request);  
 
         if ($user) {
             $jobsQuery = DB::table('jobs as j')
@@ -426,7 +443,6 @@ class JobsCotroller extends ApiController
 
     public function getCompany(Request $request)
     {
-
          
         $data = User::where('user_type', '2')->where('otp_verified', '1')->select('id', 'name')->get();  
         return $this->sucessResponse(null, $data, true, 201);

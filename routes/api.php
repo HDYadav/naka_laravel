@@ -66,10 +66,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/add_favourite', [JobsCotroller::class, 'addFavourite'])->name('add_favourite');
         Route::get('/get_favourite', [JobsCotroller::class, 'getFavourite'])->name('get_favourite');
 
-        Route::get('/get_company', [JobsCotroller::class, 'getCompany'])->name('get_company');
-
-
-
+        Route::get('/get_company', [JobsCotroller::class, 'getCompany'])->name('get_company'); 
 
 
 
