@@ -182,7 +182,8 @@ class JobsCotroller extends ApiController
     {
         $jobs = DB::table('jobs as j')           
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            // ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('users as u', 'u.id', '=', 'j.company')
             ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('job_states as js', 'js.id', '=', 'j.state')
@@ -210,7 +211,7 @@ class JobsCotroller extends ApiController
                 'jc.id as cityId',
                 'jc.name as city',
                 'cl.id as companyId',
-                'cl.name as company',
+                'u.name as company',
                 'et.id as employeementTypeId',
                 'et.name as employeementType',
                 'j.totalVacancy',
@@ -258,7 +259,7 @@ class JobsCotroller extends ApiController
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->join('job_states as js', 'js.id', '=', 'j.state')
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
-            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('users as u', 'u.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->leftjoin('favorate_job as fav', 'fav.job_id', '=', 'j.id');
  
@@ -314,7 +315,7 @@ class JobsCotroller extends ApiController
         $jobs = $jobsQuery->select(
             'j.id',
             'jp.name as jobPosition',
-            'cl.name as company',
+            'u.name as company',
             'jc.name as city',
             'js.name as state',
             'et.name as employeementType',
@@ -391,7 +392,7 @@ class JobsCotroller extends ApiController
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->join('job_states as js', 'js.id', '=', 'j.state')
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
-            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('users as u', 'u.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id') 
             ->where('j.created_by', $user->id)
@@ -400,7 +401,7 @@ class JobsCotroller extends ApiController
             ->select(
                 'j.id',
                 'jp.name as jobPosition',
-                'cl.name as company',
+                'u.name as company',
                 'jc.name as city',
                 'js.name as state',
                 'et.name as employeementType',
