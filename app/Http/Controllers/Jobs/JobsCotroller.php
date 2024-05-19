@@ -350,6 +350,8 @@ class JobsCotroller extends ApiController
                 'isFavourite' => $fav,
             ];
 
+            //dd($jobData);
+
             $existingRecord = FavorateJob::where('user_id', $user->id)
                                 ->where('job_id', $request->job_id)
                                 ->first();
@@ -357,8 +359,13 @@ class JobsCotroller extends ApiController
 
             if ($existingRecord) {
                 // Delete the existing record
+
+                if($fav == 0){
                 $existingRecord->delete();
-                return response()->json(['success' => true, 'message' => 'Record deleted.']);
+                    return response()->json(['success' => true, 'message' => 'Record deleted.']);
+                }
+                
+
             } else {
                 // Insert the new record
                $data =  FavorateJob::create($jobData);
