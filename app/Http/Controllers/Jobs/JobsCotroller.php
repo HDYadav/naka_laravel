@@ -23,8 +23,8 @@ use EmptyIterator;
 use Illuminate\Database\QueryException as DatabaseQueryException;
 use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
-use App\Helpers\UserData; 
-
+use App\Helpers\UserData;
+use App\Models\FavorateJob;
 
 class JobsCotroller extends ApiController
 {
@@ -340,28 +340,19 @@ class JobsCotroller extends ApiController
     {
         try {
             $user = UserData::getUserFrToken($request);
-            $fav = ($request->isFavourite) ? 1 : 0;
+            $fav = ($request->isFavourite) ? 1 : 0; 
+       
 
             $jobData = [
                 'user_id' => $user->id,
-                'job_id' => $request->id,
+                'job_id' => $request->job_id,
                 'isFavourite' => $fav,
-            ];
+            ]; 
 
-            $existingRecord = DB::table('favorate_job')
-            ->where('user_id', $user->id)
-                ->where('job_id', $request->id)
-                ->first();
-
-            if ($existingRecord) { 
-                throw new \Exception("Failed to insert favorite job."); // Throw exception if insertion fails 
-            }
-
-              DB::table('favorate_job')->insert($jobData);
-
-            $lastId = DB::getPdo()->lastInsertId();
+           $data=  FavorateJob::updateOrCreate(['id' => $request->id], $jobData);  
+          
+            $lastId = $data->id;
             $lastInsertedData = DB::table('favorate_job')->where('id', $lastId)->first();
-
             $isFavourite = $lastInsertedData->isFavourite == 1 ? true : false;
 
             return $this->sucessResponse('Successfully created favorite', ['id' => $lastId, 'isFavourite' => $isFavourite], true, 201);
