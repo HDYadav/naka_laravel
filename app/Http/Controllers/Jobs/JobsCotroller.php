@@ -381,9 +381,7 @@ class JobsCotroller extends ApiController
 
     public function getFavourite(Request $request)
     {
-        $user = UserData::getUserFrToken($request); 
-        
-//dd($user->id);
+        $user = UserData::getUserFrToken($request);  
 
         if ($user) {
             $jobsQuery = DB::table('jobs as j')
@@ -396,7 +394,7 @@ class JobsCotroller extends ApiController
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id') 
             ->where('j.created_by', '15')
-            //->where('fav.isFavourite', 1)
+            ->where('fav.isFavourite', $user->id)
             ->groupBy('j.id')
             ->select(
                 'j.id',
