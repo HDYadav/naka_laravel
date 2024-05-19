@@ -125,8 +125,8 @@ class JobsCotroller extends ApiController
     {
       // dd($request);
         $skills = str_replace(['[', ']'], '', $request->skills);
-
         $user = UserData::getUserFrToken($request);  
+       // dd($user);
        
         $jobData = [
             'jobPosiiton' => $request->jobPosiiton,
@@ -134,7 +134,7 @@ class JobsCotroller extends ApiController
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'company' => $user->id,
+            'company' => $request->company,
             'education' => $request->education,
             'employeementType' => $request->employeementType,
             'skills' => $skills,
@@ -158,8 +158,10 @@ class JobsCotroller extends ApiController
     }
 
 
-    public function getAllJobs()
-    { 
+    public function getAllJobs(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);  
+      //  dd($user->id);
         $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'cl.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city') 
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
@@ -167,6 +169,7 @@ class JobsCotroller extends ApiController
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
+            ->where('j.created_by', $user->id)
             ->get(); 
 
          return $this->sucessResponse(null, $jobs, true, 201); 
