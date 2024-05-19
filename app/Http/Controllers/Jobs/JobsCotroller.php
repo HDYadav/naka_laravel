@@ -123,7 +123,7 @@ class JobsCotroller extends ApiController
 
     public function jobCreateOrUpdate(Request $request)
     {
-      //  dd($request->skills);
+      // dd($request);
         $skills = str_replace(['[', ']'], '', $request->skills);
 
         $user = UserData::getUserFrToken($request);  
@@ -248,13 +248,15 @@ class JobsCotroller extends ApiController
     {
  
         $jobsQuery = DB::table('jobs as j')
+            ->groupBy('j.id')
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->join('job_states as js', 'js.id', '=', 'j.state')
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('company_lists as cl', 'cl.id', '=', 'j.company')
-            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace') ;
+            ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->leftjoin('favorate_job as fav', 'fav.job_id', '=', 'j.id');
  
         if (!empty($request->search) ) {
             $searchTerm = '%' . $request->search . '%';
@@ -314,7 +316,7 @@ class JobsCotroller extends ApiController
             'et.name as employeementType',
             'wp.name as workPlace',
             'j.created_at as date',
-            'j.isFavourite' // Include the isFavourite field
+            'fav.isFavourite' // Include the isFavourite field
         )->get();
 
         foreach ($jobs as $job) {
@@ -390,6 +392,7 @@ class JobsCotroller extends ApiController
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id') 
             ->where('j.created_by', $user->id)
             ->where('fav.isFavourite', 1)
+            ->groupBy('j.id')
             ->select(
                 'j.id',
                 'jp.name as jobPosition',
