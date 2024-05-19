@@ -170,10 +170,7 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
 
 
                 $userOtp = $otpRepos->generate($user->email);
-
-
-                $user['otp'] = $userOtp->otp;
-                
+                $user['otp'] = $userOtp->otp;                
 
                 if ($user->otp_verified != '1') {
                    return $this->sucessResponse('OTP not verified',$user, false, 200); 
@@ -202,6 +199,59 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
            
         }
     }
+
+
+
+    public function admoinLogin(UserLoginRequest $request)
+    {
+
+        try {
+
+            $user = User::where('email', $request->email)->where('user_type','3')->firstOrFail();
+            $otpRepos = new OtpRepository;
+
+            if (Hash::check($request->password, $user->password)) {
+
+                if ($user->user_type == '1') {
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'company_name', 'company_size']);
+                } else {
+                    $user->makeHidden(['email_verified_at', 'updated_at', 'created_at', 'dob']);
+                }
+
+
+                $userOtp = $otpRepos->generate($user->email);
+                $user['otp'] = $userOtp->otp;
+
+                if ($user->otp_verified != '1') {
+                    return $this->sucessResponse('OTP not verified', $user, false, 200);
+                }
+
+                $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+
+                //$userOtp   = UserOtp::where('user_id', $request->user_id)->where('otp', $request->otp)->orderBy('id','desc')->first();
+
+
+                $user['token'] =   $token;
+
+                LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]);
+                return $this->sucessResponse('Login Sucessfully', $user, true, 200);
+            } else {
+                throw new Exception("Password mismatch", 422);
+            }
+        } catch (ModelNotFoundException $e) {
+            //  return $this->errorResponse('User does not exist or not verified', 422);
+            return $this->sucessResponse('User does not exist or not verified', $e, false, 422);
+        } catch (Exception $e) {
+            // dd($e->getCode());
+            return $this->errorResponse($e->getMessage(), '500');
+        }
+    }
+
+
+
+
+
+
 
     public function logout(Request $request)
     {

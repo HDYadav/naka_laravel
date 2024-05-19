@@ -451,8 +451,23 @@ class JobsCotroller extends ApiController
 
     public function getCompany(Request $request)
     {
-         
-        $data = User::where('user_type', '2')->where('otp_verified', '1')->select('id', 'company_name as name')->get();  
+
+        $company = User::where('user_type', '2')->where('otp_verified', '1')->select('id', 'company_name as name')->get();
+
+        $state =  State::select('id', 'name')->get();
+        $city = City::select('id', 'name')->get();
+        $emp_type =  EmployeementType::select('id', 'name')->get();
+        $salaryType = SalaryType::select('id', 'name')->get();
+        $promote = Promote::select('id', 'name')->get();
+        $experience = Experience::select('id', 'name')->get();
+        $job_position = Jobposition::select('id', 'name')->get();
+        $education = Education::select('id', 'name')->get();
+        $workplace = WorkPlace::select('id', 'name')->get();
+        $emp_type = EmployeementType::select('id', 'name')->get(); 
+        $skills =  Skill::select('id', 'name')->get();   
+
+         $data = ['company'=> $company, 'promote'=>$promote, 'state' =>$state, 'city' => $city, 'salaryType' =>$salaryType, 'experience' =>$experience, 'job_position' =>$job_position, 'education' =>$education, 'workplace' =>$workplace, 'emp_type' =>$emp_type, 'skills' => $skills];
+
         return $this->sucessResponse(null, $data, true, 201);
     }
 
