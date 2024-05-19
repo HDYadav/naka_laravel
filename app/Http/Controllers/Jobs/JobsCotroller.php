@@ -341,8 +341,9 @@ class JobsCotroller extends ApiController
     {
         try {
             $user = UserData::getUserFrToken($request);
-            $fav = ($request->isFavourite) ? 1 : 0; 
-       
+            $fav = ($request->isFavourite) ? 1 : 0;
+
+            $data = [];
 
             $jobData = [
                 'user_id' => $user->id,
