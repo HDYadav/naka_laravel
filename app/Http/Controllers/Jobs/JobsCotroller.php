@@ -368,7 +368,9 @@ class JobsCotroller extends ApiController
 
             } else {
                 // Insert the new record
-               $data =  FavorateJob::create($jobData);
+                if ($fav == 1) {
+                $data =  FavorateJob::create($jobData);
+                }
              //   return $this->sucessResponse('Successfully created favorite', $data , true, 201);
 
                // return response()->json(['success' => true, 'message' => 'Record inserted.']);
