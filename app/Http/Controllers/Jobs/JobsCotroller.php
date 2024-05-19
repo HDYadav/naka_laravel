@@ -396,7 +396,7 @@ class JobsCotroller extends ApiController
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id') 
             ->where('j.created_by', $user->id)
-            ->where('fav.isFavourite', 1)
+            //->where('fav.isFavourite', 1)
             ->groupBy('j.id')
             ->select(
                 'j.id',
