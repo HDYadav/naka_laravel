@@ -162,9 +162,10 @@ class JobsCotroller extends ApiController
     {
         $user = UserData::getUserFrToken($request);  
       //  dd($user->id);
-        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'cl.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city') 
+        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'j.name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city') 
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->join('users as u', 'u.id', '=', 'j.company')
+           // ->join('company_lists as cl', 'cl.id', '=', 'j.company')
             ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
