@@ -63,10 +63,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
         Route::post('/jobs_opening', [JobsCotroller::class, 'jobOpenings'])->name('jobs_opening');
-
         Route::post('/add_favourite', [JobsCotroller::class, 'addFavourite'])->name('add_favourite');
-
         Route::get('/get_favourite', [JobsCotroller::class, 'getFavourite'])->name('get_favourite');
+
+        Route::get('/get_company', [JobsCotroller::class, 'getCompany'])->name('get_company');
+
 
 
 

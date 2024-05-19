@@ -28,7 +28,8 @@ class Job extends Model
         'experience',
         'promote',
         'description',
-        'isFavourite'
+        'isFavourite',
+        'created_by'
     ];
     
 }

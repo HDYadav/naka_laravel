@@ -25,6 +25,7 @@ use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
 use App\Models\FavorateJob;
+use App\Models\User;
 
 class JobsCotroller extends ApiController
 {
@@ -125,8 +126,8 @@ class JobsCotroller extends ApiController
     {
       // dd($request);
         $skills = str_replace(['[', ']'], '', $request->skills);
-        $user = UserData::getUserFrToken($request);  
-       // dd($user);
+        $user = UserData::getUserFrToken($request); 
+       
        
         $jobData = [
             'jobPosiiton' => $request->jobPosiiton,
@@ -414,6 +415,14 @@ class JobsCotroller extends ApiController
             return $this->errorResponse("User not found", [], false, 404);
         }
 
+    }
+
+    public function getCompany(Request $request)
+    {
+
+         
+        $data = User::where('user_type', '2')->where('otp_verified', '1')->select('id', 'name')->get();  
+        return $this->sucessResponse(null, $data, true, 201);
     }
 
 
