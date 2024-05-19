@@ -354,7 +354,7 @@ class JobsCotroller extends ApiController
                 ['user_id' => $user->id, 'job_id' => $request->job_id],
                 $jobData
             );
-            
+
 
          //  $data=  FavorateJob::updateOrCreate(['id' => $request->id], $jobData);  
           
@@ -395,7 +395,7 @@ class JobsCotroller extends ApiController
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id')
             ->where('fav.user_id', $user->id)
             //->where('j.created_by',$user->id)
-            ->where('fav.isFavourite', 1)
+           // ->where('fav.isFavourite', 1)
             ->groupBy('j.id')
             ->select(
                 'j.id',
