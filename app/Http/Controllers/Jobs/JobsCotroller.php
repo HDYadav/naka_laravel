@@ -183,8 +183,6 @@ class JobsCotroller extends ApiController
     {
         $jobs = DB::table('jobs as j')           
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            // ->join('company_lists as cl', 'cl.id', '=', 'j.company')
-           // ->join('users as u', 'u.id', '=', 'j.company')
             ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('job_states as js', 'js.id', '=', 'j.state')
@@ -193,7 +191,7 @@ class JobsCotroller extends ApiController
             ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('educations as ed', 'ed.id', '=', 'j.education')
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
-            ->join('users as u', 'u.id', '=', 'j.created_by')
+            ->join('users as u', 'u.id', '=', 'j.company')
             ->where('j.id', '=', $id)
             ->select(
                 'j.id',
