@@ -10,5 +10,5 @@ class Education extends Model
     use HasFactory;
     protected $table = 'educations';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'collageName', 'courseName', 'startDate', 'endDate'];
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Vendor\VendorController;  
 use App\Http\Controllers\Customer\CustomerController;
@@ -45,6 +46,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
     Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
 
+    //Route::post('/change-password',  [ResetPasswordController::class, 'changePassword'])->middleware('auth:api');
+
+
+
     Route::prefix('password')->group(function () {
         Route::post('/reset', [ResetPasswordController::class, 'reset'])->name('reset');
     });  
@@ -55,8 +60,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 Route::group(['middleware' => 'auth:api'], function () { 
  
+ Route::post('/change-password',  [PasswordController::class, 'changePassword']);
+
 
     Route::prefix('jobs')->group(function () {
+
         Route::get('/get_all', [JobsCotroller::class, 'getAll'])->name('get_all');
 
         Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
@@ -68,28 +76,24 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/jobs_opening', [JobsCotroller::class, 'jobOpenings'])->name('jobs_opening');
         Route::post('/add_favourite', [JobsCotroller::class, 'addFavourite'])->name('add_favourite');
         Route::get('/get_favourite', [JobsCotroller::class, 'getFavourite'])->name('get_favourite');
-        Route::get('/get_company', [JobsCotroller::class, 'getCompany'])->name('get_company'); 
+        Route::get('/get_company', [JobsCotroller::class, 'getCompany'])->name('get_company');  
+
+    });
 
 
+    Route::post('/edu_create_update', [JobsCotroller::class, 'eduCreateOrUpdate'])->name('edu_create_update');
 
-    }); 
-
+    Route::get('/get_educations', [JobsCotroller::class, 'getEducations'])->name('get_educations');
  
-   Route::prefix('vendors')->group(function () {
-    Route::post('/add', [VendorController::class, 'storeVendor'] )->name('add');
-   }); 
-
-  //  Route::prefix('customers')->group(function () {
-  //   Route::post('/add', [CustomerController::class, 'storeCustomer'] )->name('add');
-  //  });  
    
    Route::prefix('users')->group(function () {
     Route::post('/get_user', [UserController::class, 'getUserData'] )->name('get_user');
     Route::get('/get_all_users', [UserController::class, 'getAllUsers'])->name('get_all_users');
 
-   });   
+   });
 
- 
+    Route::delete('users/{id}/soft-delete', [UserController::class, 'softDelete']);
+    Route::patch('users/{id}/restore', [UserController::class, 'restore']);
 
     Route::post('/logout', [ApiAuthController::class, 'logout'])->name('logout.api'); 
 });

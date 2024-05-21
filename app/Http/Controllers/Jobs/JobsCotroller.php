@@ -25,6 +25,7 @@ use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
 use App\Models\FavorateJob;
+use App\Models\Model\Language;
 use App\Models\User;
 
 class JobsCotroller extends ApiController
@@ -44,6 +45,8 @@ class JobsCotroller extends ApiController
         $education = Education::select('id', 'name')->get();
         $promote = Promote::select('id', 'name')->get();
         $workplace = WorkPlace::select('id', 'name')->get();
+        $language = Language::select('id', 'name')->orderBy('id','ASC')->get();
+
 
 
         $array= ['jobPosition'=> $jobpostiong,
@@ -51,12 +54,13 @@ class JobsCotroller extends ApiController
                  'city' => $city, 
                 'companyList'=> $companyList, 
                 'employeementType'=> $emp_type,
-                'skills' => $skills,
+                'skills' => $skills,                
                 'experience' => $experience,
                 'salaryType' => $salaryType,
                 'education' => $education,
                 'promote' => $promote,
-                 'workplace' => $workplace
+                 'workplace' => $workplace,
+                 'languages' => $language
                 ];
 
         return $this->sucessResponse(null, $array, true, 201); 
@@ -467,6 +471,39 @@ class JobsCotroller extends ApiController
         $skills =  Skill::select('id', 'name')->get();   
 
          $data = ['company'=> $company, 'promote'=>$promote, 'state' =>$state, 'city' => $city, 'salaryType' =>$salaryType, 'experience' =>$experience, 'job_position' =>$job_position, 'education' =>$education, 'workplace' =>$workplace, 'emp_type' =>$emp_type, 'skills' => $skills];
+
+        return $this->sucessResponse(null, $data, true, 201);
+    }
+
+
+
+
+    public function eduCreateOrUpdate(Request $request)
+    {
+          
+
+        $jobData = [
+            'name' => $request->name,
+            'collageName' => $request->collageName,
+            'courseName' => $request->courseName,
+            'startDate' => $request->startDate,
+            'endDate' => $request->endDate            
+        ];
+
+         
+        $job = Education::updateOrCreate(['id' => $request->id], $jobData);
+
+        return $this->sucessResponse('Job Cretaed Successfully', ['id' => $job->id], true, 201);
+    }
+
+
+
+    public function getEducations()
+    {
+
+        $data = Education::select('id', 'name as name', 'collageName', 'courseName', 'startDate', 'endDate')->get();
+
+         
 
         return $this->sucessResponse(null, $data, true, 201);
     }

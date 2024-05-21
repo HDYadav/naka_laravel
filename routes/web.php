@@ -17,10 +17,29 @@
 
  
 
-Route::get('/', function () {
+Route::get('/about_us', function () {
      
-    return view('welcome');
+    return view('about_us');
 });
+
+Route::get('/contact_us', function () {
+
+    return view('contact_us');
+});
+
+Route::get('/privacy_policy', function () {
+
+    return view('privacy_policy');
+});
+
+Route::get('/terms_conditions', function () {
+
+    return view('terms_conditions');
+});
+
+
+
+
 
 
 
