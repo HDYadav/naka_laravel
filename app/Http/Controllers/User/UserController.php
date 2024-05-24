@@ -51,5 +51,40 @@ class UserController extends ApiController
     }
 
 
-    
+    public function uploadImage(Request $request)
+    {
+
+        $path = self::img_upload($request, $request->image);
+        return $this->sucessResponse('Image successfully uploaded', $path, true, 201);
+    }
+
+    public function img_upload($request, $imageName = null)
+    {
+        $extension = $imageName->getClientOriginalName() . '-' . time() . '.' . $imageName->extension();
+        $imageName->move('uploads/images/', $extension);
+        return $extension;
+    }
+
+
+
+    public function updateProfile(Request $request){
+
+        
+        $user = UserData::getUserFrToken($request);
+
+        $users =  User::where('id', $user->id)
+        ->update([
+            'profilePic' => $request->profilePic,
+            'gender' => $request->gender,
+            'maritalStatus' => $request->maritalStatus,
+            'professionId' => $request->professionId,
+            'experienced' => $request->experienced,
+            'educationId' => $request->educationId,
+            'skills' => $request->skills,
+            'languages' => $request->languages
+        ]); 
+
+
+        return $users;
+    }
 }

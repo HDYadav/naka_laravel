@@ -89,6 +89,11 @@ Route::group(['middleware' => 'auth:api'], function () {
    Route::prefix('users')->group(function () {
     Route::post('/get_user', [UserController::class, 'getUserData'] )->name('get_user');
     Route::get('/get_all_users', [UserController::class, 'getAllUsers'])->name('get_all_users');
+    Route::post('/upload_image', [UserController::class, 'uploadImage'])->name('upload_image');
+
+    Route::post('/update_profile', [UserController::class, 'updateProfile'])->name('update_profile');
+
+
 
    });
 

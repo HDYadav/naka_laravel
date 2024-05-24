@@ -501,12 +501,12 @@ class JobsCotroller extends ApiController
     public function getEducations()
     {
 
-        $data = Education::select('id', 'name as name', 'collageName', 'courseName', 'startDate', 'endDate')->get();
-
-         
+        $data = Education::select('id', 'name as name', 'collageName', 'courseName', 'startDate', 'endDate')->get(); 
 
         return $this->sucessResponse(null, $data, true, 201);
     }
+ 
+
 
 
 
