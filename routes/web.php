@@ -17,22 +17,22 @@
 
  
 
-Route::get('/about_us', function () {
+Route::get('/About_Us.html', function () {
      
     return view('about_us');
 });
 
-Route::get('/contact_us', function () {
+Route::get('/Contact_Us.html', function () {
 
     return view('contact_us');
 });
 
-Route::get('/privacy_policy', function () {
+Route::get('/Privacy_Policy.html', function () {
 
     return view('privacy_policy');
 });
 
-Route::get('/terms_conditions', function () {
+Route::get('/Terms_Conditions.html', function () {
 
     return view('terms_conditions');
 });
