@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
 use App\Models\FavorateJob;
 use App\Models\Model\Language;
+use App\Models\Model\Social;
 use App\Models\User;
 
 class JobsCotroller extends ApiController
@@ -261,7 +262,7 @@ class JobsCotroller extends ApiController
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->join('job_states as js', 'js.id', '=', 'j.state')
-            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+           // ->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('users as u', 'u.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->leftjoin('favorate_job as fav', 'fav.job_id', '=', 'j.id');
@@ -418,7 +419,7 @@ class JobsCotroller extends ApiController
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->join('job_states as js', 'js.id', '=', 'j.state')
-            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+            //->join('experiences as ex', 'ex.id', '=', 'j.experience')
             ->join('users as u', 'u.id', '=', 'j.company')
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id')
@@ -505,8 +506,84 @@ class JobsCotroller extends ApiController
 
         return $this->sucessResponse(null, $data, true, 201);
     }
- 
 
+
+
+    public function deleteEducation($id)
+    {
+        $data = Education::where('id', $id)->delete();
+
+        return $this->sucessResponse('Education sucessfylly deleted', $data, true, 201);
+
+    }
+
+
+    
+
+    public function getExp()
+    {
+
+        $data = Experience::select('id', 'name as experiance', 'designation', 'company', 'startDate', 'endDate')->get();
+
+        return $this->sucessResponse(null, $data, true, 201);
+    }
+
+
+    public function expCreateOrUpdate(Request $request)
+    {
+
+        $expData = [
+            'name' => $request->name,
+            'designation' => $request->designation,
+            'company' => $request->company,
+            'startDate' => $request->startDate,
+            'endDate' => $request->endDate,
+        ];
+        $exp = Experience::updateOrCreate(['id' => $request->id], $expData);
+
+        return $this->sucessResponse('Experiance Cretaed Successfully', ['id' => $exp->id], true, 201);
+    }
+
+
+
+    public function deleteExp($id)
+    {
+        $data = Experience::where('id', $id)->delete();
+
+        return $this->sucessResponse('Experience sucessfylly deleted', $data, true, 201);
+    }
+
+
+
+    public function socialCreateOrUpdate(Request $request)
+    {
+
+        $expData = [
+            'socialMediaType' => $request->socialMediaType,
+            'link' => $request->link 
+        ];
+        $exp = Social::updateOrCreate(['id' => $request->id], $expData);
+
+        return $this->sucessResponse('Social Cretaed Successfully', ['id' => $exp->id], true, 201);
+    }
+
+
+
+    public function getSocial()
+    {
+
+        $data = Social::select('id', 'socialMediaType', 'link')->get();
+
+        return $this->sucessResponse(null, $data, true, 201);
+    }
+
+
+    public function deleteSocial($id)
+    {
+        $data = Social::where('id', $id)->delete();
+
+        return $this->sucessResponse('Experience sucessfylly deleted', $data, true, 201);
+    }
 
 
 

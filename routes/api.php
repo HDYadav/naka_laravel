@@ -82,17 +82,27 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::post('/edu_create_update', [JobsCotroller::class, 'eduCreateOrUpdate'])->name('edu_create_update');
-
     Route::get('/get_educations', [JobsCotroller::class, 'getEducations'])->name('get_educations');
- 
+    Route::delete('/delete_edu/{id}', [JobsCotroller::class, 'deleteEducation'])->name('delete_edu');
+
+
+    Route::post('/exp_create_update', [JobsCotroller::class, 'expCreateOrUpdate'])->name('exp_create_update');
+     Route::get('/get_experiance', [JobsCotroller::class, 'getExp'])->name('get_experiance');
+     Route::delete('/delete_exp/{id}', [JobsCotroller::class, 'deleteExp'])->name('delete_exp');
+
+
+    Route::post('/social_create_update', [JobsCotroller::class, 'socialCreateOrUpdate'])->name('social_create_update');
+    Route::get('/get_social', [JobsCotroller::class, 'getSocial'])->name('get_social');
+    Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social'); 
+
+
    
    Route::prefix('users')->group(function () {
     Route::post('/get_user', [UserController::class, 'getUserData'] )->name('get_user');
     Route::get('/get_all_users', [UserController::class, 'getAllUsers'])->name('get_all_users');
     Route::post('/upload_image', [UserController::class, 'uploadImage'])->name('upload_image');
-
     Route::post('/update_profile', [UserController::class, 'updateProfile'])->name('update_profile');
-
+    Route::get('/get_employe_basic_details', [UserController::class, 'getEmployeBasicDetails'])->name('get_employe_basic_details');
 
 
    });

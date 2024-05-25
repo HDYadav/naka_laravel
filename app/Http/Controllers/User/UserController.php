@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
-use App\Helpers\UserData; 
+use App\Helpers\UserData;
+use App\Models\Model\Language;
+use App\Models\Model\Skill;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends ApiController
 {
@@ -87,4 +90,57 @@ class UserController extends ApiController
 
         return $users;
     }
+
+
+    public function getEmployeBasicDetails(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+       $users = DB::table('users as u')->select('u.id', 'u.profilePic','u.name as fullName', 'u.mobile as mobileNumber', 'u.email as emailId', 'u.dob as dateOfBirth', 'u.gender', 'u.maritalStatus', 'u.professionId', 'jp.name as profession', 'e.id as experienceId', 'e.name as experience', 'edu.id as educationId', 'edu.name as education','u.skills', 'u.languages')
+       ->leftJoin('job_positions as jp','jp.id','=', 'u.professionId')
+        ->leftJoin('experiences as e', 'e.id', '=', 'u.experienced')
+       ->leftJoin('educations as edu', 'edu.id', '=', 'u.educationId')
+       ->where('u.id', $user->id)
+       ->get();
+
+        foreach ($users as $user) {
+            $user->skills = $this->getSkills($user->skills);
+        }
+
+        foreach ($users as $language) {
+            $language->languages = $this->getLaguages($language->languages);
+        }
+        
+
+
+        return $this->sucessResponse(null, $users, true, 201);  
+        
+    }
+
+
+    protected function getSkills($skills)
+    {
+        $skillIds = explode(',', $skills);
+        $skills =  Skill::whereIn('id', $skillIds)->get();
+
+        $skill = $skills->makeHidden(['created_at', 'updated_at']);
+
+        return $skill;
+    }
+
+
+    protected function getLaguages($languages)
+    {
+        $ids = explode(',', $languages);
+        $languages =  Language::whereIn('id', $ids)->get();
+
+        $lag = $languages->makeHidden(['created_at', 'updated_at']);
+
+        return $lag;
+    }
+
+
+   
+
+    
 }

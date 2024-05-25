@@ -5,10 +5,10 @@ namespace App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Experience extends Model
+class Social extends Model
 {
     use HasFactory;
-    protected $table = 'experiences';
 
-    protected $fillable = ['name', 'designation', 'company', 'startDate', 'endDate'];
+    protected $fillable = ['socialMediaType', 'link'];
+
 }
