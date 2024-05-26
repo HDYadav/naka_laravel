@@ -79,6 +79,8 @@ class UserController extends ApiController
         $users =  User::where('id', $user->id)
         ->update([
             'profilePic' => $request->profilePic,
+            'name' => $request->fullName,
+            'dob' => $request->dateOfBirth,
             'gender' => $request->gender,
             'maritalStatus' => $request->maritalStatus,
             'professionId' => $request->professionId,
