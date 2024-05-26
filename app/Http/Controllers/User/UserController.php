@@ -72,7 +72,6 @@ class UserController extends ApiController
 
 
     public function updateProfile(Request $request){
-
         
         $user = UserData::getUserFrToken($request);
 
@@ -113,10 +112,11 @@ class UserController extends ApiController
         foreach ($users as $language) {
             $language->languages = $this->getLaguages($language->languages);
         }
-        
 
 
-        return $this->sucessResponse(null, $users, true, 201);  
+        return response()->json($users, 201);
+
+     //   return $this->sucessResponse(null, $users, true, 201);  
         
     }
 
