@@ -525,7 +525,6 @@ class JobsCotroller extends ApiController
     {
 
         $user = UserData::getUserFrToken($request);
-
         $data = ExperianceDetails::select('id', 'designation', 'company', 'startDate','endDate', 'currenltWorking')->where('user_id', $user->id)->get();
 
         foreach ($data as $exp) { 

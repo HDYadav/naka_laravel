@@ -87,7 +87,13 @@ class UserController extends ApiController
             'educationId' => $request->educationId,
             'skills' => $request->skills,
             'languages' => $request->languages
-        ]); 
+        ]);
+
+
+        return response()->json([
+           "message" => "Basic profile updated successfully"
+
+        ], 201); 
 
 
         return $users;
