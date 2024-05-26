@@ -547,7 +547,9 @@ class JobsCotroller extends ApiController
 
         $user = UserData::getUserFrToken($request);
 
-        $currenltWorking = ($request->currentlyWorking) ? 1 : 0; 
+         $currentlyWorking = ($request->currentlyWorking) ? 1 : 0; 
+
+      //  $currentlyWorking = $request->boolean('currentlyWorking', false);
 
 
         $expData = [           
@@ -556,10 +558,10 @@ class JobsCotroller extends ApiController
             'company' => $request->company,
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
-            "currentlyWorking" => $currenltWorking
+            "currentlyWorking" => $currentlyWorking
         ];
 
-       // dd($expData);
+         //dd($expData, $request->id);
 
 
         $exp = ExperianceDetails::updateOrCreate(['id' => $request->id], $expData);
