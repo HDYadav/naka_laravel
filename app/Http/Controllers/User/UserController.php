@@ -65,7 +65,7 @@ class UserController extends ApiController
     {
         $extension = $imageName->getClientOriginalName() . '-' . time() . '.' . $imageName->extension();
         $imageName->move('uploads/images/', $extension);
-        return $extension;
+        return "uploads/images/".$extension;
     }
 
 
