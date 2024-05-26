@@ -25,6 +25,7 @@ use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
 use App\Models\FavorateJob;
+use App\Models\Model\ExperianceDetails;
 use App\Models\Model\Language;
 use App\Models\Model\Social;
 use App\Models\User;
@@ -520,26 +521,49 @@ class JobsCotroller extends ApiController
 
     
 
-    public function getExp()
+    public function getExp(Request $request)
     {
 
-        $data = Experience::select('id', 'name as experiance', 'designation', 'company', 'startDate', 'endDate')->get();
+        $user = UserData::getUserFrToken($request);
 
-        return $this->sucessResponse(null, $data, true, 201);
+        $data = ExperianceDetails::select('id', 'designation', 'company', 'startDate','endDate', 'currenltWorking')->where('user_id', $user->id)->get();
+
+        foreach ($data as $exp) { 
+            $exp->currenltWorking = $exp->currenltWorking == 1 ? true : false;
+        }
+
+        return response()->json([
+            'data'   =>
+            $data,
+        ], 201); 
+
+
+       // return $this->sucessResponse(null, $data, true, 201);
     }
 
 
     public function expCreateOrUpdate(Request $request)
     {
 
-        $expData = [
-            'name' => $request->name,
+
+        $user = UserData::getUserFrToken($request);
+
+        $currenltWorking = ($request->currenltWorking) ? 1 : 0; 
+
+
+        $expData = [           
+            'user_id' => $user->id,
             'designation' => $request->designation,
             'company' => $request->company,
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
+            "currenltWorking" => $currenltWorking
         ];
-        $exp = Experience::updateOrCreate(['id' => $request->id], $expData);
+
+       // dd($expData);
+
+
+        $exp = ExperianceDetails::updateOrCreate(['id' => $request->id], $expData);
 
         return $this->sucessResponse('Experiance Cretaed Successfully', ['id' => $exp->id], true, 201);
     }
@@ -548,7 +572,7 @@ class JobsCotroller extends ApiController
 
     public function deleteExp($id)
     {
-        $data = Experience::where('id', $id)->delete();
+        $data = ExperianceDetails::where('id', $id)->delete();
 
         return $this->sucessResponse('Experience sucessfylly deleted', $data, true, 201);
     }

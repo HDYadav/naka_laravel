@@ -129,20 +129,11 @@ class UserController extends ApiController
             $user->skills = $this->getSkills($user->skills);
             $user->languages = $this->getLanguages($user->languages);
             return $user;
-        });
-
-       // dd($users['0']);
+        }); 
 
         return response()->json([ 
             'data'   =>  $users['0'],
-        ], 201);
-
-
-        // Return the response in JSON format
-
-       //  return response()->json($users, 201);
-
-       //  return response()->json(['data' => $users], 201);
+        ], 201); 
         
     }
 
