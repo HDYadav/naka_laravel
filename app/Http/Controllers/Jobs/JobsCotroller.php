@@ -528,7 +528,7 @@ class JobsCotroller extends ApiController
         $data = ExperianceDetails::select('id', 'designation', 'company', 'startDate','endDate', 'currenltWorking')->where('user_id', $user->id)->get();
 
         foreach ($data as $exp) { 
-            $exp->currenltWorking = $exp->currenltWorking == 1 ? true : false;
+            $exp->currentlyWorking = $exp->currentlyWorking == 1 ? true : false;
         }
 
         return response()->json([
@@ -547,7 +547,7 @@ class JobsCotroller extends ApiController
 
         $user = UserData::getUserFrToken($request);
 
-        $currenltWorking = ($request->currenltWorking) ? 1 : 0; 
+        $currenltWorking = ($request->currentlyWorking) ? 1 : 0; 
 
 
         $expData = [           

@@ -92,11 +92,10 @@ class UserController extends ApiController
 
         return response()->json([
            "message" => "Basic profile updated successfully"
-
         ], 201); 
 
 
-        return $users;
+        // return $users;
     }
 
 
