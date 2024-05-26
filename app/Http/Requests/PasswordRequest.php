@@ -47,6 +47,6 @@ class PasswordRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => $errors->first(),
-        ], 200));
+        ], 400));
     }
 }
