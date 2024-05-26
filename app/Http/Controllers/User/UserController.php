@@ -9,6 +9,7 @@ use App\Models\Model\Skill;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class UserController extends ApiController
 {
@@ -65,7 +66,7 @@ class UserController extends ApiController
     {
         $extension = $imageName->getClientOriginalName() . '-' . time() . '.' . $imageName->extension();
         $imageName->move('uploads/images/', $extension);
-        return "uploads/images/".$extension;
+        return URL::to('/uploads/images/')."/".$extension;
     }
 
 
