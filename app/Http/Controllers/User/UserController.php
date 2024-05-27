@@ -209,5 +209,40 @@ class UserController extends ApiController
     }
 
 
+
+
+    public function updateFoundingInfo(Request $request)
+    {
+
+        $user = UserData::getUserFrToken($request);
+
+        $users =  User::where('id', $user->id)
+            ->update([
+                'establishmentYear' => $request->establishmentYear,
+                'organizationType' => $request->organizationType,
+                'industryTypeId' => $request->industryTypeId,
+                'website' => $request->website,
+                'about' => $request->about 
+            ]);
+
+
+        return response()->json([
+            "message" => "Founding info updated successfully"
+        ], 201);
+
+
+        // return $users;
+    }
+
+    public function getFoundingInfo(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $users = DB::table('users as u')
+        ->join('industries as i','i.id','=', 'u.industryTypeId')
+        ->select('u.id', 'u.establishmentYear', 'u.organizationType', 'u.industryTypeId', 'i.name as industryType', 'u.website', 'u.company_size', 'about')->where('u.id', $user->id)->get();
+
+        return response()->json($users);
+    }
     
 }
