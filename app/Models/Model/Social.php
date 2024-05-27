@@ -9,6 +9,6 @@ class Social extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['socialMediaType', 'link'];
+    protected $fillable = ['user_id','socialMediaType', 'link'];
 
 }

@@ -595,8 +595,10 @@ class JobsCotroller extends ApiController
 
     public function socialCreateOrUpdate(Request $request)
     {
+        $user = UserData::getUserFrToken($request);
 
         $expData = [
+            'user_id' => $user->id,
             'socialMediaType' => $request->socialMediaType,
             'link' => $request->link 
         ];
@@ -607,10 +609,12 @@ class JobsCotroller extends ApiController
 
 
 
-    public function getSocial()
+    public function getSocial(Request $request)
     {
 
-        $data = Social::select('id', 'socialMediaType', 'link')->get();
+        $user = UserData::getUserFrToken($request);
+
+        $data = Social::select('id', 'socialMediaType', 'link')->where('user_id',$user->id)->get();
 
         return $this->sucessResponse(null, $data, true, 201);
     }
