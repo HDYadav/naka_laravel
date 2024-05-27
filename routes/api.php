@@ -105,6 +105,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/get_employe_basic_details', [UserController::class, 'getEmployeBasicDetails'])->name('get_employe_basic_details');
 
 
+
+    Route::post('/update_company_info', [UserController::class, 'updateCompanyInfo'])->name('update_company_info');
+    Route::get('/get_company_info', [UserController::class, 'getCompanyInfo'])->name('get_company_info');
+
+
+
+
    });
 
     Route::delete('users/{id}/soft-delete', [UserController::class, 'softDelete']);

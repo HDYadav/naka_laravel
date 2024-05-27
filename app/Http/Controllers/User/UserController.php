@@ -99,6 +99,7 @@ class UserController extends ApiController
     }
 
 
+
     public function getEmployeBasicDetails(Request $request)
     {
 
@@ -124,8 +125,8 @@ class UserController extends ApiController
             'u.languages'
         )
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-        ->leftJoin('experiences as e', 'e.id', '=', 'u.experienced')
-        ->leftJoin('educations as edu', 'edu.id', '=', 'u.educationId')
+        ->leftJoin('experiance_details as e', 'e.id', '=', 'u.experienced')
+        ->leftJoin('education_details as edu', 'edu.id', '=', 'u.educationId')
         ->where('u.id', $user->id)
         ->get();
 
@@ -169,7 +170,44 @@ class UserController extends ApiController
     }
 
 
-   
+
+
+    public function updateCompanyInfo(Request $request)
+    {
+
+        $user = UserData::getUserFrToken($request);
+
+        $users =  User::where('id', $user->id)
+            ->update([
+                'name' => $request->name,
+                'companyLogo' => $request->companyLogo,
+                'companyBanner' => $request->companyBanner,
+                'company_name' => $request->company_name,
+                'company_size' => $request->company_size,
+                'mobile' => $request->mobile,
+                'email' => $request->email
+            ]);
+
+
+        return response()->json([
+            "message" => "Comapny info updated successfully"
+        ], 201);
+
+
+        // return $users;
+    }
+
+
+
+    public function getCompanyInfo(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $users = User::select('id', 'name', 'companyLogo', 'companyBanner', 'company_name', 'company_size', 'email', 'mobile')->where('id', $user->id)->get();
+
+        return response()->json($users);
+    }
+
 
     
 }
