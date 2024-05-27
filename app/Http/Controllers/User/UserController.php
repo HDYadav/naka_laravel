@@ -125,8 +125,8 @@ class UserController extends ApiController
             'u.languages'
         )
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-        ->leftJoin('experiance_details as e', 'e.id', '=', 'u.experienced')
-        ->leftJoin('education_details as edu', 'edu.id', '=', 'u.educationId')
+        ->leftJoin('experiences as e', 'e.id', '=', 'u.experienced')
+        ->leftJoin('educations as edu', 'edu.id', '=', 'u.educationId')
         ->where('u.id', $user->id)
         ->get();
 
