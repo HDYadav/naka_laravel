@@ -27,19 +27,19 @@ use App\Helpers\UserData;
 use App\Models\FavorateJob;
 use App\Models\Model\EducationDetails;
 use App\Models\Model\ExperianceDetails;
+use App\Models\Model\IndustryType;
 use App\Models\Model\Language;
 use App\Models\Model\Social;
 use App\Models\User;
 
 class JobsCotroller extends ApiController
 {
-    public function getAll(Request $request){ 
+    public function getAll(Request $request){  
+        
         $array = [];
         $jobpostiong =  Jobposition::select('id','name')->get();
         $state =  State::select('id', 'name')->get();
         $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
-
-
         $companyList =  CompanyList::select('id', 'name')->get();
         $emp_type =  EmployeementType::select('id', 'name')->get();
         $skills =  Skill::select('id', 'name')->get();
@@ -49,6 +49,7 @@ class JobsCotroller extends ApiController
         $promote = Promote::select('id', 'name')->get();
         $workplace = WorkPlace::select('id', 'name')->get();
         $language = Language::select('id', 'name')->orderBy('id','ASC')->get();
+        $industry_type = IndustryType::select('id', 'name')->orderBy('id', 'ASC')->get();
 
 
 
@@ -63,7 +64,8 @@ class JobsCotroller extends ApiController
                 'education' => $education,
                 'promote' => $promote,
                  'workplace' => $workplace,
-                 'languages' => $language
+                 'languages' => $language,
+                'industryType' => $industry_type
                 ];
 
         return $this->sucessResponse(null, $array, true, 201); 
