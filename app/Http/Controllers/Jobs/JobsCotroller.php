@@ -27,6 +27,7 @@ use App\Helpers\UserData;
 use App\Models\FavorateJob;
 use App\Models\Model\EducationDetails;
 use App\Models\Model\ExperianceDetails;
+use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Language;
 use App\Models\Model\Social;
@@ -35,7 +36,7 @@ use App\Models\User;
 class JobsCotroller extends ApiController
 {
     public function getAll(Request $request){  
-        
+
         $array = [];
         $jobpostiong =  Jobposition::select('id','name')->get();
         $state =  State::select('id', 'name')->get();
@@ -49,8 +50,7 @@ class JobsCotroller extends ApiController
         $promote = Promote::select('id', 'name')->get();
         $workplace = WorkPlace::select('id', 'name')->get();
         $language = Language::select('id', 'name')->orderBy('id','ASC')->get();
-        $industry_type = IndustryType::select('id', 'name')->orderBy('id', 'ASC')->get();
-
+        $industry_type = Industry::select('id', 'name')->orderBy('id', 'ASC')->get();
 
 
         $array= ['jobPosition'=> $jobpostiong,
