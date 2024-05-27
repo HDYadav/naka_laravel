@@ -25,6 +25,7 @@ use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
 use App\Models\FavorateJob;
+use App\Models\Model\EducationDetails;
 use App\Models\Model\ExperianceDetails;
 use App\Models\Model\Language;
 use App\Models\Model\Social;
@@ -482,37 +483,49 @@ class JobsCotroller extends ApiController
 
     public function eduCreateOrUpdate(Request $request)
     {
-          
 
-        $jobData = [
-            'name' => $request->name,
+
+        $currentlyPursuing = ($request->currentlyPursuing) ? 1 : 0;
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'user_id' => $user->id,    
             'collageName' => $request->collageName,
             'courseName' => $request->courseName,
             'startDate' => $request->startDate,
-            'endDate' => $request->endDate            
+            'endDate' => $request->endDate,
+            'currentlyPursuing' => $request->currentlyPursuing            
         ];
 
          
-        $job = Education::updateOrCreate(['id' => $request->id], $jobData);
+        $edu = EducationDetails::updateOrCreate(['id' => $request->id], $edudata);
 
-        return $this->sucessResponse('Job Cretaed Successfully', ['id' => $job->id], true, 201);
+        return $this->sucessResponse('Education Cretaed Successfully', ['id' => $edu->id], true, 201);
     }
 
 
 
-    public function getEducations()
+    public function getEducations(Request $request)
     {
 
-        $data = Education::select('id', 'name as name', 'collageName', 'courseName', 'startDate', 'endDate')->get(); 
+        $user = UserData::getUserFrToken($request);
+        $data = EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing')->where('user_id', $user->id)->get();
 
-        return $this->sucessResponse(null, $data, true, 201);
+        foreach ($data as $edu) {
+            $edu->currentlyPursuing = $edu->currentlyPursuing == 1 ? true : false;
+        }
+
+        return response()->json([
+            'data'   =>
+            $data,
+        ], 201); 
     }
 
 
 
     public function deleteEducation($id)
     {
-        $data = Education::where('id', $id)->delete();
+        $data = EducationDetails::where('id', $id)->delete();
 
         return $this->sucessResponse('Education sucessfylly deleted', $data, true, 201);
 
