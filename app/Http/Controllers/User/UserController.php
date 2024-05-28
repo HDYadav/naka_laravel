@@ -242,6 +242,11 @@ class UserController extends ApiController
         ->join('industries as i','i.id','=', 'u.industryTypeId')
         ->select('u.id', 'u.establishmentYear', 'u.organizationType', 'u.industryTypeId', 'i.name as industryType', 'u.website', 'u.company_size', 'about')->where('u.id', $user->id)->get();
 
+        if ($users->count() == 0) {
+            $users = "Records not matching";
+        }
+        
+
         return response()->json($users);
     }
     
