@@ -221,6 +221,8 @@ class JobsCotroller extends ApiController
                 'jc.name as city',
                 'u.id as companyId',
                  'u.company_name as company',
+                'u.companyLogo',
+                'u.companyBanner',
                 'et.id as employeementTypeId',
                 'et.name as employeementType',
                 'j.totalVacancy',
@@ -330,6 +332,7 @@ class JobsCotroller extends ApiController
             'et.name as employeementType',
             'wp.name as workPlace',
             'j.created_at as date',
+            'u.companyLogo',
             'fav.isFavourite' // Include the isFavourite field
         )->get();
 
@@ -441,6 +444,7 @@ class JobsCotroller extends ApiController
                 'et.name as employeementType',
                 'wp.name as workPlace',
                 'j.created_at as date',
+                'u.companyLogo',
                 'fav.isFavourite'                
             )
             ->get();
