@@ -209,7 +209,13 @@ class UserController extends ApiController
             $users = "Records not matching";
         }
 
-        return response()->json($users);
+         return response()->json([
+            'sucess'   => true,
+            'data'   => $users[0],
+
+        ], 201);
+
+        //return response()->json($users);
     }
 
 
@@ -249,9 +255,13 @@ class UserController extends ApiController
         if ($users->count() == 0) {
             $users = "Records not matching";
         }
-        
 
-        return response()->json($users);
+        return response()->json([
+            'sucess'   => true,
+            'data'   => $users[0],
+
+        ], 201);
+      //  return response()->json($users);
     }
     
 }
