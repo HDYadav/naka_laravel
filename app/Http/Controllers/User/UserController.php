@@ -183,7 +183,7 @@ class UserController extends ApiController
                 'companyLogo' => $request->companyLogo,
                 'companyBanner' => $request->companyBanner,
                 'company_name' => $request->company_name,
-                'company_size' => $request->company_size,
+                'company_size' => $request->company_size
                 // 'mobile' => $request->mobile,
                 // 'email' => $request->email
             ]);
