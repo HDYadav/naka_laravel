@@ -205,6 +205,10 @@ class UserController extends ApiController
 
         $users = User::select('id', 'name', 'companyLogo', 'companyBanner', 'company_name', 'company_size', 'email', 'mobile')->where('id', $user->id)->get();
 
+        if ($users->count() == 0) {
+            $users = "Records not matching";
+        }
+
         return response()->json($users);
     }
 
