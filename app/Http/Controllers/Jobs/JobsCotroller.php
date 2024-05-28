@@ -210,6 +210,7 @@ class JobsCotroller extends ApiController
                 'jp.name as jobPosiiton',
                 'u.company_size as employe_count',
                 'u.about as about_company',
+                'u.website',
                 'u.email',
                 'wp.id as workPlaceId',
                 'wp.name as workPlace',
