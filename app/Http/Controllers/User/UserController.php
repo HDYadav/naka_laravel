@@ -74,6 +74,8 @@ class UserController extends ApiController
     public function updateProfile(Request $request){
         
         $user = UserData::getUserFrToken($request);
+      //  $basicProfile = ($request->basicProfile) ? 1 : 0; 
+
 
         $users =  User::where('id', $user->id)
         ->update([
@@ -86,7 +88,7 @@ class UserController extends ApiController
             'experienced' => $request->experienced,
             'educationId' => $request->educationId,
             'skills' => $request->skills,
-            'languages' => $request->languages
+            'languages' => $request->languages 
         ]);
 
 
@@ -176,6 +178,7 @@ class UserController extends ApiController
     {
 
         $user = UserData::getUserFrToken($request);
+        //$basicProfile = ($request->basicProfile) ? 1 : 0; 
 
         $users =  User::where('id', $user->id)
             ->update([
@@ -263,5 +266,42 @@ class UserController extends ApiController
         ], 201);
       //  return response()->json($users);
     }
+
+
+
+
+    public function getProfileInfo(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $users = DB::table('users as u')
+        ->leftJoin('education_details as ed', 'ed.user_id', '=', 'u.id')
+        ->leftJoin('experiance_details as expd', 'expd.user_id', '=', 'u.id')
+        ->leftJoin('socials as so', 'so.user_id', '=', 'u.id')
+        ->select('u.basicProfile','u.companyInfo','u.foundingInfo', 'u.foundingInfo', 'expd.experience', 'ed.education', 'so.socialMedia')->where('u.id', $user->id)->get();
+
+        foreach ($users as $user) {
+            // Convert isFavourite to boolean
+            $user->basicProfile = $user->basicProfile == 1 ? true : false;
+            $user->companyInfo = $user->companyInfo == 1 ? true : false;
+            $user->foundingInfo = $user->foundingInfo == 1 ? true : false;
+            $user->experience = $user->experience == 1 ? true : false;
+            $user->education = $user->education == 1 ? true : false;
+            $user->socialMedia = $user->socialMedia == 1 ? true : false;
+        } 
+
+
+        if ($users->count() == 0) {
+            $users = "Records not matching";
+        }
+
+        return response()->json([
+            'sucess'   => true,
+            'data'   => $users[0],
+
+        ], 201);
+        //  return response()->json($users);
+    }
+
     
 }

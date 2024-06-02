@@ -103,15 +103,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/upload_image', [UserController::class, 'uploadImage'])->name('upload_image');
     Route::post('/update_profile', [UserController::class, 'updateProfile'])->name('update_profile');
     Route::get('/get_employe_basic_details', [UserController::class, 'getEmployeBasicDetails'])->name('get_employe_basic_details');
-
-
-
     Route::post('/update_company_info', [UserController::class, 'updateCompanyInfo'])->name('update_company_info');
     Route::get('/get_company_info', [UserController::class, 'getCompanyInfo'])->name('get_company_info');
-
-
     Route::post('/update_company_founding', [UserController::class, 'updateFoundingInfo'])->name('update_company_founding');
     Route::get('/get_founding_info', [UserController::class, 'getFoundingInfo'])->name('get_founding_info');
+
+
+     Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status');
+
 
 
 

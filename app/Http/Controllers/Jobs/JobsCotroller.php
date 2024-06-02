@@ -492,7 +492,8 @@ class JobsCotroller extends ApiController
     {
 
 
-        $currentlyPursuing = ($request->currentlyPursuing) ? 1 : 0;
+        $currentlyPursuing = ($request->currentlyPursuing) ? 1 : 0; 
+
         $user = UserData::getUserFrToken($request);
 
         $edudata = [
@@ -501,7 +502,7 @@ class JobsCotroller extends ApiController
             'courseName' => $request->courseName,
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
-            'currentlyPursuing' => $request->currentlyPursuing            
+            'currentlyPursuing' => $request->currentlyPursuing 
         ];
 
          
@@ -567,9 +568,9 @@ class JobsCotroller extends ApiController
 
         $user = UserData::getUserFrToken($request);
 
-         $currentlyWorking = ($request->currentlyWorking) ? 1 : 0; 
+         $currentlyWorking = ($request->currentlyWorking) ? 1 : 0;
 
-      //  $currentlyWorking = $request->boolean('currentlyWorking', false);
+      //  $experience = ($request->experience) ? 1 : 0;  
 
 
         $expData = [           
@@ -578,11 +579,9 @@ class JobsCotroller extends ApiController
             'company' => $request->company,
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
-            "currentlyWorking" => $currentlyWorking
-        ];
-
-         //dd($expData, $request->id);
-
+            "currentlyWorking" => $currentlyWorking 
+            
+        ]; 
 
         $exp = ExperianceDetails::updateOrCreate(['id' => $request->id], $expData);
 
@@ -603,6 +602,7 @@ class JobsCotroller extends ApiController
     public function socialCreateOrUpdate(Request $request)
     {
         $user = UserData::getUserFrToken($request);
+       // $socialMedia = ($request->socialMedia) ? 1 : 0;  
 
         $expData = [
             'user_id' => $user->id,

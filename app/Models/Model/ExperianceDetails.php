@@ -9,6 +9,6 @@ class ExperianceDetails extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','designation', 'company', 'startDate', 'endDate', 'currentlyWorking'];
+    protected $fillable = ['user_id','designation', 'company', 'startDate', 'endDate', 'currentlyWorking', 'experience'];
 
 }

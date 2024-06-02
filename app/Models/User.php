@@ -32,6 +32,9 @@ class User extends Authenticatable
         'dob',
         'company_name',
         'company_size',
+        'basicProfile',
+        'companyInfo',
+        'foundingInfo',
         'password',
     ];
 
