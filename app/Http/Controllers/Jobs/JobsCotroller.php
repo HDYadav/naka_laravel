@@ -250,6 +250,8 @@ class JobsCotroller extends ApiController
             $job->skills = $this->getSkills($job->skills);
         } 
 
+        dd($jobs);
+
         return $this->sucessResponse(null, $jobs, true, 201);
     }
 
