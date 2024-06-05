@@ -243,7 +243,7 @@ class JobsCotroller extends ApiController
                 'aj.id as application_status',
                 'j.skills'
             )
-            ->first();  
+            ->get();  
          
          
         foreach ($jobs as $job) {
