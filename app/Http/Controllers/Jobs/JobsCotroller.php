@@ -240,7 +240,7 @@ class JobsCotroller extends ApiController
                 'ed.id as educationId',
                 'ed.name as education',
                 'pt.id as promoteId',
-                'aj.id as application_status',
+                'aj.application_status',
                 'j.skills'
             )
             ->get();  
