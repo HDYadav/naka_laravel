@@ -205,6 +205,7 @@ class JobsCotroller extends ApiController
             ->join('users as u', 'u.id', '=', 'j.company')
             ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
             ->where('j.id', '=', $id)
+            ->groupBy('j.id')
             ->select(
                 'j.id',
                 'j.description',
@@ -242,7 +243,7 @@ class JobsCotroller extends ApiController
                 'aj.id as application_status',
                 'j.skills'
             )
-            ->get();  
+            ->first();  
          
          
         foreach ($jobs as $job) {
