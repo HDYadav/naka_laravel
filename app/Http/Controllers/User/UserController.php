@@ -74,7 +74,9 @@ class UserController extends ApiController
     public function updateProfile(Request $request){
         
         $user = UserData::getUserFrToken($request);
-      //  $basicProfile = ($request->basicProfile) ? 1 : 0; 
+        //  $basicProfile = ($request->basicProfile) ? 1 : 0; 
+
+        $basicProfile =  1;  
 
 
         $users =  User::where('id', $user->id)
@@ -88,7 +90,8 @@ class UserController extends ApiController
             'experienced' => $request->experienced,
             'educationId' => $request->educationId,
             'skills' => $request->skills,
-            'languages' => $request->languages 
+            'languages' => $request->languages,
+            'basicProfile' => $basicProfile
         ]);
 
 
@@ -180,13 +183,17 @@ class UserController extends ApiController
         $user = UserData::getUserFrToken($request);
         //$basicProfile = ($request->basicProfile) ? 1 : 0; 
 
+        $companyInfo = 1 ; 
+
+
         $users =  User::where('id', $user->id)
             ->update([
                 'name' => $request->name,
                 'companyLogo' => $request->companyLogo,
                 'companyBanner' => $request->companyBanner,
                 'company_name' => $request->company_name,
-                'company_size' => $request->company_size
+                'company_size' => $request->company_size,
+                 "companyInfo" => $companyInfo
                 // 'mobile' => $request->mobile,
                 // 'email' => $request->email
             ]);
@@ -229,13 +236,16 @@ class UserController extends ApiController
 
         $user = UserData::getUserFrToken($request);
 
+        $foundingInfo = 1;
+
         $users =  User::where('id', $user->id)
             ->update([
                 'establishmentYear' => $request->establishmentYear,
                 'organizationType' => $request->organizationType,
                 'industryTypeId' => $request->industryTypeId,
                 'website' => $request->website,
-                'about' => $request->about 
+                'about' => $request->about,
+                 "foundingInfo" => $foundingInfo
             ]);
 
 
