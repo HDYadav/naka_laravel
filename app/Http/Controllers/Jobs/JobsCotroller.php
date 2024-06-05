@@ -26,9 +26,11 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
 use App\Models\FavorateJob;
 use App\Models\Model\EducationDetails;
+use App\Models\Model\EmployerFavorate;
 use App\Models\Model\ExperianceDetails;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
+use App\Models\Model\JobApplyed;
 use App\Models\Model\Language;
 use App\Models\Model\Social;
 use App\Models\User;
@@ -201,6 +203,7 @@ class JobsCotroller extends ApiController
             ->join('educations as ed', 'ed.id', '=', 'j.education')
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
             ->join('users as u', 'u.id', '=', 'j.company')
+            ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
             ->where('j.id', '=', $id)
             ->select(
                 'j.id',
@@ -236,6 +239,7 @@ class JobsCotroller extends ApiController
                 'ed.id as educationId',
                 'ed.name as education',
                 'pt.id as promoteId',
+                'aj.id as application_status',
                 'j.skills'
             )
             ->get();  
@@ -633,6 +637,213 @@ class JobsCotroller extends ApiController
 
         return $this->sucessResponse('Experience sucessfylly deleted', $data, true, 201);
     }
+
+
+
+    public function applyJob(Request $request)
+    {
+        try {
+            $user = UserData::getUserFrToken($request);
+
+            $apply = ($request->isApplyed) ? 1 : 0;
+
+            $data = [];
+
+            $data = [
+                'user_id' => $user->id,
+                'job_id' => $request->job_id,
+                'isApplyed' => $apply,
+                'application_status' => 'Submited'
+            ];
+ 
+
+           // $data =  JobApplyed::create($data);
+
+            $job = JobApplyed::updateOrCreate(['id' => $request->id], $data); 
+
+
+            return response()->json([
+            'sucess'   => true,
+            'message'   => 'Applied successfully',
+
+        ], 201);
+
+
+ 
+            // $lastId = $data->id;
+            // $lastInsertedData = DB::table('applyed_job')->where('id', $lastId)->first();
+            // $isApplyed = $lastInsertedData->isApplyed == 1 ? true : false;
+
+            // return $this->sucessResponse('Applied successfully', ['id' => $lastId, 'isApplyed' => $isApplyed], true, 201);
+        } catch (\Exception $e) { 
+            return $this->errorResponse($e->getMessage(), 500); 
+        }
+    }
+
+
+    public function getAppliedJob(Request $request){
+
+        $user = UserData::getUserFrToken($request);
+
+ 
+
+       $users = DB::table('applyed_job as aj')
+                ->join('users as u', 'u.id', '=', 'aj.user_id')
+                ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+                ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+                ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+                ->select('aj.id','u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite')
+                ->where('aj.user_id', $user->id)
+                ->where('aj.job_id', $request->job_id)
+                ->get();
+
+                 foreach ($users as $user) { 
+                     $user->isFavourite	 = $user->isFavourite	 == 1 ? true : false; 
+                  }  
+
+
+    return $users;
+    }
+
+
+
+
+    public function addEmployerFavourite(Request $request)
+    {
+        try {
+            // Check if all required parameters are present in the request
+            $requiredParams = ['user_id', 'job_id', 'isFavourite'];
+            foreach ($requiredParams as $param) {
+                if (!$request->has($param)) {
+                    return response()->json(['success' => false, 'message' => 'Required parameter missing: ' . $param], 400);
+                }
+            }
+
+            $user = UserData::getUserFrToken($request);
+            $fav = $request->isFavourite ? 1 : 0;
+
+            $jobData = [
+                'user_id' => $request->user_id,
+                'employer_id' => $user->id,
+                'job_id' => $request->job_id,
+                'isFavourite' => $fav,
+            ];
+
+            $existingRecord = EmployerFavorate::where('user_id', $user->id)
+                ->where('job_id', $request->job_id)
+                ->first();
+
+            if ($existingRecord) {
+                // Update existing record if isFavourite changed to 0
+                if ($fav == 0) {
+                    $existingRecord->delete();
+                    return response()->json(['success' => true, 'message' => 'Record deleted.']);
+                }
+            } else {
+                // Insert the new record if isFavourite is 1
+                if ($fav == 1) {
+                    
+                    $data =  EmployerFavorate::create($jobData);
+                    $lastId = $data->id;
+                    $lastInsertedData = EmployerFavorate::find($lastId);
+                    $isFavourite = $lastInsertedData->isFavourite == 1;
+                    return response()->json(['success' => true, 'message' => 'Successfully created favorite', 'data' => ['id' => $lastId, 'isFavourite' => $isFavourite]], 201);
+                }
+            }
+
+            return response()->json(['success' => false, 'message' => 'No action performed.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+    public function getRecentlyAppliedJob(Request $request)
+    {
+
+        $user = UserData::getUserFrToken($request); 
+
+        $users = DB::table('applyed_job as aj')
+        ->join('users as u', 'u.id', '=', 'aj.user_id')
+        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+            ->select('aj.id', 'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite')
+            ->where('aj.user_id', $user->id)
+            ->where('aj.isApplyed', 1)          
+            ->get();
+
+        foreach ($users as $user) {
+            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
+        }
+
+
+        return $users;
+    }
+
+
+
+
+    public function jobApplicationStatus(Request $request)
+    {
+        try {
+         //   $user = UserData::getUserFrToken($request);
+
+        
+            $data = [
+                'application_status' => $request->status
+            ]; 
+
+            // $job = JobApplyed::updateOrCreate(['id' => $request->id], $data);
+
+            JobApplyed::where('id', $request->id)->update($data);
+
+
+            return response()->json([
+                'sucess'   => true,
+                'message'   => 'Job Application Status has been changed',
+
+            ], 201);
+
+
+
+           
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+
+
+
+    public function getJobAppliyedList(Request $request)
+    {
+
+        $user = UserData::getUserFrToken($request);
+
+        $users = DB::table('applyed_job as aj')
+        ->join('users as u', 'u.id', '=', 'aj.user_id')
+        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+        ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
+        ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
+        ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
+        ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
+        ->select('aj.id','u.companyLogo', 'jp.name as jobPosition',  'ef.isFavourite', 'u.company_name', 'jc.name as city','jobstate.name as state', 'etype.name as employeementType','wp.name as workPlace','aj.application_status	 as status')
+        ->where('aj.user_id', $user->id)
+        ->where('aj.isApplyed', 1)
+        ->get();
+
+        foreach ($users as $user) {
+            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
+        }
+
+
+        return $users;
+    }
+
 
 
 
