@@ -825,26 +825,26 @@ class JobsCotroller extends ApiController
 
         $user = UserData::getUserFrToken($request);
 
-        $users = DB::table('applyed_job as aj')
+        $users = DB::table('applied_job as aj')
         ->join('users as u', 'u.id', '=', 'aj.user_id')
         ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosition')
+        ->leftJoin('employer_favorites as ef', 'ef.job_id', '=', 'j.id')
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
         ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
-        ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
+        ->leftJoin('employment_types as etype', 'etype.id', '=', 'j.employmentType')
         ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
-        ->select('aj.id','u.companyLogo', 'jp.name as jobPosition',  'ef.isFavourite', 'u.company_name', 'jc.name as city','jobstate.name as state', 'etype.name as employeementType','wp.name as workPlace','aj.application_status	as status', 'aj.created_at as date')
+        ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosition', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employmentType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date')
         ->where('aj.user_id', $user->id)
-        ->where('aj.isApplyed', 1)
+        ->where('aj.isApplied', 1)
         ->get();
 
         foreach ($users as $user) {
-            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
+            $user->isFavourite = $user->isFavourite == 1 ? true : false;
         }
 
-
         return $users;
+
     }
 
 
