@@ -836,7 +836,7 @@ class JobsCotroller extends ApiController
         ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
         ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosition', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employmentType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date')
         ->where('aj.user_id', $user->id)
-        ->where('aj.isApplied', 1)
+        ->where('aj.isApplyed', 1)
         ->get();
 
         foreach ($users as $user) {
