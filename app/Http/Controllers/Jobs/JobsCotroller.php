@@ -829,7 +829,7 @@ class JobsCotroller extends ApiController
         ->join('users as u', 'u.id', '=', 'aj.user_id')
         ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosition')
-        ->leftJoin('employer_favorites as ef', 'ef.job_id', '=', 'j.id')
+        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
         ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
         ->leftJoin('employment_types as etype', 'etype.id', '=', 'j.employmentType')
