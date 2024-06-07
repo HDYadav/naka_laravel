@@ -687,7 +687,6 @@ class JobsCotroller extends ApiController
     public function getAppliedJob(Request $request){
 
         $user = UserData::getUserFrToken($request);
-
  
 
        $users = DB::table('applyed_job as aj')
@@ -781,6 +780,12 @@ class JobsCotroller extends ApiController
             $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
         }
 
+
+        return response()->json([
+            'sucess'   => true,
+            'data'   => $users,
+
+        ], 201);
 
         return $users;
     }
