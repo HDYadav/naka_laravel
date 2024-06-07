@@ -122,7 +122,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/get_company_info', [UserController::class, 'getCompanyInfo'])->name('get_company_info');
     Route::post('/update_company_founding', [UserController::class, 'updateFoundingInfo'])->name('update_company_founding');
     Route::get('/get_founding_info', [UserController::class, 'getFoundingInfo'])->name('get_founding_info');
-     Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status'); 
+     Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status');
+
+
+        Route::get('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
+
 
 
    });

@@ -313,5 +313,52 @@ class UserController extends ApiController
         //  return response()->json($users);
     }
 
+
+    public function getUserProfile(Request $request)
+    {
+
+     //   dd($request->user_id);
+
+
+       // $user = UserData::getUserFrToken($request);
+
+        $users = DB::table('users as u')
+        ->select(
+            'u.id',
+            'u.profilePic',
+            'u.name as fullName',
+            'u.mobile as mobileNumber',
+            'u.email as emailId',
+            'u.dob as dateOfBirth',
+            'u.gender',
+            'u.maritalStatus',
+            'u.professionId',
+            'jp.name as profession',
+            'e.id as experienceId',
+            'e.name as experience',
+            'edu.id as educationId',
+            'edu.name as education',
+            'u.skills',
+            'u.languages'
+        )
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
+            ->leftJoin('experiences as e', 'e.id', '=', 'u.experienced')
+            ->leftJoin('educations as edu', 'edu.id', '=', 'u.educationId')
+            ->where('u.id', $request->user_id)
+            ->get();
+
+        // Process the skills and languages fields
+        $users->transform(function ($user) {
+            $user->skills = $this->getSkills($user->skills);
+            $user->languages = $this->getLanguages($user->languages);
+            return $user;
+        });
+
+        return response()->json([
+            'data'   =>  $users['0'],
+        ], 201);
+    }
+
+
     
 }
