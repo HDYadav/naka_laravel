@@ -662,7 +662,9 @@ class JobsCotroller extends ApiController
 
            // $data =  JobApplyed::create($data);
 
-            $job = JobApplyed::updateOrCreate(['id' => $request->id], $data); 
+            $job = JobApplyed::updateOrCreate(
+                ['user_id' => $user->id, 'job_id'=> $request->job_id],
+                 $data); 
 
 
             return response()->json([
