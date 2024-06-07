@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use App\Models\Model\EducationDetails; 
+use App\Models\Model\ExperianceDetails;
 
 class UserController extends ApiController
 {
@@ -333,17 +335,10 @@ class UserController extends ApiController
             'u.gender',
             'u.maritalStatus',
             'u.professionId',
-            'jp.name as profession',
-            'e.id as experienceId',
-            'e.name as experience',
-            'edu.id as educationId',
-            'edu.name as education',
+            'jp.name as profession',     
             'u.skills',
-            'u.languages'
-        )
-            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-            ->leftJoin('experiences as e', 'e.id', '=', 'u.experienced')
-            ->leftJoin('educations as edu', 'edu.id', '=', 'u.educationId')
+            'u.languages'  )
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')           
             ->where('u.id', $request->user_id)
             ->get();
 
@@ -351,6 +346,9 @@ class UserController extends ApiController
         $users->transform(function ($user) {
             $user->skills = $this->getSkills($user->skills);
             $user->languages = $this->getLanguages($user->languages);
+            $user->experiance = $this->getExp($user->id);
+            $user->education = $this->getEdu($user->id);
+
             return $user;
         });
 
@@ -359,6 +357,16 @@ class UserController extends ApiController
         ], 201);
     }
 
+
+    protected function getExp($user_id){
+       return ExperianceDetails::select('id', 'designation', 'company', 'startDate', 'endDate', 'currentlyWorking')->where('user_id', $user_id)->get();
+
+    }
+
+    protected function getEdu($user_id)
+    {
+        return  EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing', 'education')->where('user_id', $user_id)->get();
+    }
 
     
 }
