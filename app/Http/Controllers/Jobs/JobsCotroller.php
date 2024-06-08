@@ -831,10 +831,9 @@ class JobsCotroller extends ApiController
     {
 
         $user = UserData::getUserFrToken($request);
-
-        $users = DB::table('applyed_job as aj')
-        ->join('users as u', 'u.id', '=', 'aj.user_id')
+        $users = DB::table('applyed_job as aj') 
         ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+            ->join('users as u', 'u.id', '=', 'j.created_by')
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
         ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
