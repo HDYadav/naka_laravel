@@ -769,19 +769,18 @@ class JobsCotroller extends ApiController
         $user = UserData::getUserFrToken($request); 
 
         $users = DB::table('applyed_job as aj')
-        ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
-        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+            ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
+            ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
             ->select('aj.id', 'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite','j.id as job_id')
-            //->where('aj.user_id', $user->id)
-        ->where('j.created_by', $user->id)
-            ->where('aj.isApplyed', 1)          
-            ->get();
+              ->where('j.created_by', $user->id)
+                ->where('aj.isApplyed', 1)          
+                ->get();
 
-        foreach ($users as $user) {
-            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
-        }
+            foreach ($users as $user) {
+                $user->isFavourite = $user->isFavourite == 1 ? true : false;
+            }
 
 
         return response()->json([
@@ -842,8 +841,10 @@ class JobsCotroller extends ApiController
         ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
         ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
         ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
-        ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosiiton', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employeementType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date')
-        ->where('aj.user_id', $user->id)
+        ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosiiton', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employeementType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date','u.id as user_id')
+       // ->where('aj.user_id', $user->id)
+        ->where('j.created_by', $user->id)
+        
         ->where('aj.isApplyed', 1)
         ->get();
 
@@ -851,7 +852,16 @@ class JobsCotroller extends ApiController
             $user->isFavourite = $user->isFavourite == 1 ? true : false;
         }
 
-        return $users;
+        return response()->json([
+            'sucess'   => true,
+            'message'   => 'Job Application Status has been changed',
+            'data' => $users
+
+        ], 201);
+
+
+
+      //  return $users;
 
     }
 
