@@ -337,7 +337,7 @@ class UserController extends ApiController
             'u.professionId',
             'jp.name as profession',     
             'u.skills',
-            'u.languages'  )
+            'u.languages')
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')           
             ->where('u.id', $request->user_id)
             ->get();
@@ -360,7 +360,6 @@ class UserController extends ApiController
 
     protected function getExp($user_id){
        return ExperianceDetails::select('id', 'designation', 'company', 'startDate', 'endDate', 'currentlyWorking')->where('user_id', $user_id)->get();
-
     }
 
     protected function getEdu($user_id)

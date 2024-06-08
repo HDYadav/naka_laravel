@@ -125,7 +125,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status');
 
 
-        Route::get('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
+        Route::post('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
 
 
 
