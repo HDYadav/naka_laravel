@@ -841,9 +841,9 @@ class JobsCotroller extends ApiController
             ];
 
             $existingRecord = EmployerFavorate::where('employer_id', $user->id)
-                ->where('user_id', $request->user_id)
-                ->where('job_id', $request->job_id)
-                ->first();
+                            ->where('user_id', $request->user_id)
+                            ->where('job_id', $request->job_id)
+                            ->first();
 
             if ($existingRecord) {
                 // Update existing record if isFavourite changed to 0
@@ -982,7 +982,7 @@ class JobsCotroller extends ApiController
                 ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
                 ->select('u.id as employee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite', 'aj.job_id')
                 ->where('ef.employer_id', $user->id)
-                ->where('j.created_by', $user->id)
+                //->where('j.created_by', $user->id)
                 //->where('aj.job_id', $request->job_id)
                 ->get();
 
