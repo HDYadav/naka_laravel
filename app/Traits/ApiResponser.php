@@ -81,6 +81,7 @@ trait ApiResponser{
 
     protected function cacheResponse($data){        
         $url = request()->url();
+        
         Cache::remember($url,30/60, function() use($data){
             return $data;
         });

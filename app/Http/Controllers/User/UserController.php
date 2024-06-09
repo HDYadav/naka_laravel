@@ -337,8 +337,11 @@ class UserController extends ApiController
             'u.professionId',
             'jp.name as profession',     
             'u.skills',
-            'u.languages')
-            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')           
+            'u.languages',
+            'ap.job_id'
+            )
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
+            ->leftJoin('applyed_job as ap', 'ap.user_id', '=', 'u.id')       
             ->where('u.id', $request->user_id)
             ->get();
 
@@ -348,23 +351,44 @@ class UserController extends ApiController
             $user->languages = $this->getLanguages($user->languages);
             $user->experiance = $this->getExp($user->id);
             $user->education = $this->getEdu($user->id);
-
             return $user;
         });
 
-        return response()->json([
-            'data'   =>  $users['0'],
-        ], 201);
+
+        if ($users->isEmpty()) {
+            return response()->json([
+                'data' => false,
+                'message' =>'records not found'
+            ], 404);
+        } else {
+            return response()->json([
+                'data' => $users[0],
+            ], 201);
+        }
     }
 
 
     protected function getExp($user_id){
-       return ExperianceDetails::select('id', 'designation', 'company', 'startDate', 'endDate', 'currentlyWorking')->where('user_id', $user_id)->get();
+       $expers =  ExperianceDetails::select('id', 'designation', 'company', 'startDate', 'endDate', 'currentlyWorking')->where('user_id', $user_id)->get();
+
+        foreach ($expers as $exp) { 
+            $exp->basicProfile = $exp->basicProfile == 1 ? true : false; 
+        } 
+
+    return $expers;
+
     }
 
     protected function getEdu($user_id)
     {
-        return  EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing', 'education')->where('user_id', $user_id)->get();
+        $educations = EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing', 'education')->where('user_id', $user_id)->get();
+
+        foreach ($educations as $exp) {
+            $exp->basicProfile = $exp->basicProfile == 1 ? true : false;
+        }
+
+        return $educations;
+
     }
 
     

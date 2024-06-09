@@ -833,7 +833,7 @@ class JobsCotroller extends ApiController
         $user = UserData::getUserFrToken($request);
         $users = DB::table('applyed_job as aj') 
         ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-            ->join('users as u', 'u.id', '=', 'j.created_by')
+        ->join('users as u', 'u.id', '=', 'aj.user_id')
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
         ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
@@ -842,8 +842,7 @@ class JobsCotroller extends ApiController
         ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
         ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosiiton', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employeementType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date','u.id as user_id')
        // ->where('aj.user_id', $user->id)
-        ->where('j.created_by', $user->id)
-        
+        ->where('j.created_by', $user->id)        
         ->where('aj.isApplyed', 1)
         ->get();
 
