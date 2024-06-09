@@ -798,19 +798,15 @@ class JobsCotroller extends ApiController
     public function jobApplicationStatus(Request $request)
     {
         try {
+            
            $user = UserData::getUserFrToken($request);
 
         
             $data = [
                 'application_status' => $request->status
-            ]; 
-
-            // $job = JobApplyed::updateOrCreate(['id' => $request->id], $data); 
+            ];  
             
-             JobApplyed::where('user_id', $request->user_id)->where('job_id', $request->job_id)->update($data); 
-
-           // JobApplyed::where('id', $request->id)->update($data);
-
+             JobApplyed::where('job_id', $request->job_id)->update($data);  
 
             return response()->json([
                 'sucess'   => true,
