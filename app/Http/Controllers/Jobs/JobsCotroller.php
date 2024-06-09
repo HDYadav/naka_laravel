@@ -841,6 +841,7 @@ class JobsCotroller extends ApiController
             ];
 
             $existingRecord = EmployerFavorate::where('employer_id', $user->id)
+                ->where('user_id', $request->user_id)
                 ->where('job_id', $request->job_id)
                 ->first();
 
