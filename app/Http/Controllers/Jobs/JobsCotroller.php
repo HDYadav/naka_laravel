@@ -979,6 +979,7 @@ class JobsCotroller extends ApiController
 
         $users = DB::table('employer_favorates as ef')                
                 ->where('ef.employer_id', $user->id)
+               ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
                ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
                 //->where('j.created_by', $user->id)
                 //->where('aj.job_id', $request->job_id)
