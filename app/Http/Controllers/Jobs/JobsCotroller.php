@@ -249,11 +249,23 @@ class JobsCotroller extends ApiController
          
         foreach ($jobs as $job) {
             $job->skills = $this->getSkills($job->skills);
-        } 
+        }
 
-        //dd($jobs[0]);
 
-        return $this->sucessResponse(null, $jobs[0], true, 201);
+        if ($jobs->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $jobs[0],
+            ], 201);
+        }
+
+
+         
     }
 
     protected function getSkills($skills)
