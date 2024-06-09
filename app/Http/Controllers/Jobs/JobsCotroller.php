@@ -263,12 +263,91 @@ class JobsCotroller extends ApiController
                 'success' => true,
                 'data' => $jobs['0'],
             ], 201);
+        } 
+    }
+
+
+
+
+    public function getEmpJobsDetails($id, Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $jobs = DB::table('jobs as j')
+        ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
+        ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+        ->join('job_states as js', 'js.id', '=', 'j.state')
+        ->join('job_cities as jc', 'jc.id', '=', 'j.city')
+            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
+            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+            ->join('educations as ed', 'ed.id', '=', 'j.education')
+            ->join('promotes as pt', 'pt.id', '=', 'j.promote')
+            ->join('users as u', 'u.id', '=', 'j.company')
+            ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
+            ->where('j.id', '=', $id)
+            //  ->where('u.id', '=', $user->id) 
+            ->groupBy('j.id')
+            ->select(
+                'j.id',
+                'j.description',
+                'j.created_at as crated_date',
+                'jp.id as jobPosiitonId',
+                'jp.name as jobPosiiton',
+                'u.company_size as employe_count',
+                'u.about as about_company',
+                'u.website',
+                'u.email',
+                'wp.id as workPlaceId',
+                'wp.name as workPlace',
+                'j.country',
+                'js.id as stateId',
+                'js.name as state',
+                'jc.id as cityId',
+                'jc.name as city',
+                'u.id as companyId',
+                'u.company_name as company',
+                'u.companyLogo',
+                'u.companyBanner',
+                'et.id as employeementTypeId',
+                'et.name as employeementType',
+                'j.totalVacancy',
+                'j.deadline',
+                'st.id as salaryTypeId',
+                'st.name as salaryType',
+                'j.minSalary',
+                'j.maxSalary',
+                'ex.id as experienceId',
+                'ex.name as experience',
+                'ed.id as educationId',
+                'ed.name as education',
+                'pt.id as promoteId',
+                 'aj.application_status',
+                'j.skills'
+            )
+            ->get();
+
+
+        foreach ($jobs as $job) {
+            $job->skills = $this->getSkills($job->skills);
         }
 
 
-        
-        
+        if ($jobs->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $jobs['0'],
+            ], 201);
+        }
     }
+
+
+
 
     protected function getSkills($skills)
     {

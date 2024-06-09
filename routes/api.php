@@ -71,7 +71,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
 
-        Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');
+        Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer company 
+
+        Route::get('/get_emp_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_emp_jobs_details');  // for emploee job seekeer 
+
+
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
         Route::post('/jobs_opening', [JobsCotroller::class, 'jobOpenings'])->name('jobs_opening');
         Route::post('/add_favourite', [JobsCotroller::class, 'addFavourite'])->name('add_favourite');
