@@ -359,7 +359,10 @@ class UserController extends ApiController
                 'u.gender',
                 'u.maritalStatus',
                 'u.professionId',
-                 'aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status', 'jp.name as profession')
+                 'aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status', 'jp.name as profession',
+                'u.skills',
+                'u.languages'
+                 )
                 ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
                 ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
                 ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
