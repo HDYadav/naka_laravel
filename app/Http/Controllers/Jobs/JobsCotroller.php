@@ -880,8 +880,7 @@ class JobsCotroller extends ApiController
             ->join('users as u', 'u.id', '=', 'aj.user_id')
             ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            // ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
-            // ->leftJoin('employer_favorates as ef_user', 'ef_user.user_id', '=', 'u.id')  
+                      
             ->leftJoin('employer_favorates as ef', function ($join) {
                 $join->on('ef.job_id', '=', 'j.id')
                     ->on('ef.user_id', '=', 'u.id');
@@ -1022,11 +1021,9 @@ class JobsCotroller extends ApiController
             ], 401);
         } 
 
-        $usersQuery = DB::table('applyed_job as aj')
-        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        $usersQuery = DB::table('applyed_job as aj') 
         ->join('users as u', 'u.id', '=', 'j.created_by')
-        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')        
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
         ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
         ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
@@ -1034,8 +1031,7 @@ class JobsCotroller extends ApiController
         ->select(
             'aj.id',
             'u.companyLogo',
-            'jp.name as jobPosition',
-            'ef.isFavourite',
+            'jp.name as jobPosition',            
             'u.company_name',
             'jc.name as city',
             'jobstate.name as state',
@@ -1054,12 +1050,10 @@ class JobsCotroller extends ApiController
             $usersQuery->where('aj.application_status', $request->status);
         }
 
-        $users = $usersQuery->where('aj.isApplyed', 1)
-            ->get();
+        // $users = $usersQuery->where('aj.isApplyed', 1)
+        $users =  $usersQuery->get();
 
-        foreach ($users as $user) {
-            $user->isFavourite = $user->isFavourite == 1;
-        }
+       
 
         return response()->json([
             'success' => true,
