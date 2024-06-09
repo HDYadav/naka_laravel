@@ -1009,25 +1009,48 @@ class JobsCotroller extends ApiController
     {
         $user = UserData::getUserFrToken($request);
 
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid user.',
+                'data' => []
+            ], 401);
+        } 
+
         $usersQuery = DB::table('applyed_job as aj')
-            ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-            ->join('users as u', 'u.id', '=', 'aj.user_id')
-            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
-            ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
-            ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
-            ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
-            ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
-            ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosiiton', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employeementType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date', 'u.id as user_id');
+        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->join('users as u', 'u.id', '=', 'j.created_by')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+        ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
+        ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
+        ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
+        ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
+        ->select(
+            'aj.id',
+            'u.companyLogo',
+            'jp.name as jobPosition',
+            'ef.isFavourite',
+            'u.company_name',
+            'jc.name as city',
+            'jobstate.name as state',
+            'etype.name as employeementType',
+            'wp.name as workPlace',
+            'aj.application_status as status',
+            'aj.created_at as date',
+            'u.id as user_id',
+            'j.id as job_id'
+        );           
+                        
+       
 
         if ($request->status == 'Active') {
-            $usersQuery->whereIn('aj.application_status', ['Submited', 'Shortlisted', 'Interview']);
+            $usersQuery->whereIn('aj.application_status', ['Submitted', 'Shortlisted', 'Interview']);
         } else {
             $usersQuery->where('aj.application_status', $request->status);
         }
 
-        $users = $usersQuery->where('u.id', $user->id)
-            ->where('aj.isApplyed', 1)
+        $users = $usersQuery->where('aj.isApplyed', 1)
             ->get();
 
         foreach ($users as $user) {
@@ -1036,10 +1059,11 @@ class JobsCotroller extends ApiController
 
         return response()->json([
             'success' => true,
-            'message' => '',
+            'message' => 'Jobs retrieved successfully.',
             'data' => $users
-        ], 201);
+        ], 200);
     }
+
 
 
 
