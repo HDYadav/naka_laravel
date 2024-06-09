@@ -887,9 +887,9 @@ class JobsCotroller extends ApiController
                 ->where('aj.isApplyed', 1)          
                 ->get();
 
-            foreach ($users as $user) {
-                $user->isFavourite = $user->isFavourite == 1 ? true : false;
-            }
+            // foreach ($users as $user) {
+            //     $user->isFavourite = $user->isFavourite == 1 ? true : false;
+            // }
 
 
         return response()->json([
