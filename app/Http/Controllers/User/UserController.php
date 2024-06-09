@@ -347,7 +347,10 @@ class UserController extends ApiController
         //     ->where('u.id', $request->user_id)
         //     ->get();
 
-        $users = DB::table('users as u')
+
+        $users = DB::table('applyed_job as ap')
+        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->join('users as u', 'u.id', '=', 'j.created_by')
             ->select(
                 'u.id',
                 'u.profilePic',
@@ -363,13 +366,7 @@ class UserController extends ApiController
                 'u.languages',
                 'ap.application_status',
                 'ap.job_id'
-            )
-            ->leftJoin('applyed_job as ap', 'ap.user_id', '=', 'u.id')
-            ->leftJoin('jobs as j', 'j.id', '=', 'ap.job_id')
-            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-            ->where('u.id', $request->user_id)
-            ->get();
-
+            )->get();
             
 
         // Process the skills and languages fields
