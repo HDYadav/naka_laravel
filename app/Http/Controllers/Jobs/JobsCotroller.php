@@ -876,5 +876,42 @@ class JobsCotroller extends ApiController
 
 
 
+    public function getFavorateApplyedJob(Request $request)
+    {
+
+        $user = UserData::getUserFrToken($request);
+
+
+        $users = DB::table('applyed_job as aj')
+                ->join('users as u', 'u.id', '=', 'aj.user_id')
+                ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+                ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+                ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+                ->select('u.id as employee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite', 'aj.job_id')
+                ->where('ef.employer_id', $user->id)
+                ->where('j.created_by', $user->id)
+                ->where('aj.job_id', $request->job_id)
+                ->get();
+
+        foreach ($users as $user) {
+            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
+        }
+
+
+        if ($users->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $users,
+            ], 201);
+        }
+    }
+
+
+
 
 }
