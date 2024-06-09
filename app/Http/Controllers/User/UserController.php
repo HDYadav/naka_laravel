@@ -375,10 +375,10 @@ class UserController extends ApiController
         // Process the skills and languages fields
         $users->transform(function ($user) {
             $user->skills = $this->getSkills($user->skills);
-            $user->languages = $this->getLanguages($user->languages);
-            $user->experiance = $this->getExp($user->id);
-            $user->education = $this->getEdu($user->id);
-           // return $user;
+            // $user->languages = $this->getLanguages($user->languages);
+            // $user->experiance = $this->getExp($user->id);
+            // $user->education = $this->getEdu($user->id);
+            return $user;
         });
 
 
