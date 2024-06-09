@@ -348,49 +348,31 @@ class UserController extends ApiController
         //     ->get();
 
 
-        $users = DB::table('applyed_job as ap')
-            ->leftJoin('jobs as j', 'j.id', '=', 'ap.job_id')
-            ->join('users as u', 'u.id', '=', 'j.created_by')
-            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')          
-        ->select(
-            'u.id',
-            'u.profilePic',
-            'u.name as fullName',
-            'u.mobile as mobileNumber',
-            'u.email as emailId',
-            'u.dob as dateOfBirth',
-            'u.gender',
-            'u.maritalStatus',
-            'u.professionId',
-            'jp.name as profession',
-            'u.skills',
-            'u.languages',
-            'ap.application_status',
-            'ap.job_id'
-            )->where('u.id', $request->user_id)->get();           
-              
+        $users = DB::table('applyed_job as aj')->select('aj.*')->get();
+                 
+              return $users;
             
 
         // Process the skills and languages fields
-        $users->transform(function ($user) {
-            $user->skills = $this->getSkills($user->skills);
-            $user->languages = $this->getLanguages($user->languages);
-            $user->experiance = $this->getExp($user->id);
-            $user->education = $this->getEdu($user->id);
-            return $user;
-        });
+        // $users->transform(function ($user) {
+        //     $user->skills = $this->getSkills($user->skills);
+        //     $user->languages = $this->getLanguages($user->languages);
+        //     $user->experiance = $this->getExp($user->id);
+        //     $user->education = $this->getEdu($user->id);
+        //     return $user;
+        // });
 
 
-        if ($users->isEmpty()) {
-            return response()->json([
-                'data' => false,
-                'message' =>'records not found'
-            ], 404);
-        } else {
-            return response()->json([
-                'data' => $users[0],
-            ], 201);
-        }
+        // if ($users->isEmpty()) {
+        //     return response()->json([
+        //         'data' => false,
+        //         'message' =>'records not found'
+        //     ], 404);
+        // } else {
+        //     return response()->json([
+        //         'data' => $users[0],
+        //     ], 201);
+        // }
     }
 
 
