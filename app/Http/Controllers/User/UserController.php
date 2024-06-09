@@ -348,7 +348,7 @@ class UserController extends ApiController
         //     ->get();
 
 
-        $users = DB::table('applyed_job as ap')
+        $users = DB::table('applyed_job as aj')
         ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
         ->join('users as u', 'u.id', '=', 'j.created_by')
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
@@ -365,8 +365,8 @@ class UserController extends ApiController
                 'jp.name as profession',
                 'u.skills',
                 'u.languages',
-                'ap.application_status',
-                'ap.job_id'
+                'aj.application_status',
+                'aj.job_id'
             )->get();
             
 
