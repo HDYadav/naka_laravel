@@ -389,7 +389,7 @@ class UserController extends ApiController
             ], 404);
         } else {
             return response()->json([
-                'data' => $users[0],
+                'data' => $users,
             ], 201);
         }
     }
