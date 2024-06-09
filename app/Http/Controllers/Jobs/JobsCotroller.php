@@ -1039,8 +1039,7 @@ class JobsCotroller extends ApiController
             'wp.name as workPlace',
             'aj.application_status as status',
             'aj.created_at as date',
-            'u.id as user_id',
-            'j.id as job_id'
+            'u.id as user_id'
         )->where('aj.user_id', $user->id);     
 
         if ($request->status == 'Active') {
