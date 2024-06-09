@@ -984,7 +984,7 @@ class JobsCotroller extends ApiController
                ->join('users as u', 'u.id', '=', 'ef.user_id')
                 //->where('j.created_by', $user->id)
                 //->where('aj.job_id', $request->job_id)
-                ->select( 'u.name', 'u.profilePic', 'ef.isFavourite', 'ef.job_id', 'ef.user_id', 'ef.employer_id', 'jp.name as profession',)
+                ->select('u.id as employee_id', 'u.name', 'u.profilePic', 'ef.isFavourite', 'ef.job_id', 'ef.user_id', 'jp.name as profession',)
                 ->get();
 
         foreach ($users as $user) {
