@@ -70,28 +70,20 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
-
         Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer company 
         Route::get('/get_employee_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_employee_jobs_details');  // for emploee job seekeer 
-
-
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
         Route::post('/jobs_opening', [JobsCotroller::class, 'jobOpenings'])->name('jobs_opening');
         Route::post('/add_favourite', [JobsCotroller::class, 'addFavourite'])->name('add_favourite');
         Route::get('/get_favourite', [JobsCotroller::class, 'getFavourite'])->name('get_favourite');
         Route::get('/get_company', [JobsCotroller::class, 'getCompany'])->name('get_company');
-
-
         Route::post('/apply_job', [JobsCotroller::class, 'applyJob'])->name('apply_job'); // applyed the job
         Route::get('/get_applyed_job', [JobsCotroller::class, 'getAppliedJob'])->name('get_applyed_job');
         Route::post('/add_emp_favourite', [JobsCotroller::class, 'addEmployerFavourite'])->name('add_emp_favourite');
         Route::get('/get_favorate_applyed_job', [JobsCotroller::class, 'getFavorateApplyedJob'])->name('get_favorate_applyed_job');
-
-
         Route::get('/get_recently_applyed_job', [JobsCotroller::class, 'getRecentlyAppliedJob'])->name('get_recently_applyed_job'); // for emloyer
         Route::post('/change_application_status', [JobsCotroller::class, 'jobApplicationStatus'])->name('change_application_status');
         Route::get('/get_job_applyed_list', [JobsCotroller::class, 'getJobAppliyedList'])->name('get_job_applyed_list'); // for employee
-
 
 
     });
@@ -109,7 +101,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('/social_create_update', [JobsCotroller::class, 'socialCreateOrUpdate'])->name('social_create_update');
     Route::get('/get_social', [JobsCotroller::class, 'getSocial'])->name('get_social');
-    Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social'); 
+    Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social');
+
+
+    Route::post('/get_applyed_job_on_status', [JobsCotroller::class, 'getJobAppliyedJobOnStatus'])->name('get_applyed_job_on_status'); // for employee
+
 
 
    
@@ -124,11 +120,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/update_company_founding', [UserController::class, 'updateFoundingInfo'])->name('update_company_founding');
     Route::get('/get_founding_info', [UserController::class, 'getFoundingInfo'])->name('get_founding_info');
      Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status'); 
-
     Route::post('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
-
-
-
    });
 
     Route::delete('users/{id}/soft-delete', [UserController::class, 'softDelete']);

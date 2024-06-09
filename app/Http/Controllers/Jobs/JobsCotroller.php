@@ -959,14 +959,11 @@ class JobsCotroller extends ApiController
 
         return response()->json([
             'sucess'   => true,
-            'message'   => 'Job Application Status has been changed',
+            'message'   => '',
             'data' => $users
 
-        ], 201);
-
-
-
-      //  return $users;
+        ], 201); 
+ 
 
     }
 
@@ -1005,6 +1002,47 @@ class JobsCotroller extends ApiController
             ], 201);
         }
     }
+
+
+
+    public function getJobAppliyedJobOnStatus(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $usersQuery = DB::table('applyed_job as aj')
+            ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+            ->join('users as u', 'u.id', '=', 'aj.user_id')
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+            ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
+            ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
+            ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
+            ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->select('aj.id', 'u.companyLogo', 'jp.name as jobPosiiton', 'ef.isFavourite', 'u.company_name', 'jc.name as city', 'jobstate.name as state', 'etype.name as employeementType', 'wp.name as workPlace', 'aj.application_status as status', 'aj.created_at as date', 'u.id as user_id');
+
+        if ($request->status == 'Active') {
+            $usersQuery->whereIn('aj.application_status', ['Submited', 'Shortlisted', 'Interview']);
+        } else {
+            $usersQuery->where('aj.application_status', $request->status);
+        }
+
+        $users = $usersQuery->where('u.id', $user->id)
+            ->where('aj.isApplyed', 1)
+            ->get();
+
+        foreach ($users as $user) {
+            $user->isFavourite = $user->isFavourite == 1;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'data' => $users
+        ], 201);
+    }
+
+
+
 
 
 
