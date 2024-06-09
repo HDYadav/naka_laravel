@@ -367,7 +367,7 @@ class UserController extends ApiController
                 ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
                 ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
                 ->where('u.id', $request->user_id)
-                 ->where('j.id', $request->job_id)
+                ->where('j.id', $request->job_id)
                 ->get();
                 
                  
