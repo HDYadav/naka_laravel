@@ -330,11 +330,7 @@ class JobsCotroller extends ApiController
 
 
         foreach ($jobs as $job) {
-            $job->skills = $this->getSkills($job->skills);
-
-            if ($job->application_status === null) {
-                $job->application_status = false;
-            }
+            $job->skills = $this->getSkills($job->skills); 
 
         }
 
