@@ -697,8 +697,8 @@ class JobsCotroller extends ApiController
                 ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
                 ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
                 ->select('u.id as employee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite','aj.job_id')
-            // ->where('aj.user_id', $user->id)
-                ->where('j.created_by', $user->id)        	
+                ->where('aj.employer_id', $user->id)
+               // ->where('j.created_by', $user->id)        	
                 ->where('aj.job_id', $request->job_id)
                 ->get();
 
