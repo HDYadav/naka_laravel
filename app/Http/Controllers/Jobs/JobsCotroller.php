@@ -1051,6 +1051,8 @@ class JobsCotroller extends ApiController
                     ->orWhere('aj.application_status', 'Shortlisted')
                     ->orWhere('aj.application_status', 'Interview');
             });
+
+            return  $usersQuery;
          
         } else {
             $usersQuery->where('aj.application_status', $request->status);
