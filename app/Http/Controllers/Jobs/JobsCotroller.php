@@ -703,10 +703,22 @@ class JobsCotroller extends ApiController
 
                  foreach ($users as $user) { 
                      $user->isFavourite	 = $user->isFavourite	 == 1 ? true : false; 
-                  }  
+                  }
 
 
-    return $users;
+        if ($users->isEmpty()) {
+            return response()->json([
+                    'success' => false,
+                    'data' => [],
+                ], 200);
+        } else {
+            return response()->json([
+                    'success' => true,
+                    'data' => $users,
+                ], 201);
+        }
+
+     
     }
 
 
