@@ -1045,14 +1045,9 @@ class JobsCotroller extends ApiController
        
 
         if ($request->status == 'Active') {
-            // $usersQuery->whereIn('aj.application_status', ['Submitted', 'Shortlisted', 'Interview']);
-            $usersQuery->where(function ($query) {
-                $query->where('aj.application_status', 'Submitted')
-                    ->orWhere('aj.application_status', 'Shortlisted')
-                    ->orWhere('aj.application_status', 'Interview');
-            });
+            $usersQuery->whereIn('aj.application_status', ['Submited', 'Shortlisted', 'Interview']);
 
-            return  $usersQuery;
+            
          
         } else {
             $usersQuery->where('aj.application_status', $request->status);
