@@ -367,7 +367,9 @@ class UserController extends ApiController
                 'u.languages',
                 'aj.application_status',
                 'aj.job_id'
-            )->get();
+            )
+            ->where('aj.user_id', $request->user_id)
+            ->get();
             
 
         // Process the skills and languages fields
