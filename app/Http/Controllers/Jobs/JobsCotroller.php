@@ -204,8 +204,7 @@ class JobsCotroller extends ApiController
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
             ->join('users as u', 'u.id', '=', 'j.company')
             ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
-            //  ->where('j.id', '=', $id)
-            ->where('aj.id', '=', $id)
+            ->where('j.id', '=', $id) 
             ->groupBy('j.id')
             ->select(
                 'j.id',
@@ -260,12 +259,13 @@ class JobsCotroller extends ApiController
         } else {
             return response()->json([
                 'success' => true,
-                'data' => $jobs[0],
+                'data' => $jobs,
             ], 201);
         }
 
 
-         
+        
+        
     }
 
     protected function getSkills($skills)
