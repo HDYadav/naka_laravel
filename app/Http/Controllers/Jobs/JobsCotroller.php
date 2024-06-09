@@ -192,6 +192,8 @@ class JobsCotroller extends ApiController
 
     public function getAllJobsDetails($id)
     {
+        $user = UserData::getUserFrToken($request);  
+
         $jobs = DB::table('jobs as j')           
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('salary_types as st', 'st.id', '=', 'j.salaryType')
@@ -204,7 +206,8 @@ class JobsCotroller extends ApiController
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
             ->join('users as u', 'u.id', '=', 'j.company')
             ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
-            ->where('j.id', '=', $id) 
+            ->where('j.id', '=', $id)
+            ->where('u.id', '=', $user->id) 
             ->groupBy('j.id')
             ->select(
                 'j.id',
@@ -259,7 +262,7 @@ class JobsCotroller extends ApiController
         } else {
             return response()->json([
                 'success' => true,
-                'data' => $jobs,
+                'data' => $jobs['0'],
             ], 201);
         }
 
