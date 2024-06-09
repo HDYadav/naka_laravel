@@ -319,33 +319,58 @@ class UserController extends ApiController
     public function getUserProfile(Request $request)
     {
 
-     //   dd($request->user_id);
+        //   dd($request->user_id);
 
 
-       // $user = UserData::getUserFrToken($request);
+        // $user = UserData::getUserFrToken($request);
+
+        // $users = DB::table('users as u')
+        // ->select(
+        //     'u.id',
+        //     'u.profilePic',
+        //     'u.name as fullName',
+        //     'u.mobile as mobileNumber',
+        //     'u.email as emailId',
+        //     'u.dob as dateOfBirth',
+        //     'u.gender',
+        //     'u.maritalStatus',
+        //     'u.professionId',
+        //     'jp.name as profession',     
+        //     'u.skills',
+        //     'u.languages',
+        //     'ap.application_status',
+        //     'ap.job_id'
+        //     )
+        //     ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
+        //     ->leftJoin('jobs as j', 'j.id', '=', 'ap.job_id') 
+        //      ->leftJoin('applyed_job as ap', 'ap.job_id', '=', 'j.id')       
+        //     ->where('u.id', $request->user_id)
+        //     ->get();
 
         $users = DB::table('users as u')
-        ->select(
-            'u.id',
-            'u.profilePic',
-            'u.name as fullName',
-            'u.mobile as mobileNumber',
-            'u.email as emailId',
-            'u.dob as dateOfBirth',
-            'u.gender',
-            'u.maritalStatus',
-            'u.professionId',
-            'jp.name as profession',     
-            'u.skills',
-            'u.languages',
-            'ap.application_status',
-            'ap.job_id'
+            ->select(
+                'u.id',
+                'u.profilePic',
+                'u.name as fullName',
+                'u.mobile as mobileNumber',
+                'u.email as emailId',
+                'u.dob as dateOfBirth',
+                'u.gender',
+                'u.maritalStatus',
+                'u.professionId',
+                'jp.name as profession',
+                'u.skills',
+                'u.languages',
+                'ap.application_status',
+                'ap.job_id'
             )
+            ->leftJoin('applyed_job as ap', 'ap.user_id', '=', 'u.id')
+            ->leftJoin('jobs as j', 'j.id', '=', 'ap.job_id')
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-           // ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id') 
-             ->leftJoin('applyed_job as ap', 'ap.user_id', '=', 'u.id')       
             ->where('u.id', $request->user_id)
             ->get();
+
+            
 
         // Process the skills and languages fields
         $users->transform(function ($user) {
