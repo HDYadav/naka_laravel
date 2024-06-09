@@ -880,10 +880,12 @@ class JobsCotroller extends ApiController
             ->join('users as u', 'u.id', '=', 'aj.user_id')
             ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-            ->leftJoin('employer_favorates as ef', 'ef.user_id', '=', 'j.created_by')
+            ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')            
+           // ->leftJoin('employer_favorates as ef', 'ef.user_id', '=', 'j.created_by')        
             ->select('aj.user_id as empoyee_id', 'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite','j.id as job_id','j.created_by')
-              ->where('j.created_by', $user->id) 
-                ->where('aj.isApplyed', 1)          
+              ->where('j.created_by', $user->id)
+              ->where('aj.isApplyed', 1)
+              ->groupBy('j.id')          
                 ->get();
 
             foreach ($users as $user) {
