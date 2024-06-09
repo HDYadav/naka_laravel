@@ -372,7 +372,7 @@ class UserController extends ApiController
        $expers =  ExperianceDetails::select('id', 'designation', 'company', 'startDate', 'endDate', 'currentlyWorking')->where('user_id', $user_id)->get();
 
         foreach ($expers as $exp) { 
-            $exp->education = $exp->education == 1 ? true : false; 
+            $exp->currentlyWorking = $exp->currentlyWorking == 1 ? true : false; 
         } 
 
     return $expers;
@@ -384,7 +384,7 @@ class UserController extends ApiController
         $educations = EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing', 'education')->where('user_id', $user_id)->get();
 
         foreach ($educations as $exp) {
-            $exp->basicProfile = $exp->basicProfile == 1 ? true : false;
+            $exp->currentlyPursuing = $exp->currentlyPursuing == 1 ? true : false;
         }
 
         return $educations;
