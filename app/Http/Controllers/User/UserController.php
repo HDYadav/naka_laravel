@@ -348,28 +348,27 @@ class UserController extends ApiController
         //     ->get();
 
 
-        $users = DB::table('applyed_job as aj')
-        ->Join('jobs as j', 'j.id', '=', 'aj.job_id')
-        ->join('users as u', 'u.id', '=', 'j.created_by')
-            ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-            ->select(
-                'u.id',
-                'u.profilePic',
-                'u.name as fullName',
-                'u.mobile as mobileNumber',
-                'u.email as emailId',
-                'u.dob as dateOfBirth',
-                'u.gender',
-                'u.maritalStatus',
-                'u.professionId',
-                'jp.name as profession',
-                'u.skills',
-                'u.languages',
-                'aj.application_status',
-                'aj.job_id'
-            )
-            ->where('aj.user_id', $request->user_id)
-            ->get();
+        $users = DB::table('applyed_job as ap')
+            ->leftJoin('jobs as j', 'j.id', '=', 'ap.job_id')
+            ->join('users as u', 'u.id', '=', 'j.created_by')
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')          
+        ->select(
+            'u.id',
+            'u.profilePic',
+            'u.name as fullName',
+            'u.mobile as mobileNumber',
+            'u.email as emailId',
+            'u.dob as dateOfBirth',
+            'u.gender',
+            'u.maritalStatus',
+            'u.professionId',
+            'jp.name as profession',
+            'u.skills',
+            'u.languages',
+            'ap.application_status',
+            'ap.job_id'
+        )->get();           
+              
             
 
         // Process the skills and languages fields
