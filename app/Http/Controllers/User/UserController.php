@@ -367,7 +367,7 @@ class UserController extends ApiController
             'u.languages',
             'ap.application_status',
             'ap.job_id'
-        )->get();           
+            )->where('u.id', $request->user_id)->get();           
               
             
 
