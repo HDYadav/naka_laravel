@@ -72,8 +72,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
 
         Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer company 
-
-        Route::get('/get_emp_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_emp_jobs_details');  // for emploee job seekeer 
+        Route::get('/get_employee_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_employee_jobs_details');  // for emploee job seekeer 
 
 
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
