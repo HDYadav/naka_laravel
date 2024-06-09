@@ -366,7 +366,7 @@ class UserController extends ApiController
                 ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
                 ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
                 ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-                ->where('aj.user_id', $request->user_id)->get();
+                ->where('u.id', $request->user_id)->get();
                 
                  
         //    return $users;
@@ -389,7 +389,7 @@ class UserController extends ApiController
             ], 404);
         } else {
             return response()->json([
-                'data' => $users,
+                'data' => $users['0'],
             ], 201);
         }
     }
