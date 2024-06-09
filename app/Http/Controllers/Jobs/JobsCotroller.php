@@ -279,16 +279,16 @@ class JobsCotroller extends ApiController
         ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
         ->join('job_states as js', 'js.id', '=', 'j.state')
         ->join('job_cities as jc', 'jc.id', '=', 'j.city')
-            ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
-            ->join('experiences as ex', 'ex.id', '=', 'j.experience')
-            ->join('educations as ed', 'ed.id', '=', 'j.education')
-            ->join('promotes as pt', 'pt.id', '=', 'j.promote')
-            ->join('users as u', 'u.id', '=', 'j.company')
-            // ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
-            ->leftjoin('applyed_job as aj', 'aj.user_id', '=', 'u.id') // 
+        ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
+        ->join('experiences as ex', 'ex.id', '=', 'j.experience')
+        ->join('educations as ed', 'ed.id', '=', 'j.education')
+        ->join('promotes as pt', 'pt.id', '=', 'j.promote')
+        ->join('users as u', 'u.id', '=', 'j.company')
+        ->leftJoin('applyed_job as aj', function ($join) use ($user) {
+            $join->on('aj.job_id', '=', 'j.id')
+            ->where('aj.user_id', '=', $user->id);
+        })
             ->where('j.id', '=', $id)
-             ->where('u.id', '=', $user->id) 
-            ->groupBy('j.id')
             ->select(
                 'j.id',
                 'j.description',
@@ -323,30 +323,28 @@ class JobsCotroller extends ApiController
                 'ed.id as educationId',
                 'ed.name as education',
                 'pt.id as promoteId',
-                 'aj.application_status',
+                'aj.application_status',
                 'j.skills'
             )
             ->get();
 
-
         foreach ($jobs as $job) {
-            $job->skills = $this->getSkills($job->skills); 
-
+            $job->skills = $this->getSkills($job->skills);
         }
-
 
         if ($jobs->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'data' => [],
-            ], 200);
+            ], 404);
         } else {
             return response()->json([
                 'success' => true,
-                'data' => $jobs['0'],
-            ], 201);
+                'data' => $jobs,
+            ], 200);
         }
     }
+
 
 
 
