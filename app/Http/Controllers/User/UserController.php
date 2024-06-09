@@ -348,7 +348,7 @@ class UserController extends ApiController
         //     ->get();
 
 
-        $users = DB::table('applyed_job as aj')->select('aj.*')->get();
+        $users = DB::table('applyed_job as aj')->select('aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status')->get();
                  
               return $users;
             
