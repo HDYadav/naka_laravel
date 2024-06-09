@@ -338,6 +338,7 @@ class UserController extends ApiController
             'jp.name as profession',     
             'u.skills',
             'u.languages',
+            'ap.application_status',
             'ap.job_id'
             )
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
@@ -381,7 +382,7 @@ class UserController extends ApiController
 
     protected function getEdu($user_id)
     {
-        $educations = EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing', 'education')->where('user_id', $user_id)->get();
+        $educations = EducationDetails::select('id', 'collageName', 'courseName', 'startDate', 'endDate', 'currentlyPursuing')->where('user_id', $user_id)->get();
 
         foreach ($educations as $exp) {
             $exp->currentlyPursuing = $exp->currentlyPursuing == 1 ? true : false;
