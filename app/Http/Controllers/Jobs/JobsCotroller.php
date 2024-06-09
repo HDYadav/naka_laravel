@@ -1021,9 +1021,9 @@ class JobsCotroller extends ApiController
             ], 401);
         } 
 
-        $usersQuery = DB::table('applyed_job as aj') 
-        ->join('users as u', 'u.id', '=', 'j.created_by')
+        $usersQuery = DB::table('applyed_job as aj')
             ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->join('users as u', 'u.id', '=', 'j.created_by')        
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')        
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
         ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
