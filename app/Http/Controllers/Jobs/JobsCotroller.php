@@ -284,8 +284,8 @@ class JobsCotroller extends ApiController
             ->join('educations as ed', 'ed.id', '=', 'j.education')
             ->join('promotes as pt', 'pt.id', '=', 'j.promote')
             ->join('users as u', 'u.id', '=', 'j.company')
-            // ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
-            ->leftjoin('applyed_job as aj', 'aj.user_id', '=', 'u.id') // 
+             ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
+           // ->leftjoin('applyed_job as aj', 'aj.user_id', '=', 'u.id') // 
             ->where('j.id', '=', $id)
             //  ->where('u.id', '=', $user->id) 
             ->groupBy('j.id')
