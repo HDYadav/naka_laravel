@@ -1040,9 +1040,7 @@ class JobsCotroller extends ApiController
             'aj.created_at as date',
             'u.id as user_id',
             'j.id as job_id'
-        )->where('u.id', $user->id);           
-                        
-       
+        )->where('aj.user_id', $user->id);     
 
         if ($request->status == 'Active') {
             $usersQuery->whereIn('aj.application_status', ['Submited', 'Shortlisted', 'Interview']);            
