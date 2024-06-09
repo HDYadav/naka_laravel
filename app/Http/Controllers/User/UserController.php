@@ -348,10 +348,12 @@ class UserController extends ApiController
         //     ->get();
 
 
-        $users = DB::table('applyed_job as aj')->select('aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status')
-                         ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-                             ->where('aj.user_id', $request->user_id)
-                            ->get();
+        $users = DB::table('applyed_job as aj')
+                ->select('aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status')
+                ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+                ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
+                ->where('aj.user_id', $request->user_id)
+                ->get();
                  
               return $users;
             
