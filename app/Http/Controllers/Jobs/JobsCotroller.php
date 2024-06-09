@@ -975,7 +975,7 @@ class JobsCotroller extends ApiController
 
         $user = UserData::getUserFrToken($request);
 
-        dd($user);
+       
 
         $users = DB::table('employer_favorates as ef')                
                 ->where('ef.employer_id', $user->id)
