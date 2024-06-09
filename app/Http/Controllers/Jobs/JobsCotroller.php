@@ -733,7 +733,7 @@ class JobsCotroller extends ApiController
                 'isFavourite' => $fav,
             ];
 
-            $existingRecord = EmployerFavorate::where('user_id', $user->id)
+            $existingRecord = EmployerFavorate::where('employer_id', $user->id)
                 ->where('job_id', $request->job_id)
                 ->first();
 
@@ -798,7 +798,7 @@ class JobsCotroller extends ApiController
     public function jobApplicationStatus(Request $request)
     {
         try {
-            
+
            $user = UserData::getUserFrToken($request);
 
         
