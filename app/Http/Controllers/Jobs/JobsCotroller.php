@@ -340,7 +340,7 @@ class JobsCotroller extends ApiController
         } else {
             return response()->json([
                 'success' => true,
-                'data' => $jobs,
+                'data' => $jobs['0'],
             ], 200);
         }
     }
