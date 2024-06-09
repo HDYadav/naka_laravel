@@ -369,29 +369,29 @@ class UserController extends ApiController
                 ->where('aj.user_id', $request->user_id)
                 ->get();
                  
-              return $users;
+            //  return $users;
             
 
         // Process the skills and languages fields
-        // $users->transform(function ($user) {
-        //     $user->skills = $this->getSkills($user->skills);
-        //     $user->languages = $this->getLanguages($user->languages);
-        //     $user->experiance = $this->getExp($user->id);
-        //     $user->education = $this->getEdu($user->id);
-        //     return $user;
-        // });
+        $users->transform(function ($user) {
+            $user->skills = $this->getSkills($user->skills);
+            $user->languages = $this->getLanguages($user->languages);
+            $user->experiance = $this->getExp($user->id);
+            $user->education = $this->getEdu($user->id);
+            return $user;
+        });
 
 
-        // if ($users->isEmpty()) {
-        //     return response()->json([
-        //         'data' => false,
-        //         'message' =>'records not found'
-        //     ], 404);
-        // } else {
-        //     return response()->json([
-        //         'data' => $users[0],
-        //     ], 201);
-        // }
+        if ($users->isEmpty()) {
+            return response()->json([
+                'data' => false,
+                'message' =>'records not found'
+            ], 404);
+        } else {
+            return response()->json([
+                'data' => $users[0],
+            ], 201);
+        }
     }
 
 
