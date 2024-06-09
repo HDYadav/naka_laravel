@@ -876,15 +876,19 @@ class JobsCotroller extends ApiController
 
         $user = UserData::getUserFrToken($request); 
 
-        $users = DB::table('applyed_job as aj')            
+        $users = DB::table('applyed_job as aj')
+            // ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+            // ->leftJoin('users as u', 'u.id', '=', 'j.created_by')
+            // ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->join('users as u', 'u.id', '=', 'aj.user_id')
             ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-            ->leftJoin('users as u', 'u.id', '=', 'j.created_by')
             ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+
             //->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
-            ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'aj.job_id') 
+          //  ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'aj.job_id') 
             ->select('aj.user_id as empoyee_id', 'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite','j.id as job_id','j.created_by')
-              ->where('j.created_by', $user->id)
-              ->where('ef.employer_id', $user->id)
+              ->where('j.created_by', $user->id) 
                 ->where('aj.isApplyed', 1)          
                 ->get();
 
