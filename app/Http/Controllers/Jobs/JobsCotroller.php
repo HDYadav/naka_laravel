@@ -913,12 +913,13 @@ class JobsCotroller extends ApiController
                 'application_status' => $request->status
             ];  
             
-             JobApplyed::where('job_id', $request->job_id)->update($data);  
+             JobApplyed::where('job_id', $request->job_id, 'employee_id', $request->employee_id)->update($data);  
 
             return response()->json([
                 'sucess'   => true,
                 'message'   => 'Job Application Status has been changed',
-                'data' => $user->id
+                'data' => $user->id,
+                'employee_id' => $request->employee_id
             ], 201);
 
 
