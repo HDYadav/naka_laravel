@@ -207,7 +207,7 @@ class JobsCotroller extends ApiController
             ->join('users as u', 'u.id', '=', 'j.company')
             ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
             ->where('j.id', '=', $id)
-            ->where('u.id', '=', $user->id) 
+          //  ->where('u.id', '=', $user->id) 
             ->groupBy('j.id')
             ->select(
                 'j.id',
