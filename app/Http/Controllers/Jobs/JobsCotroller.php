@@ -190,7 +190,7 @@ class JobsCotroller extends ApiController
     }
 
 
-    public function getAllJobsDetails($id)
+    public function getAllJobsDetails($id, Request $request)
     {
         $user = UserData::getUserFrToken($request);  
 
