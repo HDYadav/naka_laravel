@@ -1027,6 +1027,7 @@ class JobsCotroller extends ApiController
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
         ->leftJoin('job_states as jobstate', 'jobstate.id', '=', 'j.state')
         ->leftJoin('employeement_types as etype', 'etype.id', '=', 'j.employeementType')
+            ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
         ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
         ->select(
             'aj.id',
@@ -1039,7 +1040,7 @@ class JobsCotroller extends ApiController
             'wp.name as workPlace',
             'aj.application_status as status',
             'aj.created_at as date',
-            'u.id as user_id'
+            'u.id as user_id' 
         )->where('aj.user_id', $user->id);     
 
         if ($request->status == 'Active') {
