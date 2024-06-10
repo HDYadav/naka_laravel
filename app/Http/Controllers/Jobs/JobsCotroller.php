@@ -1032,6 +1032,7 @@ class JobsCotroller extends ApiController
         ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
         ->select(
             'aj.id',
+            'j.id as job_id',
             'u.companyLogo',
             'jp.name as jobPosition',            
             'u.company_name',
