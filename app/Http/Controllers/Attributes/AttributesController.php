@@ -10,6 +10,7 @@ use App\Http\Controllers\ApiController;
 use App\Helpers\LogBuilder;
 use App\Helpers\UserData;
 use App\Models\Model\EmployeementType;
+use App\Models\Model\Experience;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Jobposition;
@@ -207,6 +208,50 @@ class AttributesController extends ApiController
 
         return Skill::select('id', 'name', 'skills_hindi', 'skills_marathi', 'skills_punjabi')->where('id', $id)->first();
     }
+
+
+
+    public function experianceAddUpdate(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'name' => $request->name,
+            'name_hindi' => $request->name_hindi,
+            'name_marathi' => $request->name_marathi,
+            'name_punjabi' => $request->name_punjabi
+        ];
+
+        // Check if the ID is provided in the request
+        if ($request->id) {
+            // Update existing record if ID is provided
+            $edu = Experience::where('id', $request->id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = Experience::where('name', $request->name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = Experience::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+    public function getExperiance($id, Request $request)
+    {
+
+        return Experience::select('id', 'name','name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
+    }
+    
 
 
     

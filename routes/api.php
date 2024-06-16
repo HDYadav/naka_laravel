@@ -69,16 +69,13 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::post('/emp_type_add_update', [AttributesController::class, 'empTypeAddUpdate'])->name('emp_type_add_update');
         Route::get('/emp_type/{id}', [AttributesController::class, 'getEmpType'])->name('emp_type');
-
-
         Route::post('/industry_type_add_update', [AttributesController::class, 'industryTypeAddUpdate'])->name('industry_type_add_update');
         Route::get('/industry_type/{id}', [AttributesController::class, 'getIndustryType'])->name('industry_type');
-
-
         Route::post('/skills_add_update', [AttributesController::class, 'skillsAddUpdate'])->name('skills_add_update');
         Route::get('/get_skills/{id}', [AttributesController::class, 'getSkills'])->name('get_skills');
 
-
+        Route::post('/experiance_add_update', [AttributesController::class, 'experianceAddUpdate'])->name('experiance_add_update');
+        Route::get('/get_experiance/{id}', [AttributesController::class, 'getExperiance'])->name('get_experiance');
 
 
 
