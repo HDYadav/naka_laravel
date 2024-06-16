@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\Attributes\AttributesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\Auth\PasswordController;
@@ -62,11 +63,30 @@ Route::group(['middleware' => 'auth:api'], function () {
  
  Route::post('/change-password',  [PasswordController::class, 'changePassword']);
 
+        Route::prefix('attributes')->group(function () {
+        Route::post('/position_add_update', [AttributesController::class, 'positionAddUpdate'])->name('position_add_update');
+        Route::get('/get_job_position/{id}', [AttributesController::class, 'getJobPosition'])->name('get_job_position');
+
+        Route::post('/emp_type_add_update', [AttributesController::class, 'empTypeAddUpdate'])->name('emp_type_add_update');
+        Route::get('/emp_type/{id}', [AttributesController::class, 'getEmpType'])->name('emp_type');
+
+
+        Route::post('/industry_type_add_update', [AttributesController::class, 'industryTypeAddUpdate'])->name('industry_type_add_update');
+        Route::get('/industry_type/{id}', [AttributesController::class, 'getIndustryType'])->name('industry_type');
+
+
+        Route::post('/skills_add_update', [AttributesController::class, 'skillsAddUpdate'])->name('skills_add_update');
+        Route::get('/get_skills/{id}', [AttributesController::class, 'getSkills'])->name('get_skills');
+
+
+
+
+
+        });
+
 
     Route::prefix('jobs')->group(function () {
-
         Route::get('/get_all', [JobsCotroller::class, 'getAll'])->name('get_all');
-
         Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
@@ -84,28 +104,19 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_recently_applyed_job', [JobsCotroller::class, 'getRecentlyAppliedJob'])->name('get_recently_applyed_job'); // for emloyer
         Route::post('/change_application_status', [JobsCotroller::class, 'jobApplicationStatus'])->name('change_application_status');
         Route::get('/get_job_applyed_list', [JobsCotroller::class, 'getJobAppliyedList'])->name('get_job_applyed_list'); // for employee
-
-
     });
 
 
     Route::post('/edu_create_update', [JobsCotroller::class, 'eduCreateOrUpdate'])->name('edu_create_update');
     Route::get('/get_educations', [JobsCotroller::class, 'getEducations'])->name('get_educations');
     Route::delete('/delete_edu/{id}', [JobsCotroller::class, 'deleteEducation'])->name('delete_edu');
-
-
     Route::post('/exp_create_update', [JobsCotroller::class, 'expCreateOrUpdate'])->name('exp_create_update');
      Route::get('/get_experiance', [JobsCotroller::class, 'getExp'])->name('get_experiance');
      Route::delete('/delete_exp/{id}', [JobsCotroller::class, 'deleteExp'])->name('delete_exp');
-
-
     Route::post('/social_create_update', [JobsCotroller::class, 'socialCreateOrUpdate'])->name('social_create_update');
     Route::get('/get_social', [JobsCotroller::class, 'getSocial'])->name('get_social');
     Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social');
-
-
     Route::post('/get_applyed_job_on_status', [JobsCotroller::class, 'getJobAppliyedJobOnStatus'])->name('get_applyed_job_on_status'); // for employee
-
 
 
    

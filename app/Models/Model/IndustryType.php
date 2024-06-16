@@ -9,5 +9,7 @@ class IndustryType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+   // protected $table = "industries";
+
+    protected $fillable = ['name', 'ind_type_hindi', 'ind_type_marathi', 'ind_type_punjabi'];
 }

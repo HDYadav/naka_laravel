@@ -11,5 +11,5 @@ class EmployeementType extends Model
 
     protected $table = 'employeement_types';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'emptype_hindi', 'emptype_marathi', 'emptype_punjabi'];
 }

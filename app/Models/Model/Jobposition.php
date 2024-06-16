@@ -11,5 +11,5 @@ class Jobposition extends Model
     
     protected $table = 'job_positions';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'name_hindi', 'name_marathi', 'name_punjabi'];
 }

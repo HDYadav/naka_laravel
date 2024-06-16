@@ -11,5 +11,5 @@ class Skill extends Model
 
     protected $table = 'skills';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'skills_hindi', 'skills_marathi', 'skills_punjabi'] ;
 }
