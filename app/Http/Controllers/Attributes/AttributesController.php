@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Helpers\LogBuilder;
 use App\Helpers\UserData;
+use App\Models\Model\Education;
 use App\Models\Model\EmployeementType;
 use App\Models\Model\Experience;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Jobposition;
 use App\Models\Model\Skill;
+use App\Models\Model\WorkPlace;
 
 class AttributesController extends ApiController
 {
@@ -251,6 +253,95 @@ class AttributesController extends ApiController
 
         return Experience::select('id', 'name','name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
     }
+
+
+
+    public function educationAddUpdate(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'name' => $request->name,
+            'name_hindi' => $request->name_hindi,
+            'name_marathi' => $request->name_marathi,
+            'name_punjabi' => $request->name_punjabi
+        ];
+
+        // Check if the ID is provided in the request
+        if ($request->id) {
+            // Update existing record if ID is provided
+            $edu = Education::where('id', $request->id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = Education::where('name', $request->name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = Education::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+    public function getEducation($id, Request $request)
+    {
+
+        return Education::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
+    }
+
+
+
+
+     public function workplaceAddUpdate(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'name' => $request->name,
+            'name_hindi' => $request->name_hindi,
+            'name_marathi' => $request->name_marathi,
+            'name_punjabi' => $request->name_punjabi
+        ];
+
+        // Check if the ID is provided in the request
+        if ($request->id) {
+            // Update existing record if ID is provided
+            $edu = WorkPlace::where('id', $request->id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = WorkPlace::where('name', $request->name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = WorkPlace::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+    public function getWorkPlace($id, Request $request)
+    {
+
+        return WorkPlace::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
+    }
+
+
     
 
 

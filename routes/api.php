@@ -77,6 +77,14 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/experiance_add_update', [AttributesController::class, 'experianceAddUpdate'])->name('experiance_add_update');
         Route::get('/get_experiance/{id}', [AttributesController::class, 'getExperiance'])->name('get_experiance');
 
+        Route::post('/education_add_update', [AttributesController::class, 'educationAddUpdate'])->name('education_add_update');
+        Route::get('/get_education/{id}', [AttributesController::class, 'getEducation'])->name('get_education');
+
+        Route::post('/workplace_add_update', [AttributesController::class, 'workplaceAddUpdate'])->name('workplace_add_update');
+        Route::get('/get_workplace/{id}', [AttributesController::class, 'getWorkPlace'])->name('get_workplace');
+
+
+
 
 
         });

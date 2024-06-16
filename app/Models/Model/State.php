@@ -9,5 +9,5 @@ class State extends Model
 {
     use HasFactory; 
     protected $table = 'job_states';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'name_hindi', 'name_marathi', 'name_punjabi'];
 }

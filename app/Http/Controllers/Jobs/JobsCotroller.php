@@ -45,18 +45,20 @@ class JobsCotroller extends ApiController
         $industry_type = Industry::select('id','name', 'ind_type_hindi', 'ind_type_marathi', 'ind_type_punjabi')->orderBy('id', 'ASC')->get();
         $skills =  Skill::select('id', 'name', 'skills_hindi', 'skills_marathi', 'skills_punjabi')->get();
         $experience = Experience::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
+        $education = Education::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
+        $workplace = WorkPlace::select('id', 'name','name_hindi', 'name_marathi', 'name_punjabi')->get();
+        $state =  State::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
 
 
-        $state =  State::select('id', 'name')->get();
         $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
         $companyList =  CompanyList::select('id', 'name')->get();
         
        
       
         $salaryType = SalaryType::select('id', 'name')->get();
-        $education = Education::select('id', 'name')->get();
+       
         $promote = Promote::select('id', 'name')->get();
-        $workplace = WorkPlace::select('id', 'name')->get();
+        
         $language = Language::select('id', 'name')->orderBy('id','ASC')->get();
        
 
