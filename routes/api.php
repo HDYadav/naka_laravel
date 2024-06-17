@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth:api'], function () {
  Route::post('/change-password',  [PasswordController::class, 'changePassword']);
 
         Route::prefix('attributes')->group(function () {
+
         Route::post('/position_add_update', [AttributesController::class, 'positionAddUpdate'])->name('position_add_update');
         Route::get('/get_job_position/{id}', [AttributesController::class, 'getJobPosition'])->name('get_job_position');
 
@@ -76,13 +77,17 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::post('/experiance_add_update', [AttributesController::class, 'experianceAddUpdate'])->name('experiance_add_update');
         Route::get('/get_experiance/{id}', [AttributesController::class, 'getExperiance'])->name('get_experiance');
-
         Route::post('/education_add_update', [AttributesController::class, 'educationAddUpdate'])->name('education_add_update');
         Route::get('/get_education/{id}', [AttributesController::class, 'getEducation'])->name('get_education');
-
         Route::post('/workplace_add_update', [AttributesController::class, 'workplaceAddUpdate'])->name('workplace_add_update');
         Route::get('/get_workplace/{id}', [AttributesController::class, 'getWorkPlace'])->name('get_workplace');
 
+        Route::post('/state_add_update', [AttributesController::class, 'stateAddUpdate'])->name('state_add_update');
+        Route::get('/get_state/{id}', [AttributesController::class, 'getState'])->name('get_state');
+
+        Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
+        Route::post('/city_add_update', [AttributesController::class, 'cityAddUpdate'])->name('city_add_update');
+        Route::get('/get_city/{id}', [AttributesController::class, 'getCity'])->name('get_city');
 
 
 
