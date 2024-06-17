@@ -90,6 +90,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_city/{id}', [AttributesController::class, 'getCity'])->name('get_city');
 
 
+         Route::post('/salary_type_add_update', [AttributesController::class, 'salaryTypeAddUpdate'])->name('salary_type_add_update');
+        Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type');
+
+
+
 
 
         });
@@ -114,6 +119,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_recently_applyed_job', [JobsCotroller::class, 'getRecentlyAppliedJob'])->name('get_recently_applyed_job'); // for emloyer
         Route::post('/change_application_status', [JobsCotroller::class, 'jobApplicationStatus'])->name('change_application_status');
         Route::get('/get_job_applyed_list', [JobsCotroller::class, 'getJobAppliyedList'])->name('get_job_applyed_list'); // for employee
+
+        Route::get('/admin_get_jobs', [JobsCotroller::class, 'getAllJobsAdmin'])->name('admin_get_jobs');
+
     });
 
 

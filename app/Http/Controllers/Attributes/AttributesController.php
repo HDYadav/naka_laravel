@@ -16,9 +16,11 @@ use App\Models\Model\Experience;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Jobposition;
+use App\Models\Model\SalaryType;
 use App\Models\Model\Skill;
 use App\Models\Model\State;
 use App\Models\Model\WorkPlace;
+use Illuminate\Support\Facades\DB;
 
 class AttributesController extends ApiController
 {
@@ -394,11 +396,14 @@ class AttributesController extends ApiController
         $user = UserData::getUserFrToken($request);
 
         $edudata = [
+            'state_id' => $request->state_id,
             'name' => $request->name,
             'name_hindi' => $request->name_hindi,
             'name_marathi' => $request->name_marathi,
             'name_punjabi' => $request->name_punjabi
         ];
+
+     //   return  $edudata;
 
         // Check if the ID is provided in the request
         if ($request->id) {
@@ -427,12 +432,61 @@ class AttributesController extends ApiController
     public function getCity($id, Request $request)
     {
 
-        return City::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
+        return City::select('id', 'state_id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
     }
 
     public function getCityList(Request $request)
     {
-        return City::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
+        return DB::table('job_cities as jc')->select('jc.id', 'jc.state_id', 'jc.name', 'jc.name_hindi', 'jc.name_marathi', 'jc.name_punjabi','js.name as state_name')
+        ->leftjoin('job_states as js','js.id','=','jc.state_id')
+        ->get();
+    }
+
+
+
+
+
+    public function salaryTypeAddUpdate(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [ 
+            'name' => $request->name,
+            'name_hindi' => $request->name_hindi,
+            'name_marathi' => $request->name_marathi,
+            'name_punjabi' => $request->name_punjabi
+        ];
+
+        //   return  $edudata;
+
+        // Check if the ID is provided in the request
+        if ($request->id) {
+            // Update existing record if ID is provided
+            $edu = SalaryType::where('id', $request->id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = SalaryType::where('name', $request->name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = SalaryType::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+    public function getSalaryType($id, Request $request)
+    {
+
+        return SalaryType::select('id',  'name', 'name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
     }
 
 

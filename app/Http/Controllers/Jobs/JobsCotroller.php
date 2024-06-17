@@ -49,12 +49,13 @@ class JobsCotroller extends ApiController
         $workplace = WorkPlace::select('id', 'name','name_hindi', 'name_marathi', 'name_punjabi')->get();
         $state =  State::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
         $city = City::where('state_id', $request->state_id)->select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
-        
+        $salaryType = SalaryType::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();  
+
         $companyList =  CompanyList::select('id', 'name')->get();
         
        
       
-        $salaryType = SalaryType::select('id', 'name')->get();       
+            
         $promote = Promote::select('id', 'name')->get();        
         $language = Language::select('id', 'name')->orderBy('id','ASC')->get();
        
@@ -193,6 +194,28 @@ class JobsCotroller extends ApiController
          return $this->sucessResponse(null, $jobs, true, 201); 
 
     }
+
+
+     public function getAllJobsAdmin(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);  
+      //  dd($user->id);
+        $jobs = DB::table('jobs as j')
+        ->select('j.id', 'jp.name as jobPosiiton', 'u.company_name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo') 
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->leftJoin('users as u', 'u.id', '=', 'j.company')
+           // ->join('company_lists as cl', 'cl.id', '=', 'j.company')
+            ->leftJoin('salary_types as st', 'st.id', '=', 'j.salaryType')
+            ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
+            ->leftJoin('employeement_types as et', 'et.id', '=', 'j.employeementType')
+            ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
+            //->where('j.created_by', $user->id)
+            ->get(); 
+
+         return $this->sucessResponse(null, $jobs, true, 201); 
+
+    }
+
 
 
     public function getAllJobsDetails($id, Request $request)
