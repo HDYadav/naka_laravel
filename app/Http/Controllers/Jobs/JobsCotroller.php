@@ -179,7 +179,24 @@ class JobsCotroller extends ApiController
     {
         $user = UserData::getUserFrToken($request);  
       //  dd($user->id);
-        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton', 'u.company_name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo') 
+        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton',
+            'jp.name_hindi as jobPosiiton_hindi',
+            'jp.name_marathi as jobPosiiton_marathi',
+            'jp.name_punjabi as jobPosiiton_punjabi',
+         'u.company_name as company', 'j.minSalary', 'j.maxSalary','st.name as salaryType', 
+         'wp.name as workPlace',
+            'wp.name_hindi as workPlace_hindi',
+            'wp.name_marathi as workPlace_marathi',
+            'wp.name_punjabi as workPlace_punjabi',
+         'et.name as employeementType',
+            'et.emptype_hindi as employeementType_hindi',
+            'et.emptype_marathi as employeementType_marathi',
+            'et.emptype_punjabi as employeementType_punjabi',
+         'jc.name as city',
+            'jc.name_hindi as city_hindi',
+            'jc.name_marathi as city_marathi',
+            'jc.name_punjabi as city_punjabi',
+         'u.companyLogo') 
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('users as u', 'u.id', '=', 'j.company')
            // ->join('company_lists as cl', 'cl.id', '=', 'j.company')
