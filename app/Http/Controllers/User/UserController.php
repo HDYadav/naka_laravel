@@ -154,7 +154,7 @@ class UserController extends ApiController
     protected function getSkills($skills)
     {
         $skillIds = explode(',', $skills);
-        $skills =  Skill::whereIn('id', $skillIds)->get();
+        $skills =  Skill::whereIn('id', $skillIds)->select('name','skills_hindi as name_hindi', 'skills_marathi as name_marathi', 'skills_punjabi as name_punjabi')->get();
 
         $skill = $skills->makeHidden(['created_at', 'updated_at']);
 
@@ -317,36 +317,7 @@ class UserController extends ApiController
 
 
     public function getUserProfile(Request $request)
-    {
-
-        //   dd($request->user_id);
-
-
-        // $user = UserData::getUserFrToken($request);
-
-        // $users = DB::table('users as u')
-        // ->select(
-        //     'u.id',
-        //     'u.profilePic',
-        //     'u.name as fullName',
-        //     'u.mobile as mobileNumber',
-        //     'u.email as emailId',
-        //     'u.dob as dateOfBirth',
-        //     'u.gender',
-        //     'u.maritalStatus',
-        //     'u.professionId',
-        //     'jp.name as profession',     
-        //     'u.skills',
-        //     'u.languages',
-        //     'ap.application_status',
-        //     'ap.job_id'
-        //     )
-        //     ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
-        //     ->leftJoin('jobs as j', 'j.id', '=', 'ap.job_id') 
-        //      ->leftJoin('applyed_job as ap', 'ap.job_id', '=', 'j.id')       
-        //     ->where('u.id', $request->user_id)
-        //     ->get();
-
+    { 
 
         $users = DB::table('applyed_job as aj')
                 ->select(
@@ -359,7 +330,11 @@ class UserController extends ApiController
                 'u.gender',
                 'u.maritalStatus',
                 'u.professionId',
-                 'aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status', 'jp.name as profession',
+                 'aj.job_id', 'aj.user_id','aj.isApplyed', 'aj.application_status', 
+                 'jp.name as profession',
+                'jp.name_hindi as profession_hindi',
+                'jp.name_marathi as profession_marathi',
+                'jp.name_punjabi as profession_punjabi',     
                 'u.skills',
                 'u.languages'
                  )

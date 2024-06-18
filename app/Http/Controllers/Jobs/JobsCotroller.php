@@ -1127,10 +1127,10 @@ class JobsCotroller extends ApiController
                ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
                ->join('users as u', 'u.id', '=', 'ef.user_id')              
                 ->select('u.id as employee_id', 'u.name', 'u.profilePic', 'ef.isFavourite', 'ef.job_id', 'ef.user_id', 
-                'jp.name as profession',
-            'jp.name_hindi as profession_hindi',
-            'jp.name_marathi as profession_marathi',
-            'jp.name_punjabi as profession_punjabi')
+                'jp.name as profession', 
+                'jp.name_hindi as profession_hindi',
+                'jp.name_marathi as profession_marathi',
+                'jp.name_punjabi as profession_punjabi')
                 ->get();
 
         foreach ($users as $user) {
