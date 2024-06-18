@@ -107,7 +107,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
 
-
         Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer company 
         Route::get('/get_employee_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_employee_jobs_details');  // for emploee job seekeer 
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
@@ -120,7 +119,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/add_emp_favourite', [JobsCotroller::class, 'addEmployerFavourite'])->name('add_emp_favourite');
         Route::get('/get_favorate_applyed_job', [JobsCotroller::class, 'getFavorateApplyedJob'])->name('get_favorate_applyed_job');
         Route::get('/get_recently_applyed_job', [JobsCotroller::class, 'getRecentlyAppliedJob'])->name('get_recently_applyed_job'); // for emloyer
-        
+
         Route::post('/change_application_status', [JobsCotroller::class, 'jobApplicationStatus'])->name('change_application_status');
         Route::get('/get_job_applyed_list', [JobsCotroller::class, 'getJobAppliyedList'])->name('get_job_applyed_list'); // for employee
 
