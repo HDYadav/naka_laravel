@@ -88,8 +88,8 @@ class JobsCotroller extends ApiController
         $state =  State::select('id', 'name')->get();
       //  $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
         $emp_type =  EmployeementType::select('id', 'name', 'emptype_hindi as name_hindi', 'emptype_marathi as name_marathi', 'emptype_punjabi as name_punjabi')->get();
-        $experience = Experience::select('id', 'name')->get();
-        $workplace = WorkPlace::select('id', 'name')->get();
+        $experience = Experience::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
+        $workplace = WorkPlace::select('id', 'name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
 
         // $companyList =  CompanyList::select('id', 'name')->get();
         //   $jobpostiong =  Jobposition::select('id', 'name')->get();
