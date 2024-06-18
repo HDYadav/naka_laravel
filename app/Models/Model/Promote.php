@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Promote extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'name_hindi', 'name_marathi', 'name_punjabi'];
 }

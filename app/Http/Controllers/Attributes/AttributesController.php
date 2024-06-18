@@ -16,6 +16,7 @@ use App\Models\Model\Experience;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Jobposition;
+use App\Models\Model\Promote;
 use App\Models\Model\SalaryType;
 use App\Models\Model\Skill;
 use App\Models\Model\State;
@@ -490,6 +491,51 @@ class AttributesController extends ApiController
     }
 
 
+
+
+
+    public function salaryPromoteAddUpdate(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'name' => $request->name,
+            'name_hindi' => $request->name_hindi,
+            'name_marathi' => $request->name_marathi,
+            'name_punjabi' => $request->name_punjabi
+        ];
+
+        //   return  $edudata;
+
+        // Check if the ID is provided in the request
+        if ($request->id) {
+            // Update existing record if ID is provided
+            $edu = Promote::where('id', $request->id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = Promote::where('name', $request->name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = Promote::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+    public function getPromote($id, Request $request)
+    {
+
+        return Promote::select('id',  'name', 'name_hindi', 'name_marathi', 'name_punjabi')->where('id', $id)->first();
+    }
 
 
 

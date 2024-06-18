@@ -91,7 +91,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
          Route::post('/salary_type_add_update', [AttributesController::class, 'salaryTypeAddUpdate'])->name('salary_type_add_update');
-        Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type');
+         Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type');
+
+        Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
+        Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote');
+
 
 
 
