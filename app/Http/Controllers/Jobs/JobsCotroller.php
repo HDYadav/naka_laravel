@@ -1021,7 +1021,11 @@ class JobsCotroller extends ApiController
                 $join->on('ef.job_id', '=', 'j.id')
                     ->on('ef.user_id', '=', 'u.id');
             })
-            ->select('aj.user_id as empoyee_id', 'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite','j.id as job_id','j.created_by')
+            ->select('aj.user_id as empoyee_id', 'u.name', 'u.profilePic', 'jp.name as profession',
+            'jp.name_hindi as profession_hindi',
+            'jp.name_marathi as profession_marathi',
+            'jp.name_punjabi as profession_punjabi',            
+            'ef.isFavourite','j.id as job_id','j.created_by')
               ->where('j.created_by', $user->id)
               ->where('aj.isApplyed', 1)                   
                 ->get();
