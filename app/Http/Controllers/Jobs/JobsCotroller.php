@@ -87,7 +87,7 @@ class JobsCotroller extends ApiController
 
         $state =  State::select('id', 'name')->get();
       //  $city = City::where('state_id', $request->state_id)->select('id', 'name')->get();
-        $emp_type =  EmployeementType::select('id', 'name')->get();
+        $emp_type =  EmployeementType::select('id', 'name', 'emptype_hindi as name_hindi', 'emptype_marathi as name_marathi', 'emptype_punjabi as name_punjabi')->get();
         $experience = Experience::select('id', 'name')->get();
         $workplace = WorkPlace::select('id', 'name')->get();
 
@@ -114,7 +114,7 @@ class JobsCotroller extends ApiController
     protected function getAllCities()
     {
          
-        $cities =  City::select('id','name as cityName')->get();
+        $cities =  City::select('id','name as cityName', 'name_hindi as city_hindi', 'name_marathi as city_marathi', 'name_punjabi as city_punjabi')->get();
 
        // $skill = $skills->makeHidden(['created_at', 'updated_at']);
 
