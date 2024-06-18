@@ -399,6 +399,9 @@ class JobsCotroller extends ApiController
                 'u.email',
                 'wp.id as workPlaceId',
                 'wp.name as workPlace',
+                'wp.name_hindi as workPlace_hindi',
+                'wp.name_marathi as workPlace_marathi',
+                'wp.name_punjabi as workPlace_punjabi',
                 'j.country',
                 'js.id as stateId',
                 'js.name as state',
@@ -423,6 +426,9 @@ class JobsCotroller extends ApiController
                 'j.deadline',
                 'st.id as salaryTypeId',
                 'st.name as salaryType',
+                'st.name_hindi as salaryType_hindi',
+                'st.name_marathi as salaryType_marathi',
+                'st.name_punjabi as salaryType_punjabi',
                 'j.minSalary',
                 'j.maxSalary',
                 'ex.id as experienceId',
@@ -965,11 +971,13 @@ class JobsCotroller extends ApiController
 
 
         $users = DB::table('applyed_job as aj')
-        ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
-        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+            ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->leftJoin('users as u', 'u.id', '=', 'aj.user_id') 
+       
+        ->leftJoin('users as employer', 'employer.id', '=', 'j.created_by')
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
         ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
-        ->select('u.id as empoyee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite', 'aj.job_id')
+        ->select('u.id as empoyee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite', 'aj.job_id', 'employer.name as employer_name')
         //->where('aj.user_id', $user->id)
       //  ->where('j.created_by', $user->id)
          //   ->where('aj.job_id', $request->job_id)
