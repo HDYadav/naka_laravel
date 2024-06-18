@@ -150,6 +150,7 @@ class JobsCotroller extends ApiController
        
        
         $jobData = [
+            'title' => $request->job_title,
             'jobPosiiton' => $request->jobPosiiton,
             'workPlace' => $request->workPlace,
             'country' => $request->country,
