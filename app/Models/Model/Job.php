@@ -11,6 +11,7 @@ class Job extends Model
 
     protected $fillable = [
         'id', // Add this line to allow mass assignment of the id field
+        'title',
         'jobPosiiton',
         'workPlace',
         'country',

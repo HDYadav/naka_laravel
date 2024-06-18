@@ -122,6 +122,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::get('/admin_get_jobs', [JobsCotroller::class, 'getAllJobsAdmin'])->name('admin_get_jobs');
 
+        Route::get('/get_applyed_job_admin', [JobsCotroller::class, 'getAppliedJobAdmin'])->name('get_applyed_job_admin');
+
+
     });
 
 

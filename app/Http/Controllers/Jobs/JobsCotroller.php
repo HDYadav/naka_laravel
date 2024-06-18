@@ -50,7 +50,9 @@ class JobsCotroller extends ApiController
         $workplace = WorkPlace::select('id', 'name','name_hindi', 'name_marathi', 'name_punjabi')->get();
         $state =  State::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
         $city = City::where('state_id', $request->state_id)->select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
-        $salaryType = SalaryType::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();  
+        $salaryType = SalaryType::select('id','name', 'name_hindi', 'name_marathi', 'name_punjabi')->get();
+        $promote = Promote::select('id', 'name','name_hindi', 'name_marathi', 'name_punjabi')->get();  
+
 
         $companyList =  CompanyList::select('id', 'name')->get();
         
@@ -205,7 +207,7 @@ class JobsCotroller extends ApiController
         $user = UserData::getUserFrToken($request);
 
         $jobs = DB::table('jobs as j')
-        ->select('j.id', 'jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo')
+        ->select('j.id', 'j.title','jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo')
         ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
         ->leftJoin('users as u', 'u.id', '=', 'j.company')
         ->leftJoin('salary_types as st', 'st.id', '=', 'j.salaryType')
@@ -895,6 +897,47 @@ class JobsCotroller extends ApiController
 
      
     }
+
+
+
+    public function getAppliedJobAdmin(Request $request)
+    {
+
+        $user = UserData::getUserFrToken($request);
+
+
+        $users = DB::table('applyed_job as aj')
+        ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
+        ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
+        ->select('u.id as empoyee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite', 'aj.job_id')
+        //->where('aj.user_id', $user->id)
+      //  ->where('j.created_by', $user->id)
+         //   ->where('aj.job_id', $request->job_id)
+            ->get();
+
+        foreach ($users as $user) {
+            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
+        }
+
+
+      return  $users ;
+
+        // if ($users->isEmpty()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'data' => [],
+        //     ], 200);
+        // } else {
+        //     return response()->json([
+        //         'success' => true,
+        //         'data' => $users,
+        //     ], 201);
+        // }
+    }
+
+
 
 
 
