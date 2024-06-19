@@ -122,13 +122,17 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::post('/change_application_status', [JobsCotroller::class, 'jobApplicationStatus'])->name('change_application_status');
         Route::get('/get_job_applyed_list', [JobsCotroller::class, 'getJobAppliyedList'])->name('get_job_applyed_list'); // for employee
-
         Route::get('/admin_get_jobs', [JobsCotroller::class, 'getAllJobsAdmin'])->name('admin_get_jobs');
-
         Route::get('/get_applyed_job_admin', [JobsCotroller::class, 'getAppliedJobAdmin'])->name('get_applyed_job_admin');
 
+        Route::get('/get_applyed_job_details_admin/{id}', [JobsCotroller::class, 'getAppliedJobDetailsAdmin'])->name('get_applyed_job_details_admin');   
 
     });
+
+
+    Route::get('/get_candidates', [UserController::class, 'getCandidates'])->name('get_candidates');
+
+
 
 
     Route::post('/edu_create_update', [JobsCotroller::class, 'eduCreateOrUpdate'])->name('edu_create_update');

@@ -395,5 +395,14 @@ class UserController extends ApiController
 
     }
 
+
+
+    public function getCandidates(Request $request)
+    {
+        $users = User::select('*')->where('user_type','1')->get();
+        return response()->json($users);
+    }
+
+
     
 }

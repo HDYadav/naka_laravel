@@ -967,41 +967,48 @@ class JobsCotroller extends ApiController
     public function getAppliedJobAdmin(Request $request)
     {
 
-        $user = UserData::getUserFrToken($request);
-
-
+        $user = UserData::getUserFrToken($request); 
         $users = DB::table('applyed_job as aj')
+                    ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
+                    ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')        
+                    ->leftJoin('users as employer', 'employer.id', '=', 'j.created_by')
+                    ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+                    ->select('aj.id','u.id as empoyee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'aj.job_id', 'employer.name as employer_name', 'employer.company_name')
+                    ->get();   
+                     return  $users ;
+
+        
+    }
+
+
+    public function getAppliedJobDetailsAdmin($id,Request $request)
+    {
+
+        //    $user = UserData::getUserFrToken($request);
+        $jobs = DB::table('applyed_job as aj')
             ->leftJoin('jobs as j', 'j.id', '=', 'aj.job_id')
-        ->leftJoin('users as u', 'u.id', '=', 'aj.user_id') 
-       
-        ->leftJoin('users as employer', 'employer.id', '=', 'j.created_by')
-        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
-        ->leftJoin('employer_favorates as ef', 'ef.job_id', '=', 'j.id')
-        ->select('u.id as empoyee_id',  'u.name', 'u.profilePic', 'jp.name as profession', 'ef.isFavourite', 'aj.job_id', 'employer.name as employer_name')
-        //->where('aj.user_id', $user->id)
-      //  ->where('j.created_by', $user->id)
-         //   ->where('aj.job_id', $request->job_id)
+            ->leftJoin('users as u', 'u.id', '=', 'aj.user_id')
+            ->leftJoin('users as employer', 'employer.id', '=', 'j.created_by')
+            ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+            ->leftJoin('experiences as exp', 'exp.id', '=', 'u.experienced')
+            ->leftJoin('educations as edu', 'edu.id', '=', 'u.educationId')
+            ->select('aj.id', 'u.id as empoyee_id',  'u.name', 'u.mobile', 'u.email','u.gender', 'u.profilePic', 'u.website','jp.name as profession', 'aj.job_id', 'employer.name as employer_name', 'employer.company_name', 'exp.name as experience', 'edu.name as education', 'j.deadline', 'j.skills', 'j.description')
+            ->where('aj.id', $id)
             ->get();
 
-        foreach ($users as $user) {
-            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
+        foreach ($jobs as $job) {
+            $job->skills = $this->getSkills($job->skills);
         }
 
+        return response()->json([
+            'success' => true,
+            'data' => $jobs['0'],
+        ], 201);
 
-      return  $users ;
-
-        // if ($users->isEmpty()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'data' => [],
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         'success' => true,
-        //         'data' => $users,
-        //     ], 201);
-        // }
+        
+        
     }
+
 
 
 
