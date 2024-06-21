@@ -280,7 +280,7 @@ class UserController extends ApiController
     }
 
 
-
+   
 
     public function getProfileInfo(Request $request)
     {
@@ -399,8 +399,91 @@ class UserController extends ApiController
 
     public function getCandidates(Request $request)
     {
-        $users = User::select('*')->where('user_type','1')->get();
-        return response()->json($users);
+       $users = DB::table('users as u')
+    ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
+    ->leftJoin('applyed_job as aj', 'aj.user_id', '=', 'u.id')
+    ->select('u.id',
+        'u.name',
+        'jp.name as jobposition',
+        DB::raw('COUNT(aj.id) as jobsApplied'),
+        DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
+        DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'), 
+        'u.profilePic',
+        DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
+    )
+    ->where('u.user_type', '1')
+    ->groupBy('u.id', 'u.name', 'jp.name', 'status', 'u.otp_verified', 'u.profilePic', 'u.created_at')
+    ->get();
+
+    return response()->json($users); 
+
+
+    }
+
+
+    public function candidateDetails($id, Request $request)
+    {
+        $users = DB::table('users as u')
+                ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
+                ->leftjoin('experiences as ex', 'ex.id', '=', 'u.experienced')
+                 ->leftjoin('educations as ed', 'ed.id', '=', 'u.educationId')
+                ->where('u.id', $id) 
+                ->select('u.id',
+            'u.name as user_name','u.email',
+            'jp.name as jobposition',
+            'u.profilePic','ex.name as experience','ed.name as education',
+            'u.gender',
+            'u.maritalStatus',
+            'u.dob',
+            'u.skills',
+            'u.languages','u.maritalStatus',
+            DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
+            DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
+        )->get();
+
+        foreach ($users as $job) {
+            $job->skills = $this->getSkills($job->skills);
+        }
+
+        foreach ($users as $job) {
+            $job->languages = $this->languages($job->languages);
+        }
+
+        
+
+        if ($users->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+            ], 404);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $users['0'],
+            ], 200);
+        }
+    }
+
+
+    protected function getSkillsUser($skills)
+    {
+        $skillIds = explode(',', $skills);
+        $skills =  Skill::whereIn('id', $skillIds)->get();
+
+        $skill = $skills->makeHidden(['created_at', 'updated_at']);
+
+        return $skill;
+    }
+
+
+    protected function languages($laguages)
+    {
+        $ids = explode(',', $laguages);
+        $laguages =  Language::whereIn('id', $ids)->get();
+
+        $lang = $laguages->makeHidden(['created_at', 'updated_at']);
+
+        return $lang;
     }
 
 

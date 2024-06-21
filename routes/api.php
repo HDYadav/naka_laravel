@@ -131,6 +131,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::get('/get_candidates', [UserController::class, 'getCandidates'])->name('get_candidates');
+    Route::get('/candidates_details/{id}', [UserController::class, 'candidateDetails'])->name('candidates_details');
 
 
 
