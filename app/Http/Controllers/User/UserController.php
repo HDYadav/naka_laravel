@@ -439,6 +439,7 @@ class UserController extends ApiController
             'u.maritalStatus',
             'u.dob',
             'u.skills',
+            'u.resume',
             'u.languages','u.maritalStatus',
             DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
@@ -495,8 +496,8 @@ class UserController extends ApiController
 
         if ($file->isValid()) {
             $fileName = $file->getClientOriginalName();
-            $directory = public_path('uploads/customers/' . date('Y/m/d'));
-            $relativePath = 'uploads/customers/' . date('Y/m/d');
+            $directory = public_path('uploads/images/' . date('Y/m/d'));
+            $relativePath = 'uploads/images/' . date('Y/m/d');
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);
@@ -514,9 +515,7 @@ class UserController extends ApiController
     public function createOrUpdateCandidate(Request $request)
     {
         // Determine if it's a create or update operation
-        $isUpdate = $request->has('id');
-        
-
+        $isUpdate = $request->has('id'); 
 
         // Validate the request
         $rules = [
@@ -563,15 +562,24 @@ class UserController extends ApiController
             'educationId' => $request->education,
             'skills' => $request->skills,
             'languages' => $request->languages,
-            'profilePic' => $profilePicture,
-            'resume' =>  $resume,
             'maritalStatus' => $request->maritalStatus,
             'gender' => $request->gender,
         ];
 
+        if (!empty($profilePicture)) {
+            $userData['profilePic'] = $profilePicture;
+        }
+
+        if (!empty($resume)) {
+            $userData['resume'] = $resume;
+        }
+ 
+     
+
         // Update existing user or create new user
         if ($isUpdate) {
             // Update existing user
+            $userData['dob'] = $request->date_of_birth;
             $user = User::findOrFail($request->id);
             $user->update($userData);
         } else {
@@ -620,11 +628,29 @@ class UserController extends ApiController
 
 
 
+
     public function deleteUser($id)
     {
-        $data = User::where('id', $id)->delete();
+        try {
+            $user = User::withTrashed()->find($id);            
 
-        return $this->sucessResponse('Records sucessfylly deleted', $data, true, 201);
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            if ($user->trashed()) {
+                $user->forceDelete(); // Permanently delete if soft deleted
+                return response()->json(['message' => 'User permanently deleted'], 200);
+            } else {
+                $user->forceDelete(); 
+             //   $user->delete(); // Soft delete if not already deleted
+                return response()->json(['message' => 'User deleted successfully'], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete user: ' . $e->getMessage()], 500);
+        }
     }
+
+
 
 }
