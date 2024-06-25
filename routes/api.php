@@ -43,6 +43,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('/user_register',[ApiAuthController::class, 'register'])->name('user_register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
     Route::post('/resent_otp', [ApiAuthController::class, 'resendOtp'])->name('resent_otp.api');
+
+
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
     Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
@@ -63,8 +65,11 @@ Route::group(['middleware' => 'auth:api'], function () {
  
  Route::post('/change-password',  [PasswordController::class, 'changePassword']);
 
-        Route::prefix('attributes')->group(function () {
 
+
+
+
+        Route::prefix('attributes')->group(function () {
         Route::post('/position_add_update', [AttributesController::class, 'positionAddUpdate'])->name('position_add_update');
         Route::get('/get_job_position/{id}', [AttributesController::class, 'getJobPosition'])->name('get_job_position');
 
@@ -129,9 +134,19 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     });
 
+    //Route::post('/create_candidate', [UserController::class, 'createCandidate'])->name('create_candidate');
 
+    Route::post('/create_candidate', [UserController::class, 'createOrUpdateCandidate'])->name('create_candidate');
+
+    
+    
     Route::get('/get_candidates', [UserController::class, 'getCandidates'])->name('get_candidates');
     Route::get('/candidates_details/{id}', [UserController::class, 'candidateDetails'])->name('candidates_details');
+    Route::get('/get_candidates_edit/{id}', [UserController::class, 'getEditCandidate'])->name('get_candidates_edit');
+
+    Route::delete('/delete_candidate/{id}', [UserController::class, 'deleteUser'])->name('delete_candidate');
+
+
 
 
 

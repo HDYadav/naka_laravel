@@ -725,9 +725,11 @@ class JobsCotroller extends ApiController
         $education = Education::select('id', 'name')->get();
         $workplace = WorkPlace::select('id', 'name')->get();
         $emp_type = EmployeementType::select('id', 'name')->get(); 
-        $skills =  Skill::select('id', 'name')->get();   
+        $skills =  Skill::select('id', 'name')->get();
 
-         $data = ['company'=> $company, 'promote'=>$promote, 'state' =>$state, 'city' => $city, 'salaryType' =>$salaryType, 'experience' =>$experience, 'job_position' =>$job_position, 'education' =>$education, 'workplace' =>$workplace, 'emp_type' =>$emp_type, 'skills' => $skills];
+        $languages = DB::table('languages')->select('id','name')->get();
+
+         $data = ['company'=> $company, 'promote'=>$promote, 'state' =>$state, 'city' => $city, 'salaryType' =>$salaryType, 'experience' =>$experience, 'job_position' =>$job_position, 'education' =>$education, 'workplace' =>$workplace, 'emp_type' =>$emp_type, 'skills' => $skills, 'languages'=> $languages];
 
         return $this->sucessResponse(null, $data, true, 201);
     }

@@ -22,6 +22,16 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     * 
+     * 'skills' => $request->skills,
+            'languages' => $request->languages,
+            'profilePicture' => $profilePicture,
+            'resume' =>
+            $resume,
+            'maritalStatus' => $request->maritalStatus,
+            'gender' => $request->gender,
+
+
      */
     protected $fillable = [   
         'name',        
@@ -36,6 +46,15 @@ class User extends Authenticatable
         'companyInfo',
         'foundingInfo',
         'password',
+        'experienced',
+        'professionId',
+        'educationId',
+        'skills',
+        'languages',
+        'profilePic',
+        'resume',
+        'maritalStatus',
+        'gender'
     ];
 
     /**

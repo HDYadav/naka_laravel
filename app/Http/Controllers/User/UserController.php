@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\Model\EducationDetails; 
 use App\Models\Model\ExperianceDetails;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 class UserController extends ApiController
 {
@@ -487,5 +490,141 @@ class UserController extends ApiController
     }
 
 
-    
+    private function image_upload($file)
+    {
+
+        if ($file->isValid()) {
+            $fileName = $file->getClientOriginalName();
+            $directory = public_path('uploads/customers/' . date('Y/m/d'));
+            $relativePath = 'uploads/customers/' . date('Y/m/d');
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            if ($file->move($directory, $fileName)) {
+                return $relativePath . '/' . $fileName;
+            } else {
+                throw new \Exception('Error uploading file');
+            }
+        } else {
+            throw new \Exception('Invalid file uploaded');
+        }
+    }
+
+    public function createOrUpdateCandidate(Request $request)
+    {
+        // Determine if it's a create or update operation
+        $isUpdate = $request->has('id');
+        
+
+
+        // Validate the request
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'mobile' => 'required|string|max:10',
+            'password' => 'required|string',
+        ];
+
+        if (!$isUpdate) {
+            // For create operation, ensure email and mobile are unique
+            $rules['email'] .= '|unique:users';
+            $rules['mobile'] .= '|unique:users';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        // If validation fails, return a response with errors
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Handle file uploads
+        $profilePicture = '';
+        if ($request->hasFile('profilePicture')) {
+            $profilePicture = $this->image_upload($request->file('profilePicture'));
+        }
+
+        $resume = '';
+        if ($request->hasFile('resume')) {
+            $resume = $this->image_upload($request->file('resume'));
+        }
+
+        // Prepare data for create/update
+        $userData = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'password' => Hash::make($request->password),
+            'experienced' => $request->experience,
+            'professionId' => $request->jobPosiiton,
+            'educationId' => $request->education,
+            'skills' => $request->skills,
+            'languages' => $request->languages,
+            'profilePic' => $profilePicture,
+            'resume' =>  $resume,
+            'maritalStatus' => $request->maritalStatus,
+            'gender' => $request->gender,
+        ];
+
+        // Update existing user or create new user
+        if ($isUpdate) {
+            // Update existing user
+            $user = User::findOrFail($request->id);
+            $user->update($userData);
+        } else {
+            // Create new user
+            $userData['dob'] = $request->date_of_birth; // Assuming 'dob' is date of birth
+            $userData['user_type'] = 1; // Assuming 'user_type' for candidate is 1
+            $user = User::create($userData);
+        }
+
+        // Hide timestamps
+        $user->makeHidden(['updated_at', 'created_at']);
+
+        // Return the user with appropriate status code
+        return response()->json($user, $isUpdate ? 200 : 201);
+    }
+
+
+
+    public function getEditCandidate($user_id)
+    {
+
+       
+    return  $users = User::where('id', $user_id)->select(
+            'name',
+            'email',
+            'mobile',
+            'user_type',
+            'otp_verified',
+            'dob',
+            'company_name',
+            'company_size',
+            'basicProfile',
+            'companyInfo',
+            'foundingInfo',
+            'password',
+            'experienced',
+            'professionId',
+            'educationId',
+            'skills',
+            'languages',
+            'profilePic',
+            'resume',
+            'maritalStatus',
+            'gender')->first(); 
+    }
+
+
+
+    public function deleteUser($id)
+    {
+        $data = User::where('id', $id)->delete();
+
+        return $this->sucessResponse('Records sucessfylly deleted', $data, true, 201);
+    }
+
 }
