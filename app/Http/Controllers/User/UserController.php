@@ -522,7 +522,7 @@ class UserController extends ApiController
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'mobile' => 'required|string|max:10',
+            'mobile' => 'required|string',
             'password' => 'required|string',
         ];
 
