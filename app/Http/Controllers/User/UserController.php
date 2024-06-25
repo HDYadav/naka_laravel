@@ -523,7 +523,7 @@ class UserController extends ApiController
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'mobile' => 'required|string',
-            'password' => 'required|string',
+           // 'password' => 'required|string',
         ];
 
         if (!$isUpdate) {
