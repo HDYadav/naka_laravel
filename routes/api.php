@@ -63,10 +63,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 Route::group(['middleware' => 'auth:api'], function () { 
  
- Route::post('/change-password',  [PasswordController::class, 'changePassword']);
-
-
-
+ Route::post('/change-password',  [PasswordController::class, 'changePassword']); 
 
 
         Route::prefix('attributes')->group(function () {
@@ -143,10 +140,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/get_candidates', [UserController::class, 'getCandidates'])->name('get_candidates');
     Route::get('/candidates_details/{id}', [UserController::class, 'candidateDetails'])->name('candidates_details');
     Route::get('/get_candidates_edit/{id}', [UserController::class, 'getEditCandidate'])->name('get_candidates_edit');
-
     Route::delete('/delete_candidate/{id}', [UserController::class, 'deleteUser'])->name('delete_candidate');
-
-
 
 
 

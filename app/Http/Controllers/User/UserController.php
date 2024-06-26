@@ -406,7 +406,8 @@ class UserController extends ApiController
     ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
     ->leftJoin('applyed_job as aj', 'aj.user_id', '=', 'u.id')
     ->select('u.id',
-        'u.name',
+        'u.name','u.email',
+            'u.profilePic',
         'jp.name as jobposition',
         DB::raw('COUNT(aj.id) as jobsApplied'),
         DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),

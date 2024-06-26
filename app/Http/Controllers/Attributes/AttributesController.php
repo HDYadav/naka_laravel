@@ -33,11 +33,13 @@ class AttributesController extends ApiController
         $user = UserData::getUserFrToken($request);
 
         $edudata = [
-            'name' => $request->name_english,
-            'name_hindi' => $request->name_hindi,
-            'name_marathi' => $request->name_marathi,
-            'name_punjabi' => $request->name_punjabi
+            'name' => $request->name_english ?? '',
+            'name_hindi' => $request->name_hindi ?? '',
+            'name_marathi' => $request->name_marathi ?? '',
+            'name_punjabi' => $request->name_punjabi ?? ''
         ];
+
+        
 
         // Check if the ID is provided in the request
         if ($request->id) {
@@ -52,11 +54,21 @@ class AttributesController extends ApiController
             // Create new record if ID is not provided
             $edu = Jobposition::where('name', $request->name_english)->first();
             if ($edu) {
-                return $this->errorResponse('Job position with this name already exists', [], false, 400);
-            } else {
+                return response()->json([
+                    'Job position with this name already exists',
+                    'data'   =>  $edu,
+                ], 201); 
+
+
+              //  return $this->errorResponse('Job position with this name already exists', [], false, 400);
+            } else { 
                 $edu = Jobposition::create($edudata);
             }
         }
+        // return response()->json([
+        //     'data'   =>  $edu,
+        // ], 201); 
+
 
         return $this->sucessResponse('Job position saved successfully', ['id' => $edu->id], true, 200);
     }
