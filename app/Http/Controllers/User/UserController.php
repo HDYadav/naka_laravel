@@ -654,4 +654,59 @@ class UserController extends ApiController
 
 
 
+
+    public function getEmployer(Request $request)
+    {
+        $users = DB::table('users as u')
+  
+        ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
+        ->select(
+            'u.id',
+            'u.name',
+            'u.email',
+            'u.companyLogo',
+            'u.status',
+            DB::raw('COUNT(j.id) as activeJob'),
+            DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
+            DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
+            'u.companyLogo',
+            DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
+        )
+            ->where('u.user_type', '2')
+            ->groupBy('u.id', 'u.name', 'u.status', 'u.otp_verified', 'u.companyLogo', 'u.created_at')
+            ->get();
+
+        return response()->json($users);
+    }
+
+
+    public function employerDetails($id)
+    {
+        $users = DB::table('users as u')
+
+        ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
+        ->select(
+            'u.id',
+            'u.name',
+            'u.email',
+            'u.establishmentYear',
+            'u.mobile',
+            'u.companyLogo',
+            'u.status',
+            DB::raw('COUNT(j.id) as activeJob'),
+            DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
+            DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
+            'u.companyLogo',
+            DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
+        )
+            ->where('u.user_type', '2')
+            ->where('u.id', $id)
+            ->groupBy('u.id', 'u.name', 'u.status', 'u.otp_verified', 'u.companyLogo', 'u.created_at')
+            ->get();
+
+        return response()->json($users);
+    }
+
+
+
 }

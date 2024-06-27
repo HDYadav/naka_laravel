@@ -25,8 +25,7 @@ use Illuminate\Support\Facades\DB;
 
 class AttributesController extends ApiController
 {
-
-
+ 
 
     public function positionAddUpdate(Request $request)
     {

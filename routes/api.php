@@ -133,14 +133,18 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     //Route::post('/create_candidate', [UserController::class, 'createCandidate'])->name('create_candidate');
 
-    Route::post('/create_candidate', [UserController::class, 'createOrUpdateCandidate'])->name('create_candidate');
-
-    
-    
+    Route::post('/create_candidate', [UserController::class, 'createOrUpdateCandidate'])->name('create_candidate'); 
     Route::get('/get_candidates', [UserController::class, 'getCandidates'])->name('get_candidates');
     Route::get('/candidates_details/{id}', [UserController::class, 'candidateDetails'])->name('candidates_details');
     Route::get('/get_candidates_edit/{id}', [UserController::class, 'getEditCandidate'])->name('get_candidates_edit');
     Route::delete('/delete_candidate/{id}', [UserController::class, 'deleteUser'])->name('delete_candidate');
+
+
+    Route::get('/get_employer', [UserController::class, 'getEmployer'])->name('get_employer');
+
+    Route::get('/employer_details/{id}', [UserController::class, 'employerDetails'])->name('employer_details');
+
+
 
 
 
