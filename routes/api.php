@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Vendor\VendorController;  
-use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Jobs\JobsCotroller;
 use App\Http\Controllers\User\UserController;
 
@@ -89,18 +87,19 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
         Route::post('/city_add_update', [AttributesController::class, 'cityAddUpdate'])->name('city_add_update');
-        Route::get('/get_city/{id}', [AttributesController::class, 'getCity'])->name('get_city');
-
+        Route::get('/get_city/{id}', [AttributesController::class, 'getCity'])->name('get_city'); 
 
          Route::post('/salary_type_add_update', [AttributesController::class, 'salaryTypeAddUpdate'])->name('salary_type_add_update');
-         Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type');
-
+         Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type'); 
         Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
-        Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote');
- 
-
+        Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote'); 
 
         });
+
+
+    Route::post('/employer_register_admin', [ApiAuthController::class, 'employerRegisterAdmin'])->name('employer_register_admin');
+
+    
 
 
     Route::prefix('jobs')->group(function () {

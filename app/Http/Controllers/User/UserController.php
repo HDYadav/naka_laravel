@@ -666,9 +666,12 @@ class UserController extends ApiController
             'u.email',
             'u.companyLogo',
             'u.status',
+            'u.establishmentYear',
+            'u.profile_status',
             DB::raw('COUNT(j.id) as activeJob'),
+            DB::raw('CASE WHEN u.profile_status = 1 THEN "verified" ELSE "unverified" END as profile_status'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
-            DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
+            DB::raw('CASE WHEN u.otp_verified = 1 THEN "verified" ELSE "unverified" END as otp_verified'),
             'u.companyLogo',
             DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
         )
@@ -685,24 +688,28 @@ class UserController extends ApiController
         $users = DB::table('users as u')
 
         ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
+        ->leftJoin('industries as i', 'i.id','=','u.industryTypeId')
         ->select(
             'u.id',
-            'u.name',
+            'u.company_name',
             'u.email',
-            'u.establishmentYear',
-            'u.mobile',
             'u.companyLogo',
             'u.status',
+            'u.establishmentYear',
+            'u.profile_status',
+            'i.name as industry_type',
+            'u.company_size as team_size',
+            'u.company_size as descriptions',
             DB::raw('COUNT(j.id) as activeJob'),
+            DB::raw('CASE WHEN u.profile_status = 1 THEN "verified" ELSE "unverified" END as profile_status'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
-            DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
+            DB::raw('CASE WHEN u.otp_verified = 1 THEN "verified" ELSE "unverified" END as otp_verified'),
             'u.companyLogo',
             DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
         )
-            ->where('u.user_type', '2')
-            ->where('u.id', $id)
+            ->where('u.user_type', '2') 
             ->groupBy('u.id', 'u.name', 'u.status', 'u.otp_verified', 'u.companyLogo', 'u.created_at')
-            ->get();
+            ->first();
 
         return response()->json($users);
     }

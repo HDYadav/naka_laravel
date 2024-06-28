@@ -298,4 +298,45 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
     }
 
 
+
+
+
+    public function employerRegisterAdmin(EmployerRegistrationRequest $request, SignupRepository $signupRepository)
+    {
+        try {
+            DB::beginTransaction();
+            $user =  $signupRepository->employerCreateAdmin($request);
+            $otpRepos = new OtpRepository;
+
+           // dd($user);
+
+            // Generate OTP
+            $otp = $otpRepos->generate($user->email);
+
+            $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+            $response =  $otp;
+
+            $user['otp'] = $response['otp'];
+
+            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]);
+
+            DB::commit();
+            return $this->sucessResponse('Records successfully inserted', $user, true, 200);
+        } catch (QueryException $e) {
+            DB::rollBack();
+            LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse('Database error: ' . $e->getMessage(), 500)]);
+            return $this->errorResponse('Database error: ' . $e->getMessage(), 500);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse($e->getMessage(), 422)]);
+            return $this->errorResponse($e->getMessage(), 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse($e->getMessage(), 500)]);
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+
+
 }

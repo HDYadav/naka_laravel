@@ -57,6 +57,59 @@ class SignupRepository implements UserRepositoryInterface
 
 
 
+    public function employerCreateAdmin($request)
+    {
+
+        
+
+        $companyLogo = '';
+        if ($request->hasFile('companyLogo')) {
+            $companyLogo = $this->image_upload($request->file('companyLogo'));
+        }
+
+
+        $user =  User::create([
+            'name' => $request->name,
+            'company_name' => $request->company_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,  
+            'company_size' => $request->company_size,           
+            'organizationType' => $request->organizationType,
+            'industryTypeId' => $request->industryTypeId, 
+            'website' => $request->website,
+            'establishmentYear' => $request->establishmentYear,
+            'companyLogo' => $companyLogo,
+            'about' => $request->about,                      
+            'user_type' => '2',
+            'password' => Hash::make($request->password)
+
+        ]);
+
+        $user->makeHidden(['updated_at', 'created_at']);
+
+        return $user;
+    }
+
+    private function image_upload($file)
+    {
+
+        if ($file->isValid()) {
+            $fileName = $file->getClientOriginalName();
+            $directory = public_path('uploads/images/' . date('Y/m/d'));
+            $relativePath = 'uploads/images/' . date('Y/m/d');
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            if ($file->move($directory, $fileName)) {
+                return $relativePath . '/' . $fileName;
+            } else {
+                throw new \Exception('Error uploading file');
+            }
+        } else {
+            throw new \Exception('Invalid file uploaded');
+        }
+    }
 
      
 }

@@ -47,7 +47,8 @@ class User extends Authenticatable
         'profilePic',
         'resume',
         'maritalStatus',
-        'gender'
+        'gender',
+        'companyLogo'
     ];
 
     /**
