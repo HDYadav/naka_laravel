@@ -9,6 +9,7 @@ use App\Http\Requests\RegistraionRequest;
 use App\Repository\SignupRepository;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\LogBuilder;
+use App\Http\Requests\EmployerEditRegistrationRequest;
 use App\Http\Requests\EmployerRegistrationRequest;
 use App\Http\Requests\OtpLoginRequest;
 use Illuminate\Support\Facades\Hash;
@@ -336,6 +337,46 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
+
+
+    public function employerUpdateAdmin($id, Request $request, SignupRepository $signupRepository)
+    {
+        
+        try {
+            DB::beginTransaction();
+            $user =  $signupRepository->employerUpdateAdmin($id,$request);
+            $otpRepos = new OtpRepository;
+
+            // dd($user);
+
+            // Generate OTP
+            $otp = $otpRepos->generate($user->email);
+
+            $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+            $response =  $otp;
+
+            $user['otp'] = $response['otp'];
+
+            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]);
+
+            DB::commit();
+            return $this->sucessResponse('Records successfully inserted', $user, true, 200);
+        } catch (QueryException $e) {
+            DB::rollBack();
+            LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse('Database error: ' . $e->getMessage(), 500)]);
+            return $this->errorResponse('Database error: ' . $e->getMessage(), 500);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse($e->getMessage(), 422)]);
+            return $this->errorResponse($e->getMessage(), 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse($e->getMessage(), 500)]);
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
 
 
 

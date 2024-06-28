@@ -94,11 +94,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
         Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote'); 
 
-        });
-
-
-    Route::post('/employer_register_admin', [ApiAuthController::class, 'employerRegisterAdmin'])->name('employer_register_admin');
-
+        }); 
     
 
 
@@ -143,6 +139,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/employer_details/{id}', [UserController::class, 'employerDetails'])->name('employer_details');
 
+    Route::post('/employer_register_admin', [ApiAuthController::class, 'employerRegisterAdmin'])->name('employer_register_admin');
+
+    Route::post('/employer_update_admin/{id}', [ApiAuthController::class, 'employerUpdateAdmin'])->name('employer_update_admin');
 
 
 

@@ -90,6 +90,70 @@ class SignupRepository implements UserRepositoryInterface
         return $user;
     }
 
+
+    public function employerUpdateAdmin($id, Request $request)
+    { 
+        // Validate the incoming request data
+        $request->validate([
+            'email' => 'required|email|unique:users,email,' . $id,
+            'mobile' => 'required|unique:users,mobile,' . $id,
+            // 'name' => 'required|string|max:255',
+            // 'company_name' => 'required|string|max:255',
+            // 'company_size' => 'required|string|max:255',
+            // 'organizationType' => 'required|string|max:255',
+            // 'industryTypeId' => 'required|integer',
+            // 'website' => 'required|url|max:255',
+            // 'establishmentYear' => 'required|integer',
+            // 'about' => 'required|string|max:500',
+            // 'password' => 'nullable|string|min:6|confirmed',
+            // 'companyLogo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        // Find the existing user record by $id
+        $user = User::findOrFail($id);
+
+        // Handle the optional file upload
+        if ($request->hasFile('companyLogo')) {
+            $companyLogo = $this->image_upload($request->file('companyLogo'));
+            $user->companyLogo = $companyLogo;
+        }
+
+        // Update the user record with new data from $request
+        $user->name = $request->name;
+        $user->company_name = $request->company_name;
+        $user->email = $request->email;
+        $user->mobile = $request->mobile;
+        $user->company_size = $request->company_size;
+        $user->organizationType = $request->organizationType;
+        $user->industryTypeId = $request->industryTypeId;
+        $user->website = $request->website;
+        $user->establishmentYear = $request->establishmentYear;
+        $user->about = $request->about;
+        $user->user_type = '2'; // Assuming user_type should always be '2' for employers
+
+        // Update the password only if a new password is provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        // Save the updated user record
+        $user->save();
+
+        // Optionally hide updated_at and created_at if necessary
+        $user->makeHidden(['updated_at', 'created_at']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Employer updated successfully',
+            'data' => $user
+        ], 200);
+    }
+
+
+
+
+
+
     private function image_upload($file)
     {
 
