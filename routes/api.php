@@ -65,6 +65,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
         Route::prefix('attributes')->group(function () {
+
         Route::post('/position_add_update', [AttributesController::class, 'positionAddUpdate'])->name('position_add_update');
         Route::get('/get_job_position/{id}', [AttributesController::class, 'getJobPosition'])->name('get_job_position');
 
@@ -84,6 +85,31 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::post('/state_add_update', [AttributesController::class, 'stateAddUpdate'])->name('state_add_update');
         Route::get('/get_state/{id}', [AttributesController::class, 'getState'])->name('get_state');
+
+        Route::delete('/delete_state/{id}', [AttributesController::class, 'deleteState'])->name('delete_state');
+        Route::delete('/delete_city/{id}', [AttributesController::class, 'deletecity'])->name('delete_city');
+        Route::delete('/delete_salarytype/{id}', [AttributesController::class, 'deletesalarytype'])->name('delete_salarytype');
+        Route::delete('/delete_industrytype/{id}', [AttributesController::class, 'deleteindustrytype'])->name('delete_industrytype'); 
+        Route::delete('/delete_job_position/{id}', [AttributesController::class, 'deletejob_position'])->name('delete_job_position');
+        Route::delete('/delete_emp_type/{id}', [AttributesController::class, 'deleteemp_type'])->name('delete_emp_type');
+        Route::delete('/delete_skill/{id}', [AttributesController::class, 'deleteskill'])->name('delete_skill');
+        Route::delete('/delete_experiance/{id}', [AttributesController::class, 'deleteexperiance'])->name('delete_experiance');
+        Route::delete('/delete_educations/{id}', [AttributesController::class, 'deleteeducations'])->name('delete_educations');
+        Route::delete('/delete_workplace/{id}', [AttributesController::class, 'deleteworkplace'])->name('delete_workplace');
+        Route::delete('/delete_promote/{id}', [AttributesController::class, 'deletepromote'])->name('delete_promote'); 
+        Route::delete('/delete_job/{id}', [AttributesController::class, 'deletejob'])->name('delete_job');
+
+
+        Route::post('/pages_add_update', [AttributesController::class, 'pagesAddUpdate'])->name('pages_add_update');
+        Route::get('/page_list', [AttributesController::class, 'pagesList'])->name('page_list');
+        Route::delete('/delete_page/{id}', [AttributesController::class, 'deletePage'])->name('delete_page');
+        Route::get('/get_page/{id}', [AttributesController::class, 'getPage'])->name('get_page'); 
+
+         Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update');
+
+ 
+
+
 
         Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
         Route::post('/city_add_update', [AttributesController::class, 'cityAddUpdate'])->name('city_add_update');
@@ -141,11 +167,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/employer/update', [ApiAuthController::class, 'employerUpdateAdmin']);
     Route::get('/get_employer_edit/{id}', [ApiAuthController::class, 'getEditEmployer'])->name('get_employer_edit');
 
-    Route::get('/admin_get_emp_jobs/{id}', [JobsCotroller::class, 'getAllEmployerJobsAdmin'])->name('admin_get_emp_jobs');
-
-
-
-
+    Route::get('/admin_get_emp_jobs/{id}', [JobsCotroller::class, 'getAllEmployerJobsAdmin'])->name('admin_get_emp_jobs'); 
 
 
 
@@ -158,7 +180,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/social_create_update', [JobsCotroller::class, 'socialCreateOrUpdate'])->name('social_create_update');
     Route::get('/get_social', [JobsCotroller::class, 'getSocial'])->name('get_social');
     Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social');
-    Route::post('/get_applyed_job_on_status', [JobsCotroller::class, 'getJobAppliyedJobOnStatus'])->name('get_applyed_job_on_status'); // for employee
+    Route::post('/get_applyed_job_on_status', [JobsCotroller::class, 'getJobAppliyedJobOnStatus'])->name('get_applyed_job_on_status');
+
+
+ 
+
 
 
    

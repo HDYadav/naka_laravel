@@ -15,11 +15,13 @@ use App\Models\Model\EmployeementType;
 use App\Models\Model\Experience;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
+use App\Models\Model\Job;
 use App\Models\Model\Jobposition;
 use App\Models\Model\Promote;
 use App\Models\Model\SalaryType;
 use App\Models\Model\Skill;
 use App\Models\Model\State;
+use App\Models\Model\StaticPage;
 use App\Models\Model\WorkPlace;
 use Illuminate\Support\Facades\DB;
 
@@ -550,8 +552,184 @@ class AttributesController extends ApiController
 
 
 
-    
+    public function deleteState($id)
+    {
+     
+        $state = State::where('id', $id)->delete();
+        return response()->json(['message' => 'state permanently deleted'], 200);
+ 
+    }
 
+    public function deletecity($id)
+    {
+
+        $state = City::where('id', $id)->delete();
+        return response()->json(['message' => 'city permanently deleted'], 200);
+    }
+
+    public function deletesalarytype($id)
+    {
+
+        $state = SalaryType::where('id', $id)->delete();
+        return response()->json(['message' => 'salary type permanently deleted'], 200);
+    }
+
+
+    public function deleteindustrytype($id)
+    {
+
+        $state = Industry::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+    public function deletejob_position($id)
+    {
+
+        $state = Jobposition::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+
+    public function deleteemp_type($id)
+    {
+
+        $state = EmployeementType::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+
+    public function deleteskill($id)
+    {
+
+        $state = Skill::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+    public function deleteexperiance($id)
+    {
+
+        $state = Experience::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+    public function deleteeducations($id)
+    {
+
+        $state = Education::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+    public function deleteworkplace($id)
+    {
+
+        $state = WorkPlace::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+    public function deletepromote($id)
+    {
+
+        $state = Promote::where('id', $id)->delete();
+        return response()->json(['message' => 'industry permanently deleted'], 200);
+    }
+
+    public function deletejob($id)
+    {
+
+        $state = Job::where('id', $id)->delete();
+        return response()->json(['message' => 'job permanently deleted'], 200);
+    }
+
+
+    public function deletePage($id)
+    {
+
+        $state = StaticPage::where('id', $id)->delete();
+        return response()->json(['message' => 'job permanently deleted'], 200);
+    }
+
+
+
+    public function pagesAddUpdate(Request $request)
+    {
+        $user = UserData::getUserFrToken($request); 
+
+        $edudata = [
+            'page_name' => $request->page_name,
+            'heading' => $request->heading,
+            'descriptions' => $request->descriptions 
+        ];
+
+        // Check if the ID is provided in the request
+        if ($request->id) {
+            // Update existing record if ID is provided
+            $edu = StaticPage::where('id', $request->id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = StaticPage::where('page_name', $request->page_name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = StaticPage::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+    public function pagesUpdate($id,Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'page_name' => $request->page_name,
+            'heading' => $request->heading,
+            'descriptions' => $request->descriptions
+        ];
+
+        // Check if the ID is provided in the request
+        if ($id) {
+            // Update existing record if ID is provided
+            $edu = StaticPage::where('id', $id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = StaticPage::where('page_name', $request->page_name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = StaticPage::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+
+    public function pagesList(Request $request)
+    {
+        return StaticPage::select('id', 'page_name', 'heading', 'descriptions')->get();
+    }
+
+
+
+    public function getPage($id, Request $request)
+    {
+
+        return StaticPage::select('id', 'page_name', 'heading', 'descriptions')->where('id', $id)->first();
+    }
 
     
 }
