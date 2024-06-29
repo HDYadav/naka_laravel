@@ -340,25 +340,15 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
 
 
 
-    public function employerUpdateAdmin($id, Request $request, SignupRepository $signupRepository)
+    public function employerUpdateAdmin($id,Request $request, SignupRepository $signupRepository)
     {
+        
         
         try {
             DB::beginTransaction();
-            $user =  $signupRepository->employerUpdateAdmin($id,$request);
-            $otpRepos = new OtpRepository;
-
-            // dd($user);
-
-            // Generate OTP
-            $otp = $otpRepos->generate($user->email);
-
-            $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-            $response =  $otp;
-
-            $user['otp'] = $response['otp'];
-
-            LogBuilder::apiLog(LogBuilder::$info, [$this->sucessResponse('your are looged in', $user, true, 200)]);
+            $user =  $signupRepository->employerUpdateAdmin($id, $request);     
+            
+            
 
             DB::commit();
             return $this->sucessResponse('Records successfully inserted', $user, true, 200);

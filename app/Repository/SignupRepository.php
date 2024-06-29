@@ -1,15 +1,13 @@
 <?php
 
 namespace App\Repository;
-
+use Illuminate\Validation\Rule;
 use App\Contracts\UserRepositoryInterface;
 use App\Models\User; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB; 
-use Illuminate\Support\Facades\Auth;
-use App\Models\UserDetail;
-use Illuminate\Support\Str;
+ 
+ 
 
 class SignupRepository implements UserRepositoryInterface
 { 
@@ -91,53 +89,62 @@ class SignupRepository implements UserRepositoryInterface
     }
 
 
+
     public function employerUpdateAdmin($id, Request $request)
-    { 
-        // Validate the incoming request data
+    {
+
+     
+        $user = User::findOrFail($id); 
+
+         
+
         $request->validate([
-            'email' => 'required|email|unique:users,email,' . $id,
-            'mobile' => 'required|unique:users,mobile,' . $id,
-            // 'name' => 'required|string|max:255',
-            // 'company_name' => 'required|string|max:255',
-            // 'company_size' => 'required|string|max:255',
-            // 'organizationType' => 'required|string|max:255',
-            // 'industryTypeId' => 'required|integer',
-            // 'website' => 'required|url|max:255',
-            // 'establishmentYear' => 'required|integer',
-            // 'about' => 'required|string|max:500',
-            // 'password' => 'nullable|string|min:6|confirmed',
-            // 'companyLogo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($id),
+            ],
+            'mobile' => [
+                'required',
+                Rule::unique('users')->ignore($id),
+            ],
+            // Other validation rules...
         ]);
 
-        // Find the existing user record by $id
-        $user = User::findOrFail($id);
-
         // Handle the optional file upload
+        $companyLogo = $user->companyLogo; // Retain the existing companyLogo
         if ($request->hasFile('companyLogo')) {
             $companyLogo = $this->image_upload($request->file('companyLogo'));
-            $user->companyLogo = $companyLogo;
         }
 
-        // Update the user record with new data from $request
-        $user->name = $request->name;
-        $user->company_name = $request->company_name;
-        $user->email = $request->email;
-        $user->mobile = $request->mobile;
-        $user->company_size = $request->company_size;
-        $user->organizationType = $request->organizationType;
-        $user->industryTypeId = $request->industryTypeId;
-        $user->website = $request->website;
-        $user->establishmentYear = $request->establishmentYear;
-        $user->about = $request->about;
-        $user->user_type = '2'; // Assuming user_type should always be '2' for employers
+        // Prepare the user data for updating
+        $userData = [
+            'name' => $request->name,
+            'company_name' => $request->company_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'company_size' => $request->company_size,
+            'organizationType' => $request->organizationType,
+            'industryTypeId' => $request->industryTypeId,
+            'website' => $request->website,
+            'establishmentYear' => $request->establishmentYear,
+            'about' => $request->about,
+            'user_type' => '2', // Assuming user_type should always be '2' for employers
+            'companyLogo' => $companyLogo,
+        ];
 
         // Update the password only if a new password is provided
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $userData['password'] = Hash::make($request->password);
         }
 
-        // Save the updated user record
-        $user->save();
+      
+
+       
+
+      $res =   User::updateOrCreate(['id' => $id], $userData);
+
+        
 
         // Optionally hide updated_at and created_at if necessary
         $user->makeHidden(['updated_at', 'created_at']);
@@ -148,6 +155,8 @@ class SignupRepository implements UserRepositoryInterface
             'data' => $user
         ], 200);
     }
+
+
 
 
 

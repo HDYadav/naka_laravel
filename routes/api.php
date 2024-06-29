@@ -141,7 +141,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('/employer_register_admin', [ApiAuthController::class, 'employerRegisterAdmin'])->name('employer_register_admin');
 
-    Route::post('/employer_update_admin/{id}', [ApiAuthController::class, 'employerUpdateAdmin'])->name('employer_update_admin');
+    Route::post('/employer/update/{id}', [ApiAuthController::class, 'employerUpdateAdmin']);
+
 
 
 
