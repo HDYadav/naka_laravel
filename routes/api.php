@@ -136,12 +136,13 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::get('/get_employer', [UserController::class, 'getEmployer'])->name('get_employer');
-
     Route::get('/employer_details/{id}', [UserController::class, 'employerDetails'])->name('employer_details');
-
     Route::post('/employer_register_admin', [ApiAuthController::class, 'employerRegisterAdmin'])->name('employer_register_admin');
+    Route::post('/employer/update', [ApiAuthController::class, 'employerUpdateAdmin']);
+    Route::get('/get_employer_edit/{id}', [ApiAuthController::class, 'getEditEmployer'])->name('get_employer_edit');
 
-    Route::post('/employer/update/{id}', [ApiAuthController::class, 'employerUpdateAdmin']);
+    Route::get('/admin_get_emp_jobs/{id}', [JobsCotroller::class, 'getAllEmployerJobsAdmin'])->name('admin_get_emp_jobs');
+
 
 
 

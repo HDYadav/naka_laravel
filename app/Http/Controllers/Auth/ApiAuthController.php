@@ -340,15 +340,12 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
 
 
 
-    public function employerUpdateAdmin($id,Request $request, SignupRepository $signupRepository)
+    public function employerUpdateAdmin(Request $request, SignupRepository $signupRepository)
     {
-        
         
         try {
             DB::beginTransaction();
-            $user =  $signupRepository->employerUpdateAdmin($id, $request);     
-            
-            
+            $user =  $signupRepository->employerUpdateAdmin($request); 
 
             DB::commit();
             return $this->sucessResponse('Records successfully inserted', $user, true, 200);
@@ -365,6 +362,28 @@ public function register(RegistraionRequest $request, SignupRepository $signupRe
             LogBuilder::apiLog(LogBuilder::$error, [$this->errorResponse($e->getMessage(), 500)]);
             return $this->errorResponse($e->getMessage(), 500);
         }
+    }
+
+
+
+    public function getEditEmployer($user_id)
+    {
+
+        return User::where('id', $user_id)->select(
+            // 'id',
+            // 'name',
+            // 'email',
+            // 'companyLogo',
+            // 'status',
+            // 'establishmentYear',
+            // 'profile_status',
+            // DB::raw('CASE WHEN profile_status = 1 THEN "verified" ELSE "unverified" END as profile_status_text'),
+            // DB::raw('CASE WHEN status = 1 THEN "activated" ELSE "deactivated" END as status_text'),
+            // DB::raw('CASE WHEN otp_verified = 1 THEN "verified" ELSE "unverified" END as otp_verified_text'),
+            // DB::raw('DATE_FORMAT(created_at, "%m-%d-%Y") as created_at_formatted')
+            '*'
+        )->first();
+
     }
 
 

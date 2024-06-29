@@ -90,23 +90,20 @@ class SignupRepository implements UserRepositoryInterface
 
 
 
-    public function employerUpdateAdmin($id, Request $request)
-    {
-
+    public function employerUpdateAdmin($request)
+    { 
      
-        $user = User::findOrFail($id); 
-
-         
-
+        
+        $user = User::findOrFail($request->id);  
         $request->validate([
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->ignore($id),
+                Rule::unique('users')->ignore($request->id),
             ],
             'mobile' => [
                 'required',
-                Rule::unique('users')->ignore($id),
+                Rule::unique('users')->ignore($request->id),
             ],
             // Other validation rules...
         ]);
@@ -116,6 +113,9 @@ class SignupRepository implements UserRepositoryInterface
         if ($request->hasFile('companyLogo')) {
             $companyLogo = $this->image_upload($request->file('companyLogo'));
         }
+
+        
+
 
         // Prepare the user data for updating
         $userData = [
@@ -142,7 +142,7 @@ class SignupRepository implements UserRepositoryInterface
 
        
 
-      $res =   User::updateOrCreate(['id' => $id], $userData);
+      $res =   User::updateOrCreate(['id' => $request->id], $userData);
 
         
 

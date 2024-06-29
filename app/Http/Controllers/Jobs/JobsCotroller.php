@@ -261,6 +261,54 @@ class JobsCotroller extends ApiController
 
 
 
+
+
+    public function getAllEmployerJobsAdmin($employerId,Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $jobs = DB::table('jobs as j')
+        ->select('j.id', 'j.title', 'jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo')
+        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->leftJoin('users as u', 'u.id', '=', 'j.company')
+        ->leftJoin('salary_types as st', 'st.id', '=', 'j.salaryType')
+        ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
+        ->leftJoin('employeement_types as et', 'et.id', '=', 'j.employeementType')
+        ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
+        ->where('j.created_by', $employerId)
+        ->get();
+
+        // Format the deadline date
+        $jobs = $jobs->map(function ($job) {
+            if (!empty($job->deadline)) {
+                try {
+                    // Assuming the deadline is stored in 'Y-m-d H:i:s' format
+                    $job->deadline = Carbon::createFromFormat('Y-m-d H:i:s', $job->deadline)->format('d-m-Y');
+                } catch (\Exception $e) {
+                    // Attempt alternative formats if needed
+                    try {
+                        $job->deadline = Carbon::parse($job->deadline)->format('d M, Y');
+                    } catch (\Exception $e) { 
+                        $job->deadline = null; // or set to some default value like '01-01-1970'
+                    }
+                }
+            }
+
+            $job->deadline_status = 1;
+            //Carbon::createFromFormat('d M, Y',$job->deadline)->isPast() ? 1 : 0;
+
+            return $job;
+        });
+
+
+
+
+        return $this->sucessResponse(null, $jobs, true, 201);
+    }
+
+
+
+
     //  public function getAllJobsAdmin(Request $request)
     // {
     //     $user = UserData::getUserFrToken($request);  

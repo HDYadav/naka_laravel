@@ -48,7 +48,12 @@ class User extends Authenticatable
         'resume',
         'maritalStatus',
         'gender',
-        'companyLogo'
+        'companyLogo',
+        'organizationType',
+        'industryTypeId',
+        'website',
+        'establishmentYear',
+        'about'
     ];
 
     /**

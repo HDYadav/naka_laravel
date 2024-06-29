@@ -690,7 +690,7 @@ class UserController extends ApiController
         ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
         ->leftJoin('industries as i', 'i.id','=','u.industryTypeId')
         ->select(
-            'u.id',
+            'u.*',
             'u.company_name',
             'u.email',
             'u.companyLogo',
@@ -708,7 +708,7 @@ class UserController extends ApiController
             DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
         )
             ->where('u.user_type', '2') 
-            ->groupBy('u.id', 'u.name', 'u.status', 'u.otp_verified', 'u.companyLogo', 'u.created_at')
+           // ->groupBy('u.id', 'u.name', 'u.status', 'u.otp_verified', 'u.companyLogo', 'u.created_at')
             ->first();
 
         return response()->json($users);
