@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Helpers\LogBuilder;
 use App\Helpers\UserData;
+use App\Models\Model\AadharCard;
 use App\Models\Model\City;
 use App\Models\Model\Education;
 use App\Models\Model\EmployeementType;
@@ -17,6 +18,7 @@ use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Job;
 use App\Models\Model\Jobposition;
+use App\Models\Model\PanCard;
 use App\Models\Model\Promote;
 use App\Models\Model\SalaryType;
 use App\Models\Model\Skill;
@@ -730,6 +732,84 @@ class AttributesController extends ApiController
 
         return StaticPage::select('id', 'page_name', 'heading', 'descriptions')->where('id', $id)->first();
     }
+
+
+
+    public function addAadharCard(Request $request)
+    {
+        $user = UserData::getUserFrToken($request); 
+         
+        $validatedData = $request->validate([
+            'aadharCardNumber' => 'required|digits:12|unique:aadhar_cards,aadharCardNumber',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'dateOfBirth' => 'required|date',
+            'photo' => 'required|string', // Assuming photo is a URL or base64 encoded string
+            'status' => 'VALID',
+        ]);
+
+     
+        $validatedData['user_id'] = $user->id;
+ 
+        AadharCard::create($validatedData); 
+
+        return $this->sucessResponse('Aadhar card added successfully', true, 200);
+
+ 
+    }
+
+    public function getAadharCard(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+ 
+
+        $data =  AadharCard::select('aadharCardNumber', 'name', 'gender', 'dateOfBirth', 'photo', 'status')->where('user_id', $user->id)->first(); 
+
+        return response()->json([ 
+            'data'   =>  $data,
+        ], 201); 
+    }
+
+
+
+    public function addPanCard(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        // Validate the request data
+        $validatedData = $request->validate([
+            'panCardNumber' => 'required|string|max:10|unique:pan_cards,panCardNumber', // Assuming PAN card number is unique
+            'name' => 'required|string|max:255',
+          //  'gender' => 'required|in:male,female,other',
+            // 'dateOfBirth' => 'required|date', // Uncomment and adjust if dateOfBirth is required
+            // 'photo' => 'required|string', // Assuming photo is a URL or base64 encoded string
+            'category' => 'required|string',
+        ]);
+
+        // Add additional fields not included in validation
+        $validatedData['user_id'] = $user->id;
+        $validatedData['status'] = 'VALID';
+
+        // Save the PAN card data
+        PanCard::create($validatedData); 
+
+        return $this->sucessResponse('PAN card added successfully', true, 200);
+    }
+
+
+    public function getPanCard(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+ 
+
+        $data =  PanCard::select('panCardNumber', 'name', 'gender', 'category', 'status')->where('user_id', $user->id)->first(); 
+
+        return response()->json([ 
+            'data'   =>  $data,
+        ], 201); 
+    }
+
+
 
     
 }

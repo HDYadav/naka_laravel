@@ -57,7 +57,17 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 Route::group(['middleware' => 'auth:api'], function () { 
  
- Route::post('/change-password',  [PasswordController::class, 'changePassword']); 
+ Route::post('/change-password',  [PasswordController::class, 'changePassword']);
+
+
+    Route::post('/add_aadhar_card', [AttributesController::class, 'addAadharCard'])->name('add_aadhar_card');
+    Route::get('/get_aadhar_card', [AttributesController::class, 'getAadharCard'])->name('get_aadhar_card');
+
+    Route::post('/add_pan_card', [AttributesController::class, 'addPanCard'])->name('add_pan_card');
+    Route::get('/get_pan_card', [AttributesController::class, 'getPanCard'])->name('get_pan_card');
+
+
+
 
 
         Route::prefix('attributes')->group(function () {

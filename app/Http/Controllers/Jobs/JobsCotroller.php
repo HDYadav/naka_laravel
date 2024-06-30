@@ -228,8 +228,6 @@ class JobsCotroller extends ApiController
             )
             ->first();
     }
-
-
  
 
 
