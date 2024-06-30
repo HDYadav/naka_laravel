@@ -35,14 +35,10 @@ use App\Http\Controllers\User\UserController;
 Route::group(['middleware' => ['cors', 'json.response']], function () { 
    
     Route::post('/login', [ApiAuthController::class, 'login'] )->name('login.api');
-
     Route::post('/admin_login', [ApiAuthController::class, 'admoinLogin'])->name('admin_login.api');
-
     Route::post('/user_register',[ApiAuthController::class, 'register'])->name('user_register.api'); 
     Route::post('/login_with_otp', [ApiAuthController::class, 'loginWithOtp'])->name('login_with_otp.api');
     Route::post('/resent_otp', [ApiAuthController::class, 'resendOtp'])->name('resent_otp.api');
-
-
     Route::post('/employer_register', [ApiAuthController::class, 'employerRegister'])->name('employer_register.api');
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');  // forgot password 
     Route::post('/check_email', [ResetPasswordController::class, 'checEmail'])->name('check_email.api');
@@ -105,10 +101,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/delete_page/{id}', [AttributesController::class, 'deletePage'])->name('delete_page');
         Route::get('/get_page/{id}', [AttributesController::class, 'getPage'])->name('get_page'); 
 
-         Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update');
-
- 
-
+         Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update'); 
 
 
         Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
@@ -117,8 +110,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
          Route::post('/salary_type_add_update', [AttributesController::class, 'salaryTypeAddUpdate'])->name('salary_type_add_update');
          Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type'); 
-        Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
-        Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote'); 
+         Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
+         Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote'); 
 
         }); 
     

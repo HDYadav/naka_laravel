@@ -6,8 +6,7 @@ use App\Contracts\UserRepositoryInterface;
 use App\Models\User; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
- 
- 
+use Illuminate\Support\Facades\URL;
 
 class SignupRepository implements UserRepositoryInterface
 { 
@@ -155,10 +154,7 @@ class SignupRepository implements UserRepositoryInterface
             'data' => $user
         ], 200);
     }
-
-
-
-
+ 
 
 
 
@@ -175,7 +171,8 @@ class SignupRepository implements UserRepositoryInterface
                 mkdir($directory, 0777, true);
             }
             if ($file->move($directory, $fileName)) {
-                return $relativePath . '/' . $fileName;
+                //  return $relativePath . '/' . $fileName;
+                return URL::to($relativePath) . "/" . $fileName;
             } else {
                 throw new \Exception('Error uploading file');
             }

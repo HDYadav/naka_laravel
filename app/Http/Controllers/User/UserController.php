@@ -411,7 +411,8 @@ class UserController extends ApiController
         'jp.name as jobposition',
         DB::raw('COUNT(aj.id) as jobsApplied'),
         DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
-        DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'), 
+            //DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'), 
+            DB::raw('CASE WHEN u.otp_verified = 1 THEN "verified" ELSE "unverified" END as otp_verified'),
         'u.profilePic',
         DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
     )
@@ -504,7 +505,10 @@ class UserController extends ApiController
                 mkdir($directory, 0777, true);
             }
             if ($file->move($directory, $fileName)) {
-                return $relativePath . '/' . $fileName;
+                //return $relativePath . '/' . $fileName;
+
+                return URL::to($relativePath) . "/" . $fileName;
+
             } else {
                 throw new \Exception('Error uploading file');
             }
@@ -660,11 +664,13 @@ class UserController extends ApiController
         $users = DB::table('users as u')
   
         ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
+        ->leftJoin('industries as i', 'i.id', '=', 'u.industryTypeId')
         ->select(
             'u.id',
             'u.name',
             'u.email',
             'u.companyLogo',
+            'i.name as industry_type',
             'u.status',
             'u.establishmentYear',
             'u.profile_status',
@@ -685,31 +691,45 @@ class UserController extends ApiController
 
     public function employerDetails($id)
     {
-        $users = DB::table('users as u')
+    // return   $users = DB::table('users as u')->leftJoin('industries as i', 'i.id', '=', 'u.industryTypeId')->select('i.name')->get();
 
+        $users = DB::table('users as u')
         ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
-        ->leftJoin('industries as i', 'i.id','=','u.industryTypeId')
+        ->leftJoin('industries as i', 'i.id', '=', 'u.industryTypeId')
         ->select(
-            'u.*',
+            'u.id',
+            'u.mobile',
             'u.company_name',
+            'u.establishmentYear',
             'u.email',
             'u.companyLogo',
             'u.status',
-            'u.establishmentYear',
             'u.profile_status',
             'i.name as industry_type',
             'u.company_size as team_size',
-            'u.company_size as descriptions',
             DB::raw('COUNT(j.id) as activeJob'),
             DB::raw('CASE WHEN u.profile_status = 1 THEN "verified" ELSE "unverified" END as profile_status'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
             DB::raw('CASE WHEN u.otp_verified = 1 THEN "verified" ELSE "unverified" END as otp_verified'),
-            'u.companyLogo',
             DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
         )
-            ->where('u.user_type', '2') 
-           // ->groupBy('u.id', 'u.name', 'u.status', 'u.otp_verified', 'u.companyLogo', 'u.created_at')
-            ->first();
+        ->where('u.user_type', '2')
+        ->where('u.id', $id)
+        ->groupBy(
+            'u.id',
+            'u.mobile',
+            'u.company_name',
+            'u.establishmentYear',
+            'u.email',
+            'u.companyLogo',
+            'u.status',
+            'u.profile_status',
+            'i.name',
+            'u.company_size',
+            'u.created_at'
+        )
+        ->first();
+
 
         return response()->json($users);
     }
