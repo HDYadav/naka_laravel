@@ -66,6 +66,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/add_pan_card', [AttributesController::class, 'addPanCard'])->name('add_pan_card');
     Route::get('/get_pan_card', [AttributesController::class, 'getPanCard'])->name('get_pan_card');
 
+    Route::post('/add_gst_card', [AttributesController::class, 'addGstDetails'])->name('add_gst_card');
+    Route::get('/get_gst_card', [AttributesController::class, 'getGstCard'])->name('get_gst_card');
+
+
 
 
 

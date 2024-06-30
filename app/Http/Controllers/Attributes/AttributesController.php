@@ -14,6 +14,7 @@ use App\Models\Model\City;
 use App\Models\Model\Education;
 use App\Models\Model\EmployeementType;
 use App\Models\Model\Experience;
+use App\Models\Model\GstDetail;
 use App\Models\Model\Industry;
 use App\Models\Model\IndustryType;
 use App\Models\Model\Job;
@@ -808,6 +809,46 @@ class AttributesController extends ApiController
             'data'   =>  $data,
         ], 201); 
     }
+
+
+
+
+    public function addGstDetails(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        // Validate the request data
+        $validatedData = $request->validate([
+            'gstNumber' => 'required|string|max:15|unique:gst_details,gstNumber', // Assuming GST number is unique and max length is 15
+            'name' => 'required|string|max:255',
+            'registerDate' => 'required|date_format:d/m/Y', // Validate date in d/m/Y format
+            'status' => 'required|in:Active,Inactive', // Assuming status is either Active or Inactive
+        ]);
+
+        // Add additional fields not included in validation
+        $validatedData['user_id'] = $user->id;
+
+        // Save the GST details
+        GstDetail::create($validatedData);
+
+        // Return a success response
+        return $this->sucessResponse('GST details added successfully', true, 200);
+    }
+
+
+
+    public function getGstCard(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+
+        $data =  GstDetail::select('gstNumber', 'name', 'registerDate', 'status')->where('user_id', $user->id)->first();
+
+        return response()->json([
+            'data'   =>  $data,
+        ], 201);
+    }
+
 
 
 
