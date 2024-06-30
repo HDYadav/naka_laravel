@@ -851,6 +851,20 @@ class AttributesController extends ApiController
 
 
 
+    public function getStaticPages(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+
+        $data =  StaticPage::select('page_name', 'heading', 'descriptions')->get();
+
+        return response()->json([
+            'data'   =>  $data,
+        ], 201);
+    }
+
+
+    
 
     
 }
