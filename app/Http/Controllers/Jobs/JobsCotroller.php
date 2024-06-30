@@ -211,6 +211,25 @@ class JobsCotroller extends ApiController
 
     }
 
+
+    public function getEditJobs($job_id, Request $request)
+    {
+        //$user = UserData::getUserFrToken($request); 
+        return DB::table('jobs as j')
+        ->join('users as u', 'u.id', '=', 'j.created_by')
+        ->where('j.id', $job_id)
+            ->select(
+                'j.*',
+                'j.minSalary',
+                'j.maxSalary',
+                'u.company_name',
+               // 'j.company',
+                'u.companyLogo'
+            )
+            ->first();
+    }
+
+
  
 
 

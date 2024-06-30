@@ -736,4 +736,17 @@ class UserController extends ApiController
 
 
 
+
+    public function updateAccountStatus(Request $request)
+    {
+        $status = $request->status ? 1 : 0;
+
+        User::where('id', $request->id)->update(['status' => $status]);
+
+        return response()->json([
+            "message" => "Status updated successfully"
+        ], 200);
+    }
+
+
 }

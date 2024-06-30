@@ -123,6 +123,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
 
+        Route::get('/get_edit_jobs/{id}', [JobsCotroller::class, 'getEditJobs'])->name('get_edit_jobs');
+        
+
         Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer company 
         Route::get('/get_employee_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_employee_jobs_details');  // for emploee job seekeer 
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
@@ -174,11 +177,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/get_social', [JobsCotroller::class, 'getSocial'])->name('get_social');
     Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social');
     Route::post('/get_applyed_job_on_status', [JobsCotroller::class, 'getJobAppliyedJobOnStatus'])->name('get_applyed_job_on_status');
-
-
  
-
-
 
    
    Route::prefix('users')->group(function () {
@@ -193,6 +192,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/get_founding_info', [UserController::class, 'getFoundingInfo'])->name('get_founding_info');
      Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status'); 
     Route::post('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
+
+
+    Route::post('/account_status_change/{id}', [UserController::class, 'updateAccountStatus'])->name('account_status_change'); 
+
    });
 
     Route::delete('users/{id}/soft-delete', [UserController::class, 'softDelete']);
