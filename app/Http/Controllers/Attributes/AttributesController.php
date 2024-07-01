@@ -964,11 +964,13 @@ class AttributesController extends ApiController
     {
         $user = UserData::getUserFrToken($request);
 
+       
 
-        $data =  StaticPage::select('page_name', 'heading', 'descriptions')->get();
+
+        $data =  StaticPage::select('heading', 'descriptions')->where('page_name', $request->page)->get();
 
         return response()->json([
-            'data'   =>  $data,
+            'data'   =>  $data['0'],
         ], 201);
     }
 
