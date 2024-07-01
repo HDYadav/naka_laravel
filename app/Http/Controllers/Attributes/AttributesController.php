@@ -10,6 +10,7 @@ use App\Http\Controllers\ApiController;
 use App\Helpers\LogBuilder;
 use App\Helpers\UserData;
 use App\Models\Model\AadharCard;
+use App\Models\Model\CinDetail;
 use App\Models\Model\City;
 use App\Models\Model\Education;
 use App\Models\Model\EmployeementType;
@@ -894,6 +895,68 @@ class AttributesController extends ApiController
             'data'   =>  $data,
         ], 201);
     }
+
+
+
+
+    
+    public function addCinDetails(Request $request)
+    {
+        $user = UserData::getUserFrToken($request); 
+
+        // 'user_id', 'cinNumber', 'companyName', 'companyCategory', 'classOfCompany', 'registeredAddress', 'registrationNumber', 'dateOfIncorporation'
+
+        $data = [
+            'cinNumber' => $request->cinNumber,
+            'companyName' => $request->companyName,
+            'companyCategory' => $request->companyCategory,
+            'classOfCompany' => $request->classOfCompany,
+             'registeredAddress' => $request->registeredAddress,
+            'registrationNumber' => $request->registrationNumber,
+            'dateOfIncorporation' => $request->dateOfIncorporation,
+            'user_id' => $user->id
+        ];
+
+        $gst = CinDetail::where('user_id', $user->id)->first();
+
+        if ($gst) {
+   
+            if ($gst->user_id !== $user->id) {
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 403);
+            }
+
+            $gst->update($data);
+
+            return response()->json([
+                'message' => 'CIN details updated successfully'
+            ], 200);
+        } else {
+            CinDetail::create($data);
+
+            return response()->json([
+                'message' => 'CIN details added successfully'
+            ], 201);
+        } 
+        
+    }
+
+
+
+    public function getCinCard(Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+
+        $data =  CinDetail::select('cinNumber', 'companyName', 'companyCategory', 'classOfCompany', 'registeredAddress', 'registrationNumber', 'dateOfIncorporation')->where('user_id', $user->id)->first();
+
+        return response()->json([
+            'data'   =>  $data,
+        ], 201);
+    }
+
+
 
 
 
