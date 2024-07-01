@@ -735,39 +735,52 @@ class AttributesController extends ApiController
     }
 
 
-
     public function addAadharCard(Request $request)
     {
-        $user = UserData::getUserFrToken($request); 
-         
-        $validatedData = $request->validate([
-            'aadharCardNumber' => 'required|digits:12|unique:aadhar_cards,aadharCardNumber',
-            'name' => 'required|string|max:255',
-           'gender' => 'required',
-           'dateOfBirth' => 'required',
-           'photo' => 'required', // Assuming photo is a URL or base64 encoded string
-           'status' => 'VALID',
-        ]);
+        $user = UserData::getUserFrToken($request);
 
-     
-        $validatedData['user_id'] = $user->id;
- 
-       $data =   AadharCard::create($validatedData); 
+        $data = [
+            'aadharCardNumber' => $request->aadharCardNumber,
+            'name' => $request->name,
+            'gender' => $request->gender,
+            'dateOfBirth' => $request->dateOfBirth,
+            'photo' => $request->photo,
+            'user_id' => $user->id
+        ];
 
-        return response()->json([
-            'message' => 'Aadhar card added successfully' 
-        ], 201); 
+        $aadharCard = AadharCard::where('user_id', $user->id)->first();
 
+        if ($aadharCard) {
+            // Check if the Aadhar card belongs to the authenticated user
+            if ($aadharCard->user_id !== $user->id) {
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 403);
+            }
 
- 
+            $aadharCard->update($data);
+
+            return response()->json([
+                'message' => 'Aadhar card updated successfully'
+            ], 200);
+        } else {
+            AadharCard::create($data);
+
+            return response()->json([
+                'message' => 'Aadhar card added successfully'
+            ], 201);
+        }
     }
 
+
+
+ 
     public function getAadharCard(Request $request)
     {
         $user = UserData::getUserFrToken($request);
  
 
-        $data =  AadharCard::select('aadharCardNumber', 'name', 'gender', 'dateOfBirth', 'photo', 'status')->where('user_id', $user->id)->first(); 
+        $data =  AadharCard::select('aadharCardNumber', 'name', 'gender', 'dateOfBirth', 'photo')->where('user_id', $user->id)->first(); 
 
         return response()->json([ 
             'data'   =>  $data,
@@ -778,29 +791,41 @@ class AttributesController extends ApiController
 
     public function addPanCard(Request $request)
     {
+
         $user = UserData::getUserFrToken($request);
 
-        // Validate the request data
-        $validatedData = $request->validate([
-            'panCardNumber' => 'required|string|max:10|unique:pan_cards,panCardNumber', // Assuming PAN card number is unique
-            'name' => 'required|string|max:255',
-            'gender' => 'required',
-            'dateOfBirth' => 'required', // Uncomment and adjust if dateOfBirth is required
-            'photo' => 'required', // Assuming photo is a URL or base64 encoded string
-            'category' => 'required',
-        ]);
+        $data = [
+            'panCardNumber' => $request->panCardNumber,
+            'name' => $request->name,
+            'category' => $request->category,
+            'status' => $request->status, 
+            'user_id' => $user->id
+        ];
 
-        // Add additional fields not included in validation
-        $validatedData['user_id'] = $user->id;
-        $validatedData['status'] = 'VALID';
+        $aadharCard = PanCard::where('user_id', $user->id)->first();
 
-        // Save the PAN card data
-         $data = PanCard::create($validatedData);
+        if ($aadharCard) {
+            // Check if the Aadhar card belongs to the authenticated user
+            if ($aadharCard->user_id !== $user->id) {
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 403);
+            }
 
-        return response()->json([
-            'message' => 'PAN card added successfully' 
-        ], 201);  
-        
+            $aadharCard->update($data);
+
+            return response()->json([
+                'message' => 'PAN card updated successfully'
+            ], 200);
+        } else {
+            PanCard::create($data);
+
+            return response()->json([
+                'message' => 'PAN card added successfully'
+            ], 201);
+        }
+ 
+    
     }
 
 
@@ -809,7 +834,7 @@ class AttributesController extends ApiController
         $user = UserData::getUserFrToken($request);
  
 
-        $data =  PanCard::select('panCardNumber', 'name', 'gender', 'category', 'status')->where('user_id', $user->id)->first(); 
+        $data =  PanCard::select('panCardNumber', 'name', 'category', 'status')->where('user_id', $user->id)->first(); 
 
         return response()->json([ 
             'data'   =>  $data,
@@ -821,28 +846,38 @@ class AttributesController extends ApiController
 
     public function addGstDetails(Request $request)
     {
-        $user = UserData::getUserFrToken($request);
+        $user = UserData::getUserFrToken($request); 
 
-        // Validate the request data
-        $validatedData = $request->validate([
-            'gstNumber' => 'required|string|unique:gst_details,gstNumber', // Assuming GST number is unique and max length is 15
-            'name' => 'required|string|max:255',
-            'registerDate' => 'required', // Validate date in d/m/Y format
-            'status' => 'required', // Assuming status is either Active or Inactive
-        ]);
+        $data = [
+            'gstNumber' => $request->gstNumber,
+            'name' => $request->name,
+            'registerDate' => $request->registerDate,
+            'status' => $request->status,
+            'user_id' => $user->id
+        ];
 
-        // Add additional fields not included in validation
-        $validatedData['user_id'] = $user->id;
+        $gst = GstDetail::where('user_id', $user->id)->first();
 
-        // Save the GST details
-        GstDetail::create($validatedData);
+        if ($gst) {
+   
+            if ($gst->user_id !== $user->id) {
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 403);
+            }
 
-        // Return a success response
+            $gst->update($data);
 
-         return response()->json([
-            'message' => 'GST details added successfully' 
-        ], 201); 
+            return response()->json([
+                'message' => 'GST details updated successfully'
+            ], 200);
+        } else {
+            GstDetail::create($data);
 
+            return response()->json([
+                'message' => 'GST details added successfully'
+            ], 201);
+        } 
         
     }
 
