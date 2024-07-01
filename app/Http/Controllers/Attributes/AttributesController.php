@@ -743,10 +743,10 @@ class AttributesController extends ApiController
         $validatedData = $request->validate([
             'aadharCardNumber' => 'required|digits:12|unique:aadhar_cards,aadharCardNumber',
             'name' => 'required|string|max:255',
-          //  'gender' => 'required|in:male,female,other',
-          //  'dateOfBirth' => 'required',
-         //   'photo' => 'required|string', // Assuming photo is a URL or base64 encoded string
-           // 'status' => 'VALID',
+           'gender' => 'required',
+           'dateOfBirth' => 'required',
+           'photo' => 'required', // Assuming photo is a URL or base64 encoded string
+           'status' => 'VALID',
         ]);
 
      
@@ -784,7 +784,7 @@ class AttributesController extends ApiController
         $validatedData = $request->validate([
             'panCardNumber' => 'required|string|max:10|unique:pan_cards,panCardNumber', // Assuming PAN card number is unique
             'name' => 'required|string|max:255',
-             'gender' => 'required',
+            'gender' => 'required',
             'dateOfBirth' => 'required', // Uncomment and adjust if dateOfBirth is required
             'photo' => 'required', // Assuming photo is a URL or base64 encoded string
             'category' => 'required',
