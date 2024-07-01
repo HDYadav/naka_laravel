@@ -784,10 +784,10 @@ class AttributesController extends ApiController
         $validatedData = $request->validate([
             'panCardNumber' => 'required|string|max:10|unique:pan_cards,panCardNumber', // Assuming PAN card number is unique
             'name' => 'required|string|max:255',
-          //  'gender' => 'required|in:male,female,other',
-            // 'dateOfBirth' => 'required|date', // Uncomment and adjust if dateOfBirth is required
-            // 'photo' => 'required|string', // Assuming photo is a URL or base64 encoded string
-            'category' => 'required|string',
+             'gender' => 'required',
+            'dateOfBirth' => 'required', // Uncomment and adjust if dateOfBirth is required
+            'photo' => 'required', // Assuming photo is a URL or base64 encoded string
+            'category' => 'required',
         ]);
 
         // Add additional fields not included in validation
@@ -827,8 +827,8 @@ class AttributesController extends ApiController
         $validatedData = $request->validate([
             'gstNumber' => 'required|string|unique:gst_details,gstNumber', // Assuming GST number is unique and max length is 15
             'name' => 'required|string|max:255',
-            // 'registerDate' => 'required|date_format:d/m/Y', // Validate date in d/m/Y format
-            // 'status' => 'required|in:Active,Inactive', // Assuming status is either Active or Inactive
+            'registerDate' => 'required', // Validate date in d/m/Y format
+            'status' => 'required', // Assuming status is either Active or Inactive
         ]);
 
         // Add additional fields not included in validation
