@@ -68,7 +68,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('/add_gst_card', [AttributesController::class, 'addGstDetails'])->name('add_gst_card');
     Route::get('/get_gst_card', [AttributesController::class, 'getGstCard'])->name('get_gst_card');
-    Route::get('/get_static_pages', [AttributesController::class, 'getStaticPages'])->name('get_static_pages');
+    Route::post('/get_static_pages', [AttributesController::class, 'getStaticPages'])->name('get_static_pages');
 
 
     Route::post('/add_cin_card', [AttributesController::class, 'addCinDetails'])->name('add_cin_card');
