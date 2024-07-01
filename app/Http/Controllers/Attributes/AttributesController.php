@@ -743,18 +743,23 @@ class AttributesController extends ApiController
         $validatedData = $request->validate([
             'aadharCardNumber' => 'required|digits:12|unique:aadhar_cards,aadharCardNumber',
             'name' => 'required|string|max:255',
-            'gender' => 'required|in:male,female,other',
-            'dateOfBirth' => 'required|date',
-            'photo' => 'required|string', // Assuming photo is a URL or base64 encoded string
-            'status' => 'VALID',
+          //  'gender' => 'required|in:male,female,other',
+          //  'dateOfBirth' => 'required',
+         //   'photo' => 'required|string', // Assuming photo is a URL or base64 encoded string
+           // 'status' => 'VALID',
         ]);
 
      
         $validatedData['user_id'] = $user->id;
  
-        AadharCard::create($validatedData); 
+        AadharCard::create($validatedData);
 
-        return $this->sucessResponse('Aadhar card added successfully', true, 200);
+        // return $this->sucessResponse('Aadhar card added successfully', true, 200);
+
+        return response()->json([
+            'Aadhar card added successfully'
+        ], 201); 
+
 
  
     }
