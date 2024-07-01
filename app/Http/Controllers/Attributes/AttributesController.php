@@ -752,12 +752,10 @@ class AttributesController extends ApiController
      
         $validatedData['user_id'] = $user->id;
  
-        AadharCard::create($validatedData);
-
-        // return $this->sucessResponse('Aadhar card added successfully', true, 200);
+       $data =   AadharCard::create($validatedData); 
 
         return response()->json([
-            'Aadhar card added successfully'
+            'message' => 'Aadhar card added successfully' 
         ], 201); 
 
 
@@ -797,9 +795,12 @@ class AttributesController extends ApiController
         $validatedData['status'] = 'VALID';
 
         // Save the PAN card data
-        PanCard::create($validatedData); 
+         $data = PanCard::create($validatedData);
 
-        return $this->sucessResponse('PAN card added successfully', true, 200);
+        return response()->json([
+            'message' => 'PAN card added successfully' 
+        ], 201);  
+        
     }
 
 
@@ -824,10 +825,10 @@ class AttributesController extends ApiController
 
         // Validate the request data
         $validatedData = $request->validate([
-            'gstNumber' => 'required|string|max:15|unique:gst_details,gstNumber', // Assuming GST number is unique and max length is 15
+            'gstNumber' => 'required|string|unique:gst_details,gstNumber', // Assuming GST number is unique and max length is 15
             'name' => 'required|string|max:255',
-            'registerDate' => 'required|date_format:d/m/Y', // Validate date in d/m/Y format
-            'status' => 'required|in:Active,Inactive', // Assuming status is either Active or Inactive
+            // 'registerDate' => 'required|date_format:d/m/Y', // Validate date in d/m/Y format
+            // 'status' => 'required|in:Active,Inactive', // Assuming status is either Active or Inactive
         ]);
 
         // Add additional fields not included in validation
@@ -837,7 +838,12 @@ class AttributesController extends ApiController
         GstDetail::create($validatedData);
 
         // Return a success response
-        return $this->sucessResponse('GST details added successfully', true, 200);
+
+         return response()->json([
+            'message' => 'GST details added successfully' 
+        ], 201); 
+
+        
     }
 
 
