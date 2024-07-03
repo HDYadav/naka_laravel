@@ -19,17 +19,7 @@ use App\Http\Controllers\User\UserController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-
-// Route::controller(App\Http\Controllers\Auth\AuthOtpController::class)->group(function(){   
-//     Route::post('otp/generate', 'generate')->name('otp.generate');
-//     Route::get('otp/verification/{user_id}', 'verification')->name('otp.verification');
-//     Route::post('otp/login', 'loginWithOtp')->name('otp.getlogin');   
-// });
-
-
-//Route::post('register', [RegisterController::class, 'register']);
-// Route::post('login', [RegisterController::class, 'login']); 
+ 
 
 
 Route::group(['middleware' => ['cors', 'json.response']], function () { 

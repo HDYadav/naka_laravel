@@ -664,7 +664,7 @@ class UserController extends ApiController
         $users = DB::table('users as u')
   
         ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
-        ->leftJoin('industries as i', 'i.id', '=', 'u.industryTypeId')
+        ->join('industries as i', 'i.id', '=', 'u.industryTypeId')
         ->select(
             'u.id',
             'u.name',
