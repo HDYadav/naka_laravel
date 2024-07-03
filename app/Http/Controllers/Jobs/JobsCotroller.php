@@ -237,12 +237,13 @@ class JobsCotroller extends ApiController
         $user = UserData::getUserFrToken($request);
 
         $jobs = DB::table('jobs as j')
-        ->select('j.id', 'j.title','jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo')
-        ->leftJoin('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
+        ->select('j.id', 'j.title','jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo','e.name as experiance')
+        ->join('experiences as e', 'e.id', '=', 'j.experience')
+        ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
         ->leftJoin('users as u', 'u.id', '=', 'j.company')
         ->leftJoin('salary_types as st', 'st.id', '=', 'j.salaryType')
-        ->leftJoin('work_places as wp', 'wp.id', '=', 'j.workPlace')
-        ->leftJoin('employeement_types as et', 'et.id', '=', 'j.employeementType')
+        ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
+        ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
         ->leftJoin('job_cities as jc', 'jc.id', '=', 'j.city')
         ->get();
 
