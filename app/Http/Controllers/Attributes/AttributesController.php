@@ -692,7 +692,7 @@ class AttributesController extends ApiController
         $user = UserData::getUserFrToken($request);
 
         $edudata = [
-            'page_name' => $request->page_name,
+           // 'page_name' => $request->page_name,
             'heading' => $request->heading,
             'descriptions' => $request->descriptions
         ];
