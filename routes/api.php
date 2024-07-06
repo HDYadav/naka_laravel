@@ -108,7 +108,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/delete_page/{id}', [AttributesController::class, 'deletePage'])->name('delete_page');
         Route::get('/get_page/{id}', [AttributesController::class, 'getPage'])->name('get_page'); 
 
-         Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update'); 
+        Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update');
+
+
+        Route::post('/email_template_update/{id}', [AttributesController::class, 'emailTemplateUpdate'])->name('email_template_update');
+        Route::get('/get_email_template/{id}', [AttributesController::class, 'getEmailTemplate'])->name('get_email_template'); 
+
+
 
 
         Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');

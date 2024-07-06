@@ -13,6 +13,7 @@ use App\Models\Model\AadharCard;
 use App\Models\Model\CinDetail;
 use App\Models\Model\City;
 use App\Models\Model\Education;
+use App\Models\Model\EmailTemplate;
 use App\Models\Model\EmployeementType;
 use App\Models\Model\Experience;
 use App\Models\Model\GstDetail;
@@ -972,7 +973,46 @@ class AttributesController extends ApiController
     }
 
 
-    
+
+    public function emailTemplateUpdate($id, Request $request)
+    {
+        $user = UserData::getUserFrToken($request);
+
+        $edudata = [
+            'page_name' => $request->page_name,
+            'subject' => $request->subject,
+            'message' => $request->message
+        ];
+
+        // Check if the ID is provided in the request
+        if ($id) {
+            // Update existing record if ID is provided
+            $edu = EmailTemplate::where('id', $id)->first();
+            if ($edu) {
+                $edu->update($edudata);
+            } else {
+                return $this->errorResponse('Records not found', [], false, 404);
+            }
+        } else {
+            // Create new record if ID is not provided
+            $edu = EmailTemplate::where('page_name', $request->page_name)->first();
+            if ($edu) {
+                return $this->errorResponse('Records with this name already exists', [], false, 400);
+            } else {
+                $edu = EmailTemplate::create($edudata);
+            }
+        }
+
+        return $this->sucessResponse('Records saved successfully', ['id' => $edu->id], true, 200);
+    }
+
+
+
+    public function getEmailTemplate($id, Request $request)
+    {
+
+        return EmailTemplate::select('id','name', 'subject', 'message')->where('id', $id)->first();
+    }
 
     
 }
