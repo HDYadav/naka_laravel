@@ -132,7 +132,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::prefix('jobs')->group(function () {
         Route::get('/get_all', [JobsCotroller::class, 'getAll'])->name('get_all');
-        Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
+        Route::get('/get_city', [JobsCotroller::class, 'getCity']);
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
 
@@ -168,24 +168,18 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/candidates_details/{id}', [UserController::class, 'candidateDetails'])->name('candidates_details');
     Route::get('/get_candidates_edit/{id}', [UserController::class, 'getEditCandidate'])->name('get_candidates_edit');
     Route::delete('/delete_candidate/{id}', [UserController::class, 'deleteUser'])->name('delete_candidate');
-
-
     Route::get('/get_employer', [UserController::class, 'getEmployer'])->name('get_employer');
     Route::get('/employer_details/{id}', [UserController::class, 'employerDetails'])->name('employer_details');
     Route::post('/employer_register_admin', [ApiAuthController::class, 'employerRegisterAdmin'])->name('employer_register_admin');
     Route::post('/employer/update', [ApiAuthController::class, 'employerUpdateAdmin']);
     Route::get('/get_employer_edit/{id}', [ApiAuthController::class, 'getEditEmployer'])->name('get_employer_edit');
-
     Route::get('/admin_get_emp_jobs/{id}', [JobsCotroller::class, 'getAllEmployerJobsAdmin'])->name('admin_get_emp_jobs'); 
-
-
-
     Route::post('/edu_create_update', [JobsCotroller::class, 'eduCreateOrUpdate'])->name('edu_create_update');
     Route::get('/get_educations', [JobsCotroller::class, 'getEducations'])->name('get_educations');
     Route::delete('/delete_edu/{id}', [JobsCotroller::class, 'deleteEducation'])->name('delete_edu');
     Route::post('/exp_create_update', [JobsCotroller::class, 'expCreateOrUpdate'])->name('exp_create_update');
-     Route::get('/get_experiance', [JobsCotroller::class, 'getExp'])->name('get_experiance');
-     Route::delete('/delete_exp/{id}', [JobsCotroller::class, 'deleteExp'])->name('delete_exp');
+    Route::get('/get_experiance', [JobsCotroller::class, 'getExp']);
+    Route::delete('/delete_exp/{id}', [JobsCotroller::class, 'deleteExp'])->name('delete_exp');
     Route::post('/social_create_update', [JobsCotroller::class, 'socialCreateOrUpdate'])->name('social_create_update');
     Route::get('/get_social', [JobsCotroller::class, 'getSocial'])->name('get_social');
     Route::delete('/delete_social/{id}', [JobsCotroller::class, 'deleteSocial'])->name('delete_social');
@@ -203,7 +197,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/get_company_info', [UserController::class, 'getCompanyInfo'])->name('get_company_info');
     Route::post('/update_company_founding', [UserController::class, 'updateFoundingInfo'])->name('update_company_founding');
     Route::get('/get_founding_info', [UserController::class, 'getFoundingInfo'])->name('get_founding_info');
-     Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status'); 
+    Route::get('/profile_status', [UserController::class, 'getProfileInfo'])->name('profile_status'); 
     Route::post('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
 
 
