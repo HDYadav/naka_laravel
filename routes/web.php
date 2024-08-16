@@ -10,12 +10,17 @@
 | be assigned to the "web" middleware group. Make something great!
 |
 */
- 
+
 
 
 // Passport 
 
- 
+
+Route::get('/', function () {
+
+    return view('about_us');
+});
+
 
 Route::get('/About_Us.html', function () {
      
