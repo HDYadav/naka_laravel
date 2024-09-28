@@ -517,103 +517,112 @@ class UserController extends ApiController
         }
     }
 
-    public function createOrUpdateCandidate(Request $request)
-    {
-        // Determine if it's a create or update operation
-        $isUpdate = $request->has('id'); 
+   public function createOrUpdateCandidate(Request $request)
+{
+    // Determine if it's a create or update operation
+    $isUpdate = $request->has('id'); 
 
-        // Validate the request
-        $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'mobile' => 'required|string',
-           // 'password' => 'required|string',
-        ];
+    // Validation rules
+    $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255',
+        'mobile' => 'required|string',
+        'date_of_birth' => 'required|date',
+        'experience' => 'nullable|string',
+        'jobPosiiton' => 'nullable|integer',
+        'education' => 'nullable|integer',
+        'skills' => 'nullable|string',
+        'languages' => 'nullable|string',
+        'maritalStatus' => 'nullable|string',
+        'gender' => 'nullable|string',
+    ];
 
-        if (!$isUpdate) {
-            // For create operation, ensure email and mobile are unique
-            $rules['email'] .= '|unique:users';
-            $rules['mobile'] .= '|unique:users';
-        }
-
-        $validator = Validator::make($request->all(), $rules);
-
-        // If validation fails, return a response with errors
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        // Handle file uploads
-        $profilePicture = '';
-        if ($request->hasFile('profilePicture')) {
-            $profilePicture = $this->image_upload($request->file('profilePicture'));
-        }
-
-        $resume = '';
-        if ($request->hasFile('resume')) {
-            $resume = $this->image_upload($request->file('resume'));
-        }
-
-        // Prepare data for create/update
-        $userData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'password' => Hash::make($request->password),
-            'experienced' => $request->experience,
-            'professionId' => $request->jobPosiiton,
-            'educationId' => $request->education,
-            'skills' => $request->skills,
-            'languages' => $request->languages,
-            'maritalStatus' => $request->maritalStatus,
-            'gender' => $request->gender,
-        ];
-
-        if (!empty($profilePicture)) {
-            $userData['profilePic'] = $profilePicture;
-        }
-
-        if (!empty($resume)) {
-            $userData['resume'] = $resume;
-        }
- 
-     
-
-        // Update existing user or create new user
-        if ($isUpdate) {
-            // Update existing user
-            $userData['dob'] = $request->date_of_birth;
-            $user = User::findOrFail($request->id);
-            $user->update($userData);
-        } else {
-            // Create new user
-            $userData['dob'] = $request->date_of_birth; // Assuming 'dob' is date of birth
-            $userData['user_type'] = 1; // Assuming 'user_type' for candidate is 1
-            $user = User::create($userData);
-        }
-
-        // Hide timestamps
-        $user->makeHidden(['updated_at', 'created_at']);
-
-        // Return the user with appropriate status code
-        return response()->json($user, $isUpdate ? 200 : 201);
+    if (!$isUpdate) {
+        // For create operation, ensure email and mobile are unique
+        $rules['email'] .= '|unique:users';
+        $rules['mobile'] .= '|unique:users';
+        $rules['password'] = 'required|string|min:8';
+    } else {
+        // For update operation, ensure email and mobile are unique, excluding the current user's ID
+        $rules['email'] .= '|unique:users,email,' . $request->id;
+        $rules['mobile'] .= '|unique:users,mobile,' . $request->id;
     }
+
+    $validator = Validator::make($request->all(), $rules);
+
+    // If validation fails, return a response with errors
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    // Handle file uploads
+    $profilePicture = $request->hasFile('profilePicture') 
+        ? $this->image_upload($request->file('profilePicture')) 
+        : null;
+
+    $resume = $request->hasFile('resume') 
+        ? $this->image_upload($request->file('resume')) 
+        : null;
+
+    // Prepare data for create/update
+    $userData = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'mobile' => $request->mobile,
+        'dob' => $request->date_of_birth,
+        'experienced' => $request->experience,
+        'professionId' => $request->jobPosiiton,
+        'educationId' => $request->education,
+        'skills' => $request->skills,
+        'languages' => $request->languages,
+        'maritalStatus' => $request->maritalStatus,
+        'gender' => $request->gender,
+    ];
+
+    if ($profilePicture) {
+        $userData['profilePic'] = $profilePicture;
+    }
+
+    if ($resume) {
+        $userData['resume'] = $resume;
+    }
+
+    // Update or create the user
+    if ($isUpdate) {
+        $user = User::findOrFail($request->id);
+
+        // Update password only if provided
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($userData);
+    } else {
+        // For creating a new user
+        $userData['password'] = Hash::make($request->password);
+        $userData['user_type'] = 1; // Assuming 'user_type' for candidate is 1
+        $user = User::create($userData);
+    }
+
+    // Hide timestamps
+    $user->makeHidden(['updated_at', 'created_at']);
+
+    // Return the user with the appropriate status code
+    return response()->json($user, $isUpdate ? 200 : 201);
+}
 
 
 
     public function getEditCandidate($user_id)
     {
-
-       
-    return  $users = User::where('id', $user_id)->select(
+ 
+    return  User::where('id', $user_id)->select(
             'name',
             'email',
             'mobile',
             'user_type',
-            'otp_verified',
-            'dob',
+            'otp_verified', 
+            DB::raw('DATE_FORMAT(dob, "%Y-%m-%d") as dob'),
             'company_name',
             'company_size',
             'basicProfile',
@@ -699,14 +708,16 @@ class UserController extends ApiController
         ->select(
             'u.id',
             'u.mobile',
-            'u.company_name',
-            'u.establishmentYear',
+            'u.name',
+            'u.company_name', 
             'u.email',
             'u.companyLogo',
             'u.status',
+            'u.about',
             'u.profile_status',
             'i.name as industry_type',
             'u.company_size as team_size',
+            DB::raw('DATE_FORMAT(u.establishmentYear, "%d-%m-%Y") as establishmentYear'),
             DB::raw('COUNT(j.id) as activeJob'),
             DB::raw('CASE WHEN u.profile_status = 1 THEN "verified" ELSE "unverified" END as profile_status'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
@@ -723,6 +734,7 @@ class UserController extends ApiController
             'u.email',
             'u.companyLogo',
             'u.status',
+            'u.about',
             'u.profile_status',
             'i.name',
             'u.company_size',

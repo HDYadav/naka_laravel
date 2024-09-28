@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Jobs\JobsCotroller;
 use App\Http\Controllers\User\UserController;
 
@@ -47,84 +48,81 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 Route::group(['middleware' => 'auth:api'], function () { 
  
- Route::post('/change-password',  [PasswordController::class, 'changePassword']);
-
-
+    Route::post('/change-password',  [PasswordController::class, 'changePassword']);
     Route::post('/add_aadhar_card', [AttributesController::class, 'addAadharCard'])->name('add_aadhar_card');
     Route::get('/get_aadhar_card', [AttributesController::class, 'getAadharCard'])->name('get_aadhar_card');
-
     Route::post('/add_pan_card', [AttributesController::class, 'addPanCard'])->name('add_pan_card');
     Route::get('/get_pan_card', [AttributesController::class, 'getPanCard'])->name('get_pan_card');
-
     Route::post('/add_gst_card', [AttributesController::class, 'addGstDetails'])->name('add_gst_card');
     Route::get('/get_gst_card', [AttributesController::class, 'getGstCard'])->name('get_gst_card');
     Route::post('/get_static_pages', [AttributesController::class, 'getStaticPages'])->name('get_static_pages');
-
-
     Route::post('/add_cin_card', [AttributesController::class, 'addCinDetails'])->name('add_cin_card');
     Route::get('/get_cin_card', [AttributesController::class, 'getCinCard'])->name('get_cin_card');
 
+    Route::prefix('dashboard')->group(function () {
+
+        Route::get('/get_dashboard', [Dashboard::class, 'getDashboardCount'])->name('get_dashboard'); 
+
+    }); 
+
+    Route::prefix('attributes')->group(function () {
+
+    Route::post('/position_add_update', [AttributesController::class, 'positionAddUpdate'])->name('position_add_update');
+    Route::get('/get_job_position/{id}', [AttributesController::class, 'getJobPosition'])->name('get_job_position');
+
+    Route::post('/emp_type_add_update', [AttributesController::class, 'empTypeAddUpdate'])->name('emp_type_add_update');
+    Route::get('/emp_type/{id}', [AttributesController::class, 'getEmpType'])->name('emp_type');
+    Route::post('/industry_type_add_update', [AttributesController::class, 'industryTypeAddUpdate'])->name('industry_type_add_update');
+    Route::get('/industry_type/{id}', [AttributesController::class, 'getIndustryType'])->name('industry_type');
+    Route::post('/skills_add_update', [AttributesController::class, 'skillsAddUpdate'])->name('skills_add_update');
+    Route::get('/get_skills/{id}', [AttributesController::class, 'getSkills'])->name('get_skills');
+
+    Route::post('/experiance_add_update', [AttributesController::class, 'experianceAddUpdate'])->name('experiance_add_update');
+    Route::get('/get_experiance/{id}', [AttributesController::class, 'getExperiance'])->name('get_experiance');
+    Route::post('/education_add_update', [AttributesController::class, 'educationAddUpdate'])->name('education_add_update');
+    Route::get('/get_education/{id}', [AttributesController::class, 'getEducation'])->name('get_education');
+    Route::post('/workplace_add_update', [AttributesController::class, 'workplaceAddUpdate'])->name('workplace_add_update');
+    Route::get('/get_workplace/{id}', [AttributesController::class, 'getWorkPlace'])->name('get_workplace');
+
+    Route::post('/state_add_update', [AttributesController::class, 'stateAddUpdate'])->name('state_add_update');
+    Route::get('/get_state/{id}', [AttributesController::class, 'getState'])->name('get_state');
+
+    Route::delete('/delete_state/{id}', [AttributesController::class, 'deleteState'])->name('delete_state');
+    Route::delete('/delete_city/{id}', [AttributesController::class, 'deletecity'])->name('delete_city');
+    Route::delete('/delete_salarytype/{id}', [AttributesController::class, 'deletesalarytype'])->name('delete_salarytype');
+    Route::delete('/delete_industrytype/{id}', [AttributesController::class, 'deleteindustrytype'])->name('delete_industrytype'); 
+    Route::delete('/delete_job_position/{id}', [AttributesController::class, 'deletejob_position'])->name('delete_job_position');
+    Route::delete('/delete_emp_type/{id}', [AttributesController::class, 'deleteemp_type'])->name('delete_emp_type');
+    Route::delete('/delete_skill/{id}', [AttributesController::class, 'deleteskill'])->name('delete_skill');
+    Route::delete('/delete_experiance/{id}', [AttributesController::class, 'deleteexperiance'])->name('delete_experiance');
+    Route::delete('/delete_educations/{id}', [AttributesController::class, 'deleteeducations'])->name('delete_educations');
+    Route::delete('/delete_workplace/{id}', [AttributesController::class, 'deleteworkplace'])->name('delete_workplace');
+    Route::delete('/delete_promote/{id}', [AttributesController::class, 'deletepromote'])->name('delete_promote'); 
+    Route::delete('/delete_job/{id}', [AttributesController::class, 'deletejob'])->name('delete_job');
+
+
+    Route::post('/pages_add_update', [AttributesController::class, 'pagesAddUpdate'])->name('pages_add_update');
+    Route::get('/page_list', [AttributesController::class, 'pagesList'])->name('page_list');
+    Route::delete('/delete_page/{id}', [AttributesController::class, 'deletePage'])->name('delete_page');
+    Route::get('/get_page/{id}', [AttributesController::class, 'getPage'])->name('get_page'); 
+
+    Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update');
+
+
+    Route::post('/email_template_update/{id}', [AttributesController::class, 'emailTemplateUpdate'])->name('email_template_update');
+    Route::get('/get_email_template/{id}', [AttributesController::class, 'getEmailTemplate'])->name('get_email_template'); 
 
 
 
-        Route::prefix('attributes')->group(function () {
 
-        Route::post('/position_add_update', [AttributesController::class, 'positionAddUpdate'])->name('position_add_update');
-        Route::get('/get_job_position/{id}', [AttributesController::class, 'getJobPosition'])->name('get_job_position');
+    Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
+    Route::post('/city_add_update', [AttributesController::class, 'cityAddUpdate'])->name('city_add_update');
+    Route::get('/get_city/{id}', [AttributesController::class, 'getCity'])->name('get_city'); 
 
-        Route::post('/emp_type_add_update', [AttributesController::class, 'empTypeAddUpdate'])->name('emp_type_add_update');
-        Route::get('/emp_type/{id}', [AttributesController::class, 'getEmpType'])->name('emp_type');
-        Route::post('/industry_type_add_update', [AttributesController::class, 'industryTypeAddUpdate'])->name('industry_type_add_update');
-        Route::get('/industry_type/{id}', [AttributesController::class, 'getIndustryType'])->name('industry_type');
-        Route::post('/skills_add_update', [AttributesController::class, 'skillsAddUpdate'])->name('skills_add_update');
-        Route::get('/get_skills/{id}', [AttributesController::class, 'getSkills'])->name('get_skills');
-
-        Route::post('/experiance_add_update', [AttributesController::class, 'experianceAddUpdate'])->name('experiance_add_update');
-        Route::get('/get_experiance/{id}', [AttributesController::class, 'getExperiance'])->name('get_experiance');
-        Route::post('/education_add_update', [AttributesController::class, 'educationAddUpdate'])->name('education_add_update');
-        Route::get('/get_education/{id}', [AttributesController::class, 'getEducation'])->name('get_education');
-        Route::post('/workplace_add_update', [AttributesController::class, 'workplaceAddUpdate'])->name('workplace_add_update');
-        Route::get('/get_workplace/{id}', [AttributesController::class, 'getWorkPlace'])->name('get_workplace');
-
-        Route::post('/state_add_update', [AttributesController::class, 'stateAddUpdate'])->name('state_add_update');
-        Route::get('/get_state/{id}', [AttributesController::class, 'getState'])->name('get_state');
-
-        Route::delete('/delete_state/{id}', [AttributesController::class, 'deleteState'])->name('delete_state');
-        Route::delete('/delete_city/{id}', [AttributesController::class, 'deletecity'])->name('delete_city');
-        Route::delete('/delete_salarytype/{id}', [AttributesController::class, 'deletesalarytype'])->name('delete_salarytype');
-        Route::delete('/delete_industrytype/{id}', [AttributesController::class, 'deleteindustrytype'])->name('delete_industrytype'); 
-        Route::delete('/delete_job_position/{id}', [AttributesController::class, 'deletejob_position'])->name('delete_job_position');
-        Route::delete('/delete_emp_type/{id}', [AttributesController::class, 'deleteemp_type'])->name('delete_emp_type');
-        Route::delete('/delete_skill/{id}', [AttributesController::class, 'deleteskill'])->name('delete_skill');
-        Route::delete('/delete_experiance/{id}', [AttributesController::class, 'deleteexperiance'])->name('delete_experiance');
-        Route::delete('/delete_educations/{id}', [AttributesController::class, 'deleteeducations'])->name('delete_educations');
-        Route::delete('/delete_workplace/{id}', [AttributesController::class, 'deleteworkplace'])->name('delete_workplace');
-        Route::delete('/delete_promote/{id}', [AttributesController::class, 'deletepromote'])->name('delete_promote'); 
-        Route::delete('/delete_job/{id}', [AttributesController::class, 'deletejob'])->name('delete_job');
-
-
-        Route::post('/pages_add_update', [AttributesController::class, 'pagesAddUpdate'])->name('pages_add_update');
-        Route::get('/page_list', [AttributesController::class, 'pagesList'])->name('page_list');
-        Route::delete('/delete_page/{id}', [AttributesController::class, 'deletePage'])->name('delete_page');
-        Route::get('/get_page/{id}', [AttributesController::class, 'getPage'])->name('get_page'); 
-
-        Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update');
-
-
-        Route::post('/email_template_update/{id}', [AttributesController::class, 'emailTemplateUpdate'])->name('email_template_update');
-        Route::get('/get_email_template/{id}', [AttributesController::class, 'getEmailTemplate'])->name('get_email_template'); 
-
-
-
-
-        Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
-        Route::post('/city_add_update', [AttributesController::class, 'cityAddUpdate'])->name('city_add_update');
-        Route::get('/get_city/{id}', [AttributesController::class, 'getCity'])->name('get_city'); 
-
-         Route::post('/salary_type_add_update', [AttributesController::class, 'salaryTypeAddUpdate'])->name('salary_type_add_update');
-         Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type'); 
-         Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
-         Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote'); 
+        Route::post('/salary_type_add_update', [AttributesController::class, 'salaryTypeAddUpdate'])->name('salary_type_add_update');
+        Route::get('/get_salary_type/{id}', [AttributesController::class, 'getSalaryType'])->name('get_salary_type'); 
+        Route::post('/promote_add_update', [AttributesController::class, 'salaryPromoteAddUpdate'])->name('promote_add_update');
+        Route::get('/get_promote/{id}', [AttributesController::class, 'getPromote'])->name('get_promote'); 
 
         }); 
     
@@ -135,11 +133,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/get_city', [JobsCotroller::class, 'getCity'])->name('get_city');
         Route::post('/create_update', [JobsCotroller::class, 'jobCreateOrUpdate'])->name('create_update');
         Route::get('/get_jobs', [JobsCotroller::class, 'getAllJobs'])->name('get_jobs');
+        Route::get('/get_edit_jobs/{id}', [JobsCotroller::class, 'getEditJobs'])->name('get_edit_jobs');        
 
-        Route::get('/get_edit_jobs/{id}', [JobsCotroller::class, 'getEditJobs'])->name('get_edit_jobs');
-        
-
-        Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer company 
+        Route::get('/get_jobs_details/{id}', [JobsCotroller::class, 'getAllJobsDetails'])->name('get_jobs_details');  // for employer mpany 
         Route::get('/get_employee_jobs_details/{id}', [JobsCotroller::class, 'getEmpJobsDetails'])->name('get_employee_jobs_details');  // for emploee job seekeer 
         Route::get('/emp_filter', [JobsCotroller::class, 'empFilter'])->name('emp_filter');
         Route::post('/jobs_opening', [JobsCotroller::class, 'jobOpenings'])->name('jobs_opening');
