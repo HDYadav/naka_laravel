@@ -99,21 +99,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/delete_workplace/{id}', [AttributesController::class, 'deleteworkplace'])->name('delete_workplace');
     Route::delete('/delete_promote/{id}', [AttributesController::class, 'deletepromote'])->name('delete_promote'); 
     Route::delete('/delete_job/{id}', [AttributesController::class, 'deletejob'])->name('delete_job');
-
-
     Route::post('/pages_add_update', [AttributesController::class, 'pagesAddUpdate'])->name('pages_add_update');
     Route::get('/page_list', [AttributesController::class, 'pagesList'])->name('page_list');
     Route::delete('/delete_page/{id}', [AttributesController::class, 'deletePage'])->name('delete_page');
     Route::get('/get_page/{id}', [AttributesController::class, 'getPage'])->name('get_page'); 
-
     Route::post('/pages_update/{id}', [AttributesController::class, 'pagesUpdate'])->name('pages_update');
-
-
     Route::post('/email_template_update/{id}', [AttributesController::class, 'emailTemplateUpdate'])->name('email_template_update');
     Route::get('/get_email_template/{id}', [AttributesController::class, 'getEmailTemplate'])->name('get_email_template'); 
-
-
-
 
     Route::get('/city_list', [AttributesController::class, 'getCityList'])->name('city_list');
     Route::post('/city_add_update', [AttributesController::class, 'cityAddUpdate'])->name('city_add_update');
