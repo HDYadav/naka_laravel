@@ -1277,9 +1277,7 @@ class JobsCotroller extends ApiController
     public function getFavorateApplyedJob(Request $request)
     {
 
-        $user = UserData::getUserFrToken($request);
-
-       
+        $user = UserData::getUserFrToken($request); 
 
         $users = DB::table('employer_favorates as ef')                
                 ->where('ef.employer_id', $user->id)
@@ -1293,9 +1291,9 @@ class JobsCotroller extends ApiController
                 'jp.name_punjabi as profession_punjabi')
                 ->get();
 
-        foreach ($users as $user) {
-            $user->isFavourite     = $user->isFavourite     == 1 ? true : false;
-        }
+            foreach ($users as $user) {
+                $user->isFavourite = $user->isFavourite     == 1 ? true : false;
+            }
 
 
         if ($users->isEmpty()) {

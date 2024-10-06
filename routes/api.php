@@ -156,6 +156,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     //Route::post('/create_candidate', [UserController::class, 'createCandidate'])->name('create_candidate');
 
+
+    Route::post('/update_profile_pic', [UserController::class, 'updateProfilePic'])->name('update_profile_pic'); 
+
+
+
+
     Route::post('/create_candidate', [UserController::class, 'createOrUpdateCandidate'])->name('create_candidate'); 
     Route::get('/get_candidates', [UserController::class, 'getCandidates'])->name('get_candidates');
     Route::get('/candidates_details/{id}', [UserController::class, 'candidateDetails'])->name('candidates_details');

@@ -624,6 +624,47 @@ class UserController extends ApiController
 
 
 
+
+    public function updateProfilePic(Request $request)
+    {
+        // Determine if it's a create or update operation
+        $isUpdate = $request->has('id'); 
+
+        // Handle file uploads
+        $profilePicture = $request->hasFile('profilePicture')
+        ? $this->image_upload($request->file('profilePicture'))
+        : null; 
+
+        if ($profilePicture) {
+            $userData['profilePic'] = $profilePicture;
+        } 
+      
+
+        // Update or create the user
+        if ($isUpdate) {
+            $user = User::findOrFail($request->id);
+
+            // Update password only if provided
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            }
+
+            $user->update($userData);
+        }  
+
+        // Hide timestamps
+        $user->makeHidden(['updated_at', 'created_at']);
+
+        // Return the user with the appropriate status code
+        return response()->json($user, $isUpdate ? 200 : 201);
+    }
+
+
+
+
+
+
+
     public function getEditCandidate($user_id)
     {
  
