@@ -24,6 +24,7 @@ use Illuminate\Database\QueryException as DatabaseQueryException;
 use League\Config\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\UserData;
+use App\Mail\SendMail;
 use App\Models\FavorateJob;
 use App\Models\Model\EducationDetails;
 use App\Models\Model\EmployerFavorate;
@@ -35,6 +36,7 @@ use App\Models\Model\Language;
 use App\Models\Model\Social;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class JobsCotroller extends ApiController
 {
@@ -167,8 +169,29 @@ class JobsCotroller extends ApiController
         ];
 
         // Find the job if it exists, or create a new one
-        $job = Job::updateOrCreate(['id' => $request->id], $jobData); 
+        $job = Job::updateOrCreate(['id' => $request->id], $jobData);
 
+
+        if($request->id){
+
+        }else{
+            $emailData = UserData::sendMail('New User'); 
+
+            $message = $emailData->get('message');
+            $subject = $emailData->get('subject');
+
+
+            $details = [
+                'subject' => $subject,
+                 'title' => 'Mail Naka',
+                'body' => $message
+            ];
+
+            Mail::to('h.hariy2k@gmail.com')->send(new SendMail($details));
+
+        }
+      
+        
         return $this->sucessResponse('Job Cretaed Successfully', ['id' => $job->id], true, 201);
 
         
@@ -179,7 +202,8 @@ class JobsCotroller extends ApiController
     {
         $user = UserData::getUserFrToken($request);  
       //  dd($user->id);
-        $jobs = DB::table('jobs as j')->select('j.id', 'jp.name as jobPosiiton',
+        $jobs = DB::table('jobs as j')
+        ->select('j.id', 'jp.name as jobPosiiton',
             'jp.name_hindi as jobPosiiton_hindi',
             'jp.name_marathi as jobPosiiton_marathi',
             'jp.name_punjabi as jobPosiiton_punjabi',
@@ -205,6 +229,7 @@ class JobsCotroller extends ApiController
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
             ->join('job_cities as jc', 'jc.id', '=', 'j.city')
             ->where('j.created_by', $user->id)
+            ->where('j.admin_status', '1')
             ->get(); 
 
          return $this->sucessResponse(null, $jobs, true, 201); 
@@ -237,7 +262,7 @@ class JobsCotroller extends ApiController
         $user = UserData::getUserFrToken($request);
 
         $jobs = DB::table('jobs as j')
-        ->select('j.id', 'j.title','jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo','e.name as experiance')
+        ->select('j.id', 'j.title','jp.name as jobPosiiton', 'j.deadline', 'u.company_name as company', 'j.minSalary', 'j.maxSalary', 'st.name as salaryType', 'wp.name as workPlace', 'et.name as employeementType', 'jc.name as city', 'u.companyLogo','e.name as experiance', 'j.status', 'j.admin_status')
         ->join('experiences as e', 'e.id', '=', 'j.experience')
         ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
         ->leftJoin('users as u', 'u.id', '=', 'j.company')
@@ -368,6 +393,7 @@ class JobsCotroller extends ApiController
             ->leftjoin('users as u', 'u.id', '=', 'j.company')
             ->leftjoin('applyed_job as aj', 'aj.job_id', '=', 'j.id') // 
             ->where('j.id', '=', $id)
+            ->where('j.admin_status', '1')
           //  ->where('u.id', '=', $user->id) 
             ->groupBy('j.id')
             ->select(
@@ -450,6 +476,7 @@ class JobsCotroller extends ApiController
             ->where('aj.user_id', '=', $user->id);
         })
             ->where('j.id', '=', $id)
+            ->where('j.admin_status', '1')
             ->select(
                 'j.id',
                 'j.description',
@@ -547,6 +574,7 @@ class JobsCotroller extends ApiController
     {
  
         $jobsQuery = DB::table('jobs as j')
+            ->where('j.admin_status', '1')
             ->groupBy('j.id')
             ->join('job_positions as jp', 'jp.id', '=', 'j.jobPosiiton')
             ->join('employeement_types as et', 'et.id', '=', 'j.employeementType')
@@ -730,6 +758,9 @@ class JobsCotroller extends ApiController
             ->join('work_places as wp', 'wp.id', '=', 'j.workPlace')
             ->join('favorate_job as fav', 'fav.job_id', '=', 'j.id')
             ->where('fav.user_id', $user->id)
+             ->where('j.admin_status','1')
+            
+
             //->where('j.created_by',$user->id)
            // ->where('fav.isFavourite', 1)
             ->groupBy('j.id')

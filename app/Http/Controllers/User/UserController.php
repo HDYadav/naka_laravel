@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\Model\EducationDetails; 
 use App\Models\Model\ExperianceDetails;
+use App\Models\Model\Job;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -432,6 +433,10 @@ class UserController extends ApiController
                 ->leftJoin('job_positions as jp', 'jp.id', '=', 'u.professionId')
                 ->leftjoin('experiences as ex', 'ex.id', '=', 'u.experienced')
                  ->leftjoin('educations as ed', 'ed.id', '=', 'u.educationId')
+                 ->leftjoin('aadhar_cards as ac', 'ac.user_id', '=', 'u.id')
+                 ->leftjoin('pan_cards as pc', 'pc.user_id', '=', 'u.id')
+                 ->leftjoin('cin_details as cd', 'cd.user_id', '=', 'u.id')
+                 ->leftjoin('gst_details as gd', 'gd.user_id', '=', 'u.id')
                 ->where('u.id', $id) 
                 ->select('u.id',
             'u.name as user_name','u.email',
@@ -445,6 +450,11 @@ class UserController extends ApiController
             'u.languages','u.maritalStatus',
             DB::raw('CASE WHEN u.otp_verified = 1 THEN "activated" ELSE "deactivated" END as otp_verified'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
+            DB::raw('CASE WHEN ac.aadharCardNumber IS NOT NULL THEN ac.aadharCardNumber ELSE "Pending" END as aadharCardNumber'),
+            DB::raw('CASE WHEN pc.panCardNumber IS NOT NULL THEN pc.panCardNumber ELSE "Pending" END as panCardNumber'),
+            DB::raw('CASE WHEN cd.cinNumber IS NOT NULL THEN cd.cinNumber ELSE "Pending" END as cinNumber'),
+            DB::raw('CASE WHEN gd.gstNumber IS NOT NULL THEN gd.gstNumber ELSE "Pending" END as gstNumber')
+
         )->get();
 
         foreach ($users as $job) {
@@ -455,7 +465,8 @@ class UserController extends ApiController
             $job->languages = $this->languages($job->languages);
         }
 
-        
+
+       // $doc = DB::table('aadhar_cards')->where('user_id', $id)->select('aadharCardNumber')->get();
 
         if ($users->isEmpty()) {
             return response()->json([
@@ -465,7 +476,7 @@ class UserController extends ApiController
         } else {
             return response()->json([
                 'success' => true,
-                'data' => $users['0'],
+                'data' => $users['0'] 
             ], 200);
         }
     }
@@ -705,6 +716,10 @@ class UserController extends ApiController
         $users = DB::table('users as u')
         ->leftJoin('jobs as j', 'j.created_by', '=', 'u.id')
         ->leftJoin('industries as i', 'i.id', '=', 'u.industryTypeId')
+        ->leftjoin('aadhar_cards as ac', 'ac.user_id', '=', 'u.id')
+        ->leftjoin('pan_cards as pc', 'pc.user_id', '=', 'u.id')
+        ->leftjoin('cin_details as cd', 'cd.user_id', '=', 'u.id')
+        ->leftjoin('gst_details as gd', 'gd.user_id', '=', 'u.id')
         ->select(
             'u.id',
             'u.mobile',
@@ -722,7 +737,11 @@ class UserController extends ApiController
             DB::raw('CASE WHEN u.profile_status = 1 THEN "verified" ELSE "unverified" END as profile_status'),
             DB::raw('CASE WHEN u.status = 1 THEN "activated" ELSE "deactivated" END as status'),
             DB::raw('CASE WHEN u.otp_verified = 1 THEN "verified" ELSE "unverified" END as otp_verified'),
-            DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at')
+            DB::raw('DATE_FORMAT(u.created_at, "%m-%d-%Y") as created_at'),
+            DB::raw('CASE WHEN ac.aadharCardNumber IS NOT NULL THEN ac.aadharCardNumber ELSE "Pending" END as aadharCardNumber'),
+            DB::raw('CASE WHEN pc.panCardNumber IS NOT NULL THEN pc.panCardNumber ELSE "Pending" END as panCardNumber'),
+            DB::raw('CASE WHEN cd.cinNumber IS NOT NULL THEN cd.cinNumber ELSE "Pending" END as cinNumber'),
+            DB::raw('CASE WHEN gd.gstNumber IS NOT NULL THEN gd.gstNumber ELSE "Pending" END as gstNumber')
         )
         ->where('u.user_type', '2')
         ->where('u.id', $id)
@@ -759,6 +778,20 @@ class UserController extends ApiController
             "message" => "Status updated successfully"
         ], 200);
     }
+
+
+
+    public function updateJobStatus(Request $request)
+    {
+        $status = $request->admin_status ? 1 : 0;
+
+        Job::where('id', $request->id)->update(['admin_status' => $status]);
+
+        return response()->json([
+            "message" => "Status updated successfully"
+        ], 200);
+    }
+
 
 
 }

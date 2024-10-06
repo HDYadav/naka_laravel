@@ -34,6 +34,26 @@ class AttributesController extends ApiController
 {
  
 
+    public function sendMail($subject){
+
+     $query = DB::table('email_templates')->where('name', $subject)->select('subject', 'message')->first();
+
+        $message = $query->message;
+
+        $replacements = [
+            '{user_name}' => 'John Doe',
+            '{company_name}' => 'OpenAI',
+            '{user_email}' => 'h.hariy2k@gmail.com',
+            '{user_password}' => '1111111',
+        ];
+
+        // Replace placeholders with actual values
+        $updatedMessage = str_replace(array_keys($replacements), array_values($replacements), $message);
+
+        // Output the updated message
+        return  $updatedMessage; 
+    }
+
     public function positionAddUpdate(Request $request)
     {
         $user = UserData::getUserFrToken($request);

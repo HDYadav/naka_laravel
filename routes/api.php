@@ -44,7 +44,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
  
 
 });
- 
+
+Route::get('/send_mail/{any}', [AttributesController::class, 'sendMail'])->name('send_mail');
 
 Route::group(['middleware' => 'auth:api'], function () { 
  
@@ -58,6 +59,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/get_static_pages', [AttributesController::class, 'getStaticPages'])->name('get_static_pages');
     Route::post('/add_cin_card', [AttributesController::class, 'addCinDetails'])->name('add_cin_card');
     Route::get('/get_cin_card', [AttributesController::class, 'getCinCard'])->name('get_cin_card');
+
+
+
+
 
     Route::prefix('dashboard')->group(function () {
 
@@ -195,7 +200,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/get_user_profile', [UserController::class, 'getUserProfile'])->name('get_user_profile');
 
 
-    Route::post('/account_status_change/{id}', [UserController::class, 'updateAccountStatus'])->name('account_status_change'); 
+    Route::post('/account_status_change/{id}', [UserController::class, 'updateAccountStatus'])->name('account_status_change');
+
+
+        Route::post('/job_status_change/{id}', [UserController::class, 'updateJobStatus'])->name('job_status_change'); 
+
 
    });
 

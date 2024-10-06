@@ -30,8 +30,31 @@ class UserData
                 return  DB::table('users as u')->where('u.id', $user_id)->select('u.id','u.name','u.email','u.mobile')->first();
         }
 
-       
 
+
+
+        public static function sendMail($template_name,$name=null,$company_name=null,$user_email=null, $user_password=null)
+        {
+
+                $query = DB::table('email_templates')->where('name', $template_name)->select('subject', 'message')->first();
+
+                $message = $query->message;
+                $subject = $query->subject;
+
+                $replacements = [
+                        '{user_name}' => $name,
+                        '{company_name}' => $company_name,
+                        '{user_email}' => $user_email,
+                        '{user_password}' => $user_password,
+                ];
+
+                // Replace placeholders with actual values
+                $updatedMessage = str_replace(array_keys($replacements), array_values($replacements), $message);
+
+                // Output the updated message
+             $collect =    collect(['message'=>$updatedMessage,'subject'=>$subject]);
+             return  $collect;
+        }
 
 
        
